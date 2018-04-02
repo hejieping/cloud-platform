@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.cpf</groupId>
+    <artifactId>cpf.parent</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <!--模块版本-->
+    <properties>
+        <cpf.common.version>1.0-SNAPSHOT</cpf.common.version>
+        <cpf.core.version>1.0-SNAPSHOT</cpf.core.version>
+        <cpf.dump.version>1.0-SNAPSHOT</cpf.dump.version>
+    </properties>
+    <modules>
+        <module>cpf-common</module>
+        <module>cpf-dump</module>
+        <module>cpf-console</module>
+        <module>cpf-core</module>
+    </modules>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.cpf</groupId>
+                <artifactId>cpf-common</artifactId>
+                <version>${cpf.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.cpf</groupId>
+                <artifactId>cpf-core</artifactId>
+                <version>${cpf.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.cpf</groupId>
+                <artifactId>cpf-dump</artifactId>
+                <version>${cpf.dump.version}</version>
+            </dependency>
+            <!--日志 -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.25</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>1.7.25</version>
+                <!-- <scope>test</scope> -->
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven</artifactId>
+                <version>1.16.20.0</version>
+            </dependency>
+            <!--集合操作类-->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>21.0</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/commons-collections/commons-collections -->
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>3.2.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+</project>
