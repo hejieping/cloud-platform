@@ -5,6 +5,7 @@
     </el-breadcrumb>
   </div>
 </template>
+<script>
 export default {
   name: 'Warn',
   data () {
@@ -12,3 +13,4 @@ export default {
     }
   }
 }
+</script>
