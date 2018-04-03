@@ -13,7 +13,7 @@
        <el-row > 
         <el-col> 
          <el-menu default-active="2" class="el-menu-vertical" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" router> 
-          <el-submenu index="1"> 
+          <el-submenu index='1'> 
            <template slot="title"> 
             <i class="el-icon-location"></i> 
             <span>监控</span> 
@@ -27,13 +27,23 @@
             </el-menu-item> 
            </el-menu-item-group> 
           </el-submenu> 
-          <el-menu-item index="Warn"> 
-           <i class="el-icon-menu"></i> 
-           <span slot="title">预警</span> 
-          </el-menu-item> 
+          <el-submenu index='2'>
+           <template slot="title"> 
+            <i class="el-icon-location"></i> 
+            <span>监控</span> 
+           </template> 
+            <el-menu-item-group> 
+            <el-menu-item index="SmartWarn">
+             智能预警
+            </el-menu-item> 
+            <el-menu-item index="WarnRule">
+             报警规则
+            </el-menu-item>
+           </el-menu-item-group>  
+          </el-submenu>
          </el-menu> 
         </el-col> 
-       </el-row> 
+      </el-row> 
       </el-aside> 
       <el-main> 
        <router-view></router-view> 
@@ -42,35 +52,33 @@
     </el-container> 
    </div> 
 </template> 
+<script>
 export default {
-  name: 'Layout',
-  data () {
+  name: "Layout",
+  data() {
     return {
-      msg: 'Welcome to Your Vue.js App'
-    }
+    };
   }
-}
+};
 </script> 
   <style scoped="">
-  .el-header{
-    background-color: #324057;
-    color: #333;
-    width: 100%
-  }
+.el-header {
+  background-color: #324057;
+  color: #333;
+  width: 100%;
+}
 
-  .el-aside {
-    background-color: #545c64;
-    color: #333;
-    text-align: center;
-    height: 1000px;
-  }
-  
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-    text-align: center;
-    height: 1000px;
-  }
+.el-aside {
+  background-color: #545c64;
+  color: #333;
+  text-align: center;
+  height: 1000px;
+}
 
-  
+.el-main {
+  background-color: #e9eef3;
+  color: #333;
+  text-align: center;
+  height: 1000px;
+}
 </style>

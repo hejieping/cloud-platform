@@ -3,7 +3,8 @@ import Router from 'vue-router'
 import Layout from '@/components/Layout'
 import ProcessMonitor from '@/components/ProcessMonitor'
 import CpuMonitor from '@/components/CpuMonitor'
-import Warn from '@/components/Warn'
+import SmartWarn from '@/components/SmartWarn'
+import WarnRule from '@/components/WarnRule'
 Vue.use(Router)
 
 export default new Router({
@@ -19,8 +20,11 @@ export default new Router({
         path: '/CpuMonitor',
         component: CpuMonitor,
       },{
-        path: '/Warn',
-        component: Warn,
+        path: '/SmartWarn',
+        component: SmartWarn,
+      },{
+        path: '/WarnRule',
+        component: WarnRule,
       }]
     }
   ]
