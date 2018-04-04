@@ -7,12 +7,12 @@
         </el-breadcrumb>
       </el-row>
       <el-row>
-        <ruleTable></ruleTable>
+        <RuleTable></RuleTable>
       </el-row>
   </div>
 </template>
 <script>
-import ruleTable from '@/components/warnRuleComp/ruleTable.vue'
+import RuleTable from '@/components/warnRuleComp/RuleTable.vue'
 export default {
   name: 'WarnRule',
   data () {
@@ -20,7 +20,7 @@ export default {
     }
   },
   components:{
-      'ruleTable': ruleTable
+      'RuleTable': RuleTable
   }
 }   
 </script>

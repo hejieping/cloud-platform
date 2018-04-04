@@ -30,7 +30,7 @@
           <el-submenu index='2'>
            <template slot="title"> 
             <i class="el-icon-location"></i> 
-            <span>监控</span> 
+            <span>报警</span> 
            </template> 
             <el-menu-item-group> 
             <el-menu-item index="SmartWarn">
