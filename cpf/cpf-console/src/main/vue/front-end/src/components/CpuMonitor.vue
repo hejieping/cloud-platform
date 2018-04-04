@@ -14,6 +14,9 @@
        </el-breadcrumb-item> 
       </el-breadcrumb> 
      </el-row>
+     <el-row type="flex">
+       <search></search>
+     </el-row>
      <el-row :gutter="20"> 
       <el-col :span="12" > 
         <ChartCard :canvasId="chartId1" :data="chartData">
@@ -29,6 +32,7 @@
   </template> 
 <<script>
 import ChartCard from '@/components/ChartCard.vue'
+import  search from '@/components/monitorComp/search.vue'
   export default {
   name: 'CpuMonitor',
   data () {
@@ -44,7 +48,8 @@ import ChartCard from '@/components/ChartCard.vue'
     }
   },
   components: {
-    'ChartCard': ChartCard
+    'ChartCard': ChartCard,
+    'search':search
   }
 }
 </script>
