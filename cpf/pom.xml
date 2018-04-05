@@ -24,7 +24,7 @@
     <modules>
         <module>cpf-framework</module>
         <module>cpf-dump</module>
-        <module>cpf-console</module>
+        <module>cpf-web</module>
         <module>cpf-core</module>
     </modules>
     <dependencyManagement>
