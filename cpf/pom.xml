@@ -4,18 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+
     <groupId>com.cpf</groupId>
     <artifactId>cpf.parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <!--模块版本-->
     <properties>
-        <cpf.common.version>1.0-SNAPSHOT</cpf.common.version>
+        <cpf.framework.version>1.0-SNAPSHOT</cpf.framework.version>
         <cpf.core.version>1.0-SNAPSHOT</cpf.core.version>
         <cpf.dump.version>1.0-SNAPSHOT</cpf.dump.version>
     </properties>
     <modules>
-        <module>cpf-common</module>
+        <module>cpf-framework</module>
         <module>cpf-dump</module>
         <module>cpf-console</module>
         <module>cpf-core</module>
@@ -24,8 +25,8 @@
         <dependencies>
             <dependency>
                 <groupId>com.cpf</groupId>
-                <artifactId>cpf-common</artifactId>
-                <version>${cpf.common.version}</version>
+                <artifactId>cpf-framework</artifactId>
+                <version>${cpf.framework.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.cpf</groupId>
@@ -40,21 +41,18 @@
             <!--日志 -->
             <dependency>
                 <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>1.7.25</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
-            <dependency>
-                <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
                 <version>1.7.25</version>
                 <!-- <scope>test</scope> -->
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok-maven</artifactId>
                 <version>1.16.20.0</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
+
             <!--集合操作类-->
             <dependency>
                 <groupId>com.google.guava</groupId>

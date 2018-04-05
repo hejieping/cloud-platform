@@ -3,6 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.0.0.RELEASE</version>
+		<relativePath/> <!-- lookup parent from knowledgebase -->
+	</parent>
 	<groupId>com.cpf</groupId>
 	<artifactId>cpf-console</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -11,33 +17,43 @@
 	<name>cpf-console</name>
 	<description>console</description>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.0.RELEASE</version>
-		<relativePath/> <!-- lookup parent from knowledgebase -->
-	</parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-
+		<cpf.framework.version>1.0-SNAPSHOT</cpf.framework.version>
+		<cpf.dump.version>1.0-SNAPSHOT</cpf.dump.version>
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-websocket</artifactId>
-		</dependency>
 		<!--模块引用 -->
 		<dependency>
 			<groupId>com.cpf</groupId>
-			<artifactId>cpf-dump</artifactId>
+			<artifactId>cpf-framework</artifactId>
+			<version>${cpf.framework.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.cpf</groupId>
-			<artifactId>cpf-common</artifactId>
+			<artifactId>cpf-dump</artifactId>
+			<version>${cpf.dump.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+
+        </dependency>
+
 
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
@@ -55,6 +71,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
 
 	<build>
