@@ -4,7 +4,7 @@ import com.cpf.constants.ErrorDesc;
 import lombok.Data;
 
 /**
- * service执行模板返回结果
+ * 业务service执行模板返回结果
  * @param <T>
  */
 @Data

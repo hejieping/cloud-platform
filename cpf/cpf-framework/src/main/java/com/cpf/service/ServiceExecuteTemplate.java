@@ -1,7 +1,7 @@
 package com.cpf.service;
 
 /**
- * service执行接口
+ * 业务service执行接口
  * @param <T>
  */
 public interface ServiceExecuteTemplate<T> {
