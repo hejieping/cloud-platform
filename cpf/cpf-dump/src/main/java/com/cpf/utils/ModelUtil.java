@@ -29,7 +29,7 @@ public class ModelUtil  {
      * @param id 模型对应的数据库信息ID
      * @param classifier 模型
      */
-    public void serialization(Long id, Object classifier){
+    public static void serialization(Long id, Object classifier){
         try {
             SerializationHelper.write(modelPath+id+suffix,classifier);
         } catch (Exception e) {
@@ -42,7 +42,7 @@ public class ModelUtil  {
      * @param id 模型对应的数据库信息ID
      * @return
      */
-    public Object deSerialization(Long id){
+    public static Object deSerialization(Long id){
         Object classifier = null;
         try {
             classifier  =  SerializationHelper.read(modelPath+id+suffix);
@@ -57,7 +57,7 @@ public class ModelUtil  {
      * @param modelPO
      * @return
      */
-    public ModelOptionsPO getOptions(ModelPO modelPO){
+    public static ModelOptionsPO getOptions(ModelPO modelPO){
         OptionHandler optionHandler = (OptionHandler) deSerialization(modelPO.getId());
         String[] options = optionHandler.getOptions();
         ModelOptionsPO optionsPO = new ModelOptionsPO();
@@ -90,7 +90,7 @@ public class ModelUtil  {
      * 设置模型参数，并持久化
      * @param modelPO
      */
-    public void setOptions(ModelPO modelPO){
+    public static void setOptions(ModelPO modelPO){
         OptionHandler optionHandler = (OptionHandler) deSerialization(modelPO.getId());
         List<String> optionList = Lists.newArrayList();
         for(ModelOption option : modelPO.getConfig().getOptions().values()){
@@ -113,7 +113,7 @@ public class ModelUtil  {
      * @param option
      * @return
      */
-    private  boolean judgeOptionType(String value, ModelOption option){
+    private  static boolean judgeOptionType(String value, ModelOption option){
         if(option.getValueType() == OptionTypeEnum.INTEGER){
             return isInteger(value);
         }
