@@ -5,6 +5,8 @@ import ProcessMonitor from '@/components/ProcessMonitor'
 import CpuMonitor from '@/components/CpuMonitor'
 import SmartWarn from '@/components/SmartWarn'
 import WarnRule from '@/components/WarnRule'
+import AlgorithmConfig from '@/components/AlgorithmConfig'
+
 Vue.use(Router)
 
 export default new Router({
@@ -25,6 +27,9 @@ export default new Router({
       },{
         path: '/WarnRule',
         component: WarnRule,
+      },{
+        path: '/AlgorithmConfig',
+        component: AlgorithmConfig,
       }]
     }
   ]

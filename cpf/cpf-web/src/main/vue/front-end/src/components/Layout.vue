@@ -19,6 +19,9 @@
             <span>监控</span> 
            </template> 
            <el-menu-item-group> 
+            <el-menu-item index="SmartWarn">
+             智能预警
+            </el-menu-item> 
             <el-menu-item index="CpuMonitor">
              CPU
             </el-menu-item> 
@@ -30,14 +33,14 @@
           <el-submenu index='2'>
            <template slot="title"> 
             <i class="el-icon-location"></i> 
-            <span>报警</span> 
+            <span>配置</span> 
            </template> 
             <el-menu-item-group> 
-            <el-menu-item index="SmartWarn">
-             智能预警
-            </el-menu-item> 
             <el-menu-item index="WarnRule">
              报警规则
+            </el-menu-item>
+            <el-menu-item index="AlgorithmConfig">
+             算法配置
             </el-menu-item>
            </el-menu-item-group>  
           </el-submenu>

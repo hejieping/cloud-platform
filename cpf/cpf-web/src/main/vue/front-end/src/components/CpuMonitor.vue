@@ -31,7 +31,7 @@
    </div> 
   </template> 
 <<script>
-import ChartCard from '@/components/ChartCard.vue'
+import ChartCard from '@/components/monitorComp/ChartCard.vue'
 import  search from '@/components/monitorComp/search.vue'
   export default {
   name: 'CpuMonitor',

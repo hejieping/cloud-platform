@@ -14,5 +14,12 @@ public class ModelPO {
     @GeneratedValue
     private Long id;
     private String name;
+    /**
+     * 模型占决策的比重
+     */
+    private Long weight;
+    /**
+     * 模型参数配置
+     */
     private ModelOptionsPO config;
 }
