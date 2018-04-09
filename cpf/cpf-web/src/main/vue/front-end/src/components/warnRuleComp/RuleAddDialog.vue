@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     closeDialog() {
-      this.$store.commit("closeDialog");
+      this.$store.commit("closeRuleAddDialog");
     }
   },
   computed: {
@@ -51,7 +51,7 @@ export default {
       },
       //只有关闭按钮会调用该函数，所以默认设置为关闭方法
       set: function(newValue) {
-        this.$store.commit("closeDialog");
+        this.$store.commit("closeRuleAddDialog");
       }
     }
   }

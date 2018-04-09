@@ -4,9 +4,9 @@ import com.cpf.constants.CpfDumpConstants;
 import com.cpf.constants.OptionTypeEnum;
 import com.cpf.exception.BusinessException;
 import com.cpf.exception.SystemException;
-import com.cpf.knowledgebase.dao.PO.ModelOption;
-import com.cpf.knowledgebase.dao.PO.ModelOptionsPO;
-import com.cpf.knowledgebase.dao.PO.ModelPO;
+import com.cpf.knowledgebase.manager.DO.ModelDO;
+import com.cpf.knowledgebase.manager.DO.ModelOptionDO;
+import com.cpf.knowledgebase.manager.DO.ModelOptionsDO;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.BeanUtils;
@@ -54,20 +54,20 @@ public class ModelUtil  {
 
     /**
      * 解析modelPO相关联的模型，并提取出模型的参数
-     * @param modelPO
+     * @param modelDO
      * @return
      */
-    public static ModelOptionsPO getOptions(ModelPO modelPO){
-        OptionHandler optionHandler = (OptionHandler) deSerialization(modelPO.getId());
+    public static ModelOptionsDO getOptions(ModelDO modelDO){
+        OptionHandler optionHandler = (OptionHandler) deSerialization(modelDO.getId());
         String[] options = optionHandler.getOptions();
-        ModelOptionsPO optionsPO = new ModelOptionsPO();
+        ModelOptionsDO optionsDO = new ModelOptionsDO();
         //复制option，使函数不影响原来model的配置
-        BeanUtils.copyProperties(optionsPO,modelPO.getConfig(),ModelOption.class);
+        BeanUtils.copyProperties(optionsDO,modelDO.getConfig(),ModelOptionDO.class);
         Iterator<String> iterator = Lists.newArrayList(options).iterator();
         //将参数解析成对象
         while(iterator.hasNext()){
             String key = iterator.next();
-            ModelOption option = optionsPO.getOptions().get(key);
+            ModelOptionDO option = optionsDO.getOptions().get(key);
             if(option != null){
                 //如果参数为bool类型，不需要设置参数的值
                 if(option.getValueType() == OptionTypeEnum.BOOLEAN){
@@ -82,18 +82,18 @@ public class ModelUtil  {
                 }
             }
         }
-        return modelPO.getConfig();
+        return modelDO.getConfig();
 
     }
 
     /**
      * 设置模型参数，并持久化
-     * @param modelPO
+     * @param modelDO
      */
-    public static void setOptions(ModelPO modelPO){
-        OptionHandler optionHandler = (OptionHandler) deSerialization(modelPO.getId());
+    public static void setOptions(ModelDO modelDO){
+        OptionHandler optionHandler = (OptionHandler) deSerialization(modelDO.getId());
         List<String> optionList = Lists.newArrayList();
-        for(ModelOption option : modelPO.getConfig().getOptions().values()){
+        for(ModelOptionDO option : modelDO.getConfig().getOptions().values()){
             optionList.add(option.getKey());
             if(option.getValueType() != OptionTypeEnum.BOOLEAN){
                 optionList.add(option.getValue());
@@ -104,7 +104,7 @@ public class ModelUtil  {
         } catch (Exception e) {
             throw new BusinessException(CpfDumpConstants.SET_OPTION_ERROR,e);
         }
-        serialization(modelPO.getId(),optionHandler);
+        serialization(modelDO.getId(),optionHandler);
     }
 
     /**
@@ -113,7 +113,7 @@ public class ModelUtil  {
      * @param option
      * @return
      */
-    private  static boolean judgeOptionType(String value, ModelOption option){
+    private  static boolean judgeOptionType(String value, ModelOptionDO option){
         if(option.getValueType() == OptionTypeEnum.INTEGER){
             return isInteger(value);
         }

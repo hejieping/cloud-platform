@@ -80,7 +80,7 @@ export default {
   },
   methods:{
         openDialog(){
-          this.$store.commit('openDialog')
+          this.$store.commit('openRuleAddDialog')
         }
     },
   components:{

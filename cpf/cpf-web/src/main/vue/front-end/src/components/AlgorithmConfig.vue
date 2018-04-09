@@ -1,15 +1,22 @@
 <template>
   <div>
     <el-row>
-          <el-breadcrumb separator="/">
+    <el-breadcrumb separator="/">
     <el-breadcrumb-item >云平台</el-breadcrumb-item>
     <el-breadcrumb-item>配置</el-breadcrumb-item>
     <el-breadcrumb-item>预警算法配置</el-breadcrumb-item>
     </el-breadcrumb>
     </el-row>
-    <el-row>
+      <algorithm-add-dialog ></algorithm-add-dialog>
+
+  <el-row type="flex">
+      <el-button-group >
+        <el-button type="primary" icon="el-icon-plus" @click="openDialog">新增</el-button>
+      </el-button-group>
+   </el-row>
+    <el-row >
       <el-collapse >
-        <el-collapse-item v-for="model in aggreModel.models" :key="model.name" :title="calTitle(model.name,model.weight)" :name="activeIndex++">
+        <el-collapse-item v-for="model in aggreModel.models" :key="model.name" :title="calTitle(model.name,model.weight)" >
           <AlgorithmEdit :config="model.config"></AlgorithmEdit>
         </el-collapse-item>
       </el-collapse>
@@ -17,12 +24,13 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 import  AlgorithmEdit from '@/components/algorithmComp/AlgorithmEdit.vue'
+import AlgorithmAddDialog from '@/components/algorithmComp/AlgorithmAddDialog.vue'
 export default {
   name: "AlgorithmConfig",
   data() {
     return {
-      activeIndex:1,
       aggreModel: {
         models: [
           {
@@ -86,10 +94,14 @@ export default {
   methods:{
     calTitle(name,weight){
       return name+ "   权重：" + weight;
-    }
+    },
+    openDialog(){
+          this.$store.commit('openAlgAddDialog')
+        }
   },
   components:{
-    'AlgorithmEdit':AlgorithmEdit
+    'AlgorithmEdit':AlgorithmEdit,
+    'AlgorithmAddDialog':AlgorithmAddDialog
   }
 };
 </script>

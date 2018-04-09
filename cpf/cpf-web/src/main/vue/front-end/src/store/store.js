@@ -4,11 +4,14 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state:{
-    RuleAddDialogState:false
+    RuleAddDialogState:false,
+    AlgorithmAddDialogState:false
   },
   mutations:{
-    openDialog:state => state.RuleAddDialogState=true,
-    closeDialog:state => state.RuleAddDialogState=false,
+    openRuleAddDialog:state => state.RuleAddDialogState=true,
+    closeRuleAddDialog:state => state.RuleAddDialogState=false,
+    openAlgAddDialog:state => state.AlgorithmAddDialogState=true,
+    closeAlgAddDialog:state => state.AlgorithmAddDialogState=false,
   }
 })
 

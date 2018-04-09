@@ -21,7 +21,7 @@ export default {
     }
   },
       props: {
-        config:[]
+        config:{}
   },
   components:{
       'AlgorithmOption':AlgorithmOption

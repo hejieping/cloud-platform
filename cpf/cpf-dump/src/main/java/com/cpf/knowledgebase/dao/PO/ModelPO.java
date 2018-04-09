@@ -2,13 +2,16 @@ package com.cpf.knowledgebase.dao.PO;
 
 import lombok.Data;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  * Created by jieping on 2018-04-08
  */
 @Data
+@Entity(name = "model")
 public class ModelPO {
     @Id
     @GeneratedValue
@@ -21,5 +24,6 @@ public class ModelPO {
     /**
      * 模型参数配置
      */
+    @OneToOne
     private ModelOptionsPO config;
 }

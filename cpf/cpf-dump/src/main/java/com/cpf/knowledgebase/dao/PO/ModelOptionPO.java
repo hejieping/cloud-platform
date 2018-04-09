@@ -1,6 +1,5 @@
 package com.cpf.knowledgebase.dao.PO;
 
-import com.cpf.constants.OptionTypeEnum;
 import lombok.Data;
 
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
  * Created by jieping on 2018-04-07
  */
 @Data
-public class ModelOption {
+public class ModelOptionPO {
     /**
      * 参数名称
      */
@@ -26,7 +25,7 @@ public class ModelOption {
     /**
      * 参数值类型
      */
-    private OptionTypeEnum valueType;
+    private String valueType;
     /**
      * 扩展值，当数据类型为enum时表示enum的种类
      */
