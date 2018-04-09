@@ -1,6 +1,6 @@
 package com.cpf.knowledgebase.manager.DO;
 
-import com.cpf.constants.OptionTypeEnum;
+import com.cpf.constants.ModelTypeEnum;
 import lombok.Data;
 
 import java.util.Map;
@@ -14,9 +14,10 @@ public class ModelOptionsDO {
     /**
      * 模型类型
      */
-    private OptionTypeEnum modelType;
+    private ModelTypeEnum modelType;
     /**
      * 模型的参数（json格式）
      */
     Map<String,ModelOptionDO> options;
+
 }
