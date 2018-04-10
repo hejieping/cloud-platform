@@ -93,7 +93,7 @@ public class ModelUtil  {
         for(ModelOptionDO option : modelDO.getConfig().getOptions()){
             optionList.add(option.getKey());
             if(option.getValueType() != OptionTypeEnum.BOOLEAN){
-                optionList.add(option.getValue());
+                optionList.add((String)option.getValue());
             }
         }
         try {

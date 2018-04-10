@@ -8,4 +8,5 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface ModelOptionsDAO extends CrudRepository<ModelOptionsPO, Long> {
     ModelOptionsPO save(ModelOptionsPO modelOptionsPO);
+    ModelOptionsPO getById(Long id);
 }

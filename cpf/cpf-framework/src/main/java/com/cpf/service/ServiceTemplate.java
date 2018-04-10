@@ -12,7 +12,7 @@ import org.slf4j.Logger;
  */
 public class ServiceTemplate {
     public CallbackResult<Object> execute( Logger logger,String methodName,ServiceExecuteTemplate executeTemplate){
-        methodName += this.getClass().toString();
+        methodName = this.getClass().toString()+ "."+methodName;
         Long time = System.currentTimeMillis();
         CallbackResult<Object> returnResult = null;
         CallbackResult<Object> checkResult = null;
@@ -51,7 +51,7 @@ public class ServiceTemplate {
             BusinessLogger.errorLog(methodName,null,ErrorConstants.SYSTEM_RRROR.getErrorCode(),ErrorConstants.SYSTEM_RRROR.getErrorMSG(),logger);
             throw new SystemException(ErrorConstants.EXECUTE_SERVICE_ERROR,e);
         }
-        String executeTime = String.valueOf(time - System.currentTimeMillis())+"ms";
+        String executeTime = String.valueOf(System.currentTimeMillis() -time)+"ms";
         BusinessLogger.infoLog(methodName,null,JSON.toJSONString(executeResult.getResult()),executeTime,logger);
         return executeResult;
     }

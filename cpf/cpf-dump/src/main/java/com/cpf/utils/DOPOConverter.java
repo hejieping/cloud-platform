@@ -11,6 +11,7 @@ import com.cpf.knowledgebase.manager.DO.ModelDO;
 import com.cpf.knowledgebase.manager.DO.ModelOptionDO;
 import com.cpf.knowledgebase.manager.DO.ModelOptionsDO;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;
 
@@ -34,11 +35,20 @@ public class DOPOConverter {
         modelDO.setConfig(modelOptionsPO2DO(modelPO.getConfig()));
         return modelDO;
     }
+    public static List<ModelDO> modelPOs2DOs(List<ModelPO> modelPOList){
+        List<ModelDO> list = Lists.newArrayList();
+        if(CollectionUtils.isNotEmpty(modelPOList)){
+            for(ModelPO modelPO : modelPOList){
+                list.add(modelPO2DO(modelPO));
+            }
+        }
+        return list;
+    }
     public static ModelOptionPO modelOptionDO2PO(ModelOptionDO modelOptionDO){
         ModelOptionPO modelOptionPO = new ModelOptionPO();
         modelOptionPO.setDesc(modelOptionDO.getDesc());
         modelOptionPO.setKey(modelOptionDO.getKey());
-        modelOptionPO.setValue(modelOptionDO.getValue());
+        modelOptionPO.setValue(modelOptionDO.getValue().toString());
         modelOptionPO.setValueType(modelOptionDO.getValueType().toString());
         modelOptionPO.setExtension(modelOptionDO.getExtension());
         return modelOptionPO;
@@ -81,6 +91,7 @@ public class DOPOConverter {
 
         ModelOptionsPO modelOptionsPO = DOPOConverter.modelOptionsDO2PO(modelOptionsDO);
         System.out.println(JSON.toJSONString(DOPOConverter.modelOptionsPO2DO(modelOptionsPO)));
+
 
 
     }

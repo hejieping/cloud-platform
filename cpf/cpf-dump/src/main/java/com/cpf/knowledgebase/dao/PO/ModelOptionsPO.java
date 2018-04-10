@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 
 /**
  * 各个模型的参数选项
@@ -23,5 +24,6 @@ public class ModelOptionsPO {
     /**
      * 模型的参数（json格式）
      */
+    @Lob
     String options;
 }

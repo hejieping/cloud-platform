@@ -8,4 +8,5 @@ import java.util.List;
 public interface ModelDAO extends CrudRepository<ModelPO, Long> {
     ModelPO save(ModelPO modelPO);
     List<ModelPO> findAll();
+    ModelPO getById(Long id);
 }

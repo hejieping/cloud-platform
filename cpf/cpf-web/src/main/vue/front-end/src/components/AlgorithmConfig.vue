@@ -17,7 +17,7 @@
     <el-row >
       <el-collapse >
         <el-collapse-item v-for="model in aggreModel.models" :key="model.name" :title="calTitle(model.name,model.weight)" >
-          <AlgorithmEdit :config="model.config.options"></AlgorithmEdit>
+          <AlgorithmEdit :model="model"></AlgorithmEdit>
         </el-collapse-item>
       </el-collapse>
     </el-row>
@@ -27,71 +27,13 @@
 import { mapState } from "vuex";
 import  AlgorithmEdit from '@/components/algorithmComp/AlgorithmEdit.vue'
 import AlgorithmAddDialog from '@/components/algorithmComp/AlgorithmAddDialog.vue'
+import {getAllModel} from "@/api/getData";
 export default {
   name: "AlgorithmConfig",
   data() {
     return {
       aggreModel: {
-        models: [
-          {
-            name: "svm",
-            weight: 1,
-            config: {
-              options:[{
-                key:"-p",
-                desc: "使用核函数",
-                value: false,
-                valueType: "bool"
-              },{
-                key:"-c",
-                desc: "迭代次数",
-                value: 2,
-                valueType: "integer"
-              }, {
-                key:"-d",
-                desc: "高斯值",
-                value: 0.001,
-                valueType: "double"
-              }, {
-                key:"-e",
-                desc: "指定模型",
-                value: "",
-                valueType: "enum",
-                extension: ["asd", "grqv", "wer"]
-              }
-            ]
-            }
-          },
-                   {
-            name: "bayes",
-            weight: 1,
-            config: {
-              options:[{
-                key:"-p",
-                desc: "使用核函数",
-                value: false,
-                valueType: "bool"
-              },{
-                key:"-c",
-                desc: "迭代次数",
-                value: 2,
-                valueType: "integer"
-              }, {
-                key:"-d",
-                desc: "高斯值",
-                value: 0.001,
-                valueType: "double"
-              }, {
-                key:"-e",
-                desc: "指定模型",
-                value: "",
-                valueType: "enum",
-                extension: ["asd", "grqv", "wer"]
-              }
-            ]
-            }
-          }
-        ]
+        models: []
       }
     };
   },
@@ -103,14 +45,19 @@ export default {
           this.$store.commit('openAlgAddDialog')
         },
     addModel(model){
-      console.log("config")
-      console.log(JSON.stringify(model))
       this.aggreModel.models.push(model);
+    },
+    async initModels(){
+      const models = await getAllModel();
+      this.aggreModel.models = models;
     }
   },
   components:{
     'AlgorithmEdit':AlgorithmEdit,
     'AlgorithmAddDialog':AlgorithmAddDialog
+  },
+  created(){
+    this.initModels()
   }
 };
 </script>

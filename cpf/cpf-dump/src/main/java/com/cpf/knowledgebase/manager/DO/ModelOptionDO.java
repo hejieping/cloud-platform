@@ -21,7 +21,7 @@ public class ModelOptionDO {
     /**
      * 参数值
      */
-    private String value = "";
+    private Object value ;
     /**
      * 参数值类型
      */

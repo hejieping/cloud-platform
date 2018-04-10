@@ -1,7 +1,11 @@
 package com.cpf.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.cpf.constants.ModelTypeEnum;
 import com.cpf.knowledgebase.dao.PO.KnowledgeRulePO;
+import com.cpf.knowledgebase.manager.DO.ModelDO;
+import com.cpf.knowledgebase.manager.ModelDOManager;
+import com.cpf.service.CallbackResult;
 import com.cpf.service.KnowledgeService;
 import com.cpf.utils.ModelFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +19,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/config")
-public class KnowledgeController {
+public class ConfigController {
     @Autowired
     private KnowledgeService knowledgeService;
+    @Autowired
+    private ModelDOManager modelDOManager;
 
     /**
      * 添加实时监控规则
@@ -53,6 +59,32 @@ public class KnowledgeController {
      */
     @RequestMapping(value = "/model",method = RequestMethod.GET)
     ResponseEntity<Object> model(String name, String modelType){
-        return new ResponseEntity<Object>(ModelFactory.getModel(name,modelType),HttpStatus.OK);
+        ModelDO modelDO = modelDOManager.save(ModelFactory.getModel(name,modelType));
+        if(modelDO != null){
+            return new ResponseEntity<Object>(modelDO,HttpStatus.OK);
+        }
+        return new ResponseEntity<Object>(false,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * 获取所有的模型
+     * @param name
+     * @param modelType
+     * @return
+     */
+    @RequestMapping(value = "/models",method = RequestMethod.GET)
+    ResponseEntity<Object> models(){
+        return new ResponseEntity<Object>(modelDOManager.all(),HttpStatus.OK);
+    }
+
+    /**
+     * 保存model
+     * @param modelDO
+     * @return
+     */
+    @RequestMapping(value = "/model",method = RequestMethod.POST)
+    ResponseEntity<Object> model(@RequestBody ModelDO modelDO){
+        CallbackResult<ModelDO> result = modelDOManager.modifyModel(modelDO);
+        return new ResponseEntity<Object>(result.getSuccess(),HttpStatus.OK);
     }
 }

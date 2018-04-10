@@ -1,9 +1,9 @@
 <template>
     <div>
-        <div v-if="option.valueType == 'bool'">
+        <div v-if="option.valueType == 'BOOLEAN'">
                 <el-switch v-model="option.value"></el-switch>
          </div>
-         <div v-else-if="option.valueType === 'enum'">
+         <div v-else-if="option.valueType === 'ENUM'">
             <el-select v-model="option.value" placeholder="请选择">
                 <el-option
                 v-for="key in option.extension"
