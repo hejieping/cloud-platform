@@ -12,7 +12,8 @@ import java.util.Map;
 public enum ModelTypeEnum {
     SVM("svm","支持向量"),
     BAYES("bayes","贝叶斯"),
-    DF("df","决策树");
+    DF("df","决策树"),
+    TEST("test","测试");
     private String type;
     private String desc;
     private ModelTypeEnum(String type,String desc){
@@ -27,8 +28,8 @@ public enum ModelTypeEnum {
         List<Map<String,String>> list = Lists.newArrayList();
         for(ModelTypeEnum modelTypeEnum : ModelTypeEnum.values()){
             Map<String,String> map = Maps.newHashMap();
-            map.put("value",modelTypeEnum.getType());
-            map.put("label",modelTypeEnum.getType());
+            map.put("value",modelTypeEnum.toString());
+            map.put("label",modelTypeEnum.getDesc());
             list.add(map);
         }
         return list;

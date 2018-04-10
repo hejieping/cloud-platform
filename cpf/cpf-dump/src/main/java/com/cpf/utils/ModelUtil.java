@@ -6,14 +6,11 @@ import com.cpf.exception.BusinessException;
 import com.cpf.exception.SystemException;
 import com.cpf.knowledgebase.manager.DO.ModelDO;
 import com.cpf.knowledgebase.manager.DO.ModelOptionDO;
-import com.cpf.knowledgebase.manager.DO.ModelOptionsDO;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.springframework.beans.BeanUtils;
 import weka.core.OptionHandler;
 import weka.core.SerializationHelper;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -57,34 +54,34 @@ public class ModelUtil  {
      * @param modelDO
      * @return
      */
-    public static ModelOptionsDO getOptions(ModelDO modelDO){
-        OptionHandler optionHandler = (OptionHandler) deSerialization(modelDO.getId());
-        String[] options = optionHandler.getOptions();
-        ModelOptionsDO optionsDO = new ModelOptionsDO();
-        //复制option，使函数不影响原来model的配置
-        BeanUtils.copyProperties(optionsDO,modelDO.getConfig(),ModelOptionDO.class);
-        Iterator<String> iterator = Lists.newArrayList(options).iterator();
-        //将参数解析成对象
-        while(iterator.hasNext()){
-            String key = iterator.next();
-            ModelOptionDO option = optionsDO.getOptions().get(key);
-            if(option != null){
-                //如果参数为bool类型，不需要设置参数的值
-                if(option.getValueType() == OptionTypeEnum.BOOLEAN){
-                    continue;
-                }
-                //设定参数的值
-                if(judgeOptionType(key,option)){
-                    if(iterator.hasNext()){
-                        option.setValue(iterator.next());
-
-                    }
-                }
-            }
-        }
-        return modelDO.getConfig();
-
-    }
+//    public static ModelOptionsDO getOptions(ModelDO modelDO){
+//        OptionHandler optionHandler = (OptionHandler) deSerialization(modelDO.getId());
+//        String[] options = optionHandler.getOptions();
+//        ModelOptionsDO optionsDO = new ModelOptionsDO();
+//        //复制option，使函数不影响原来model的配置
+//        BeanUtils.copyProperties(optionsDO,modelDO.getConfig(),ModelOptionDO.class);
+//        Iterator<String> iterator = Lists.newArrayList(options).iterator();
+//        //将参数解析成对象
+//        while(iterator.hasNext()){
+//            String key = iterator.next();
+//            ModelOptionDO option = optionsDO.getOptions().get(key);
+//            if(option != null){
+//                //如果参数为bool类型，不需要设置参数的值
+//                if(option.getValueType() == OptionTypeEnum.BOOLEAN){
+//                    continue;
+//                }
+//                //设定参数的值
+//                if(judgeOptionType(key,option)){
+//                    if(iterator.hasNext()){
+//                        option.setValue(iterator.next());
+//
+//                    }
+//                }
+//            }
+//        }
+//        return modelDO.getConfig();
+//
+//    }
 
     /**
      * 设置模型参数，并持久化
@@ -93,7 +90,7 @@ public class ModelUtil  {
     public static void setOptions(ModelDO modelDO){
         OptionHandler optionHandler = (OptionHandler) deSerialization(modelDO.getId());
         List<String> optionList = Lists.newArrayList();
-        for(ModelOptionDO option : modelDO.getConfig().getOptions().values()){
+        for(ModelOptionDO option : modelDO.getConfig().getOptions()){
             optionList.add(option.getKey());
             if(option.getValueType() != OptionTypeEnum.BOOLEAN){
                 optionList.add(option.getValue());

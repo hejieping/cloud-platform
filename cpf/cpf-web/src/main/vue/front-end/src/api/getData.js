@@ -1,2 +1,4 @@
 import fetch from '@/utils/fetch'
-export const modelType = data => fetch('/config/modelType');
+export const getModelTypes = () => fetch('/config/modelType');
+export const getModel = data => fetch('/config/model',data);
+

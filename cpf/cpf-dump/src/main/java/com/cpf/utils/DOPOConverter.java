@@ -11,10 +11,8 @@ import com.cpf.knowledgebase.manager.DO.ModelDO;
 import com.cpf.knowledgebase.manager.DO.ModelOptionDO;
 import com.cpf.knowledgebase.manager.DO.ModelOptionsDO;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 /**DO PO 转换工具
  * Created by jieping on 2018-04-09
@@ -58,7 +56,7 @@ public class DOPOConverter {
         ModelOptionsDO modelOptionsDO = new ModelOptionsDO();
         modelOptionsDO.setId(modelOptionsPO.getId());
         modelOptionsDO.setModelType(ModelTypeEnum.valueOf(modelOptionsPO.getModelType()));
-        modelOptionsDO.setOptions(JSON.parseObject(modelOptionsPO.getOptions(),new TypeReference<HashMap<String,ModelOptionDO>>(){}));
+        modelOptionsDO.setOptions(JSON.parseObject(modelOptionsPO.getOptions(),new TypeReference<List<ModelOptionDO>>(){}));
         return modelOptionsDO;
     }
     public static ModelOptionsPO modelOptionsDO2PO(ModelOptionsDO modelOptionsDO){
@@ -77,10 +75,9 @@ public class DOPOConverter {
         modelOptionDO.setValue("asd");
         modelOptionDO.setKey("key");
         modelOptionDO.setValueType(OptionTypeEnum.BOOLEAN);
-        Map<String,ModelOptionDO> map = Maps.newHashMap();
-        map.put("test1",modelOptionDO);
-        map.put("test2",modelOptionDO);
-        modelOptionsDO.setOptions(map);
+        List<ModelOptionDO> list = Lists.newArrayList();
+        list.add(modelOptionDO);
+        modelOptionsDO.setOptions(list);
 
         ModelOptionsPO modelOptionsPO = DOPOConverter.modelOptionsDO2PO(modelOptionsDO);
         System.out.println(JSON.toJSONString(DOPOConverter.modelOptionsPO2DO(modelOptionsPO)));

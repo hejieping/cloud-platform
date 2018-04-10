@@ -7,7 +7,7 @@
     <el-breadcrumb-item>预警算法配置</el-breadcrumb-item>
     </el-breadcrumb>
     </el-row>
-      <algorithm-add-dialog ></algorithm-add-dialog>
+      <algorithm-add-dialog @addModel="addModel"></algorithm-add-dialog>
 
   <el-row type="flex">
       <el-button-group >
@@ -17,7 +17,7 @@
     <el-row >
       <el-collapse >
         <el-collapse-item v-for="model in aggreModel.models" :key="model.name" :title="calTitle(model.name,model.weight)" >
-          <AlgorithmEdit :config="model.config"></AlgorithmEdit>
+          <AlgorithmEdit :config="model.config.options"></AlgorithmEdit>
         </el-collapse-item>
       </el-collapse>
     </el-row>
@@ -36,7 +36,8 @@ export default {
           {
             name: "svm",
             weight: 1,
-            config: [{
+            config: {
+              options:[{
                 key:"-p",
                 desc: "使用核函数",
                 value: false,
@@ -59,11 +60,13 @@ export default {
                 extension: ["asd", "grqv", "wer"]
               }
             ]
+            }
           },
                    {
             name: "bayes",
             weight: 1,
-            config: [{
+            config: {
+              options:[{
                 key:"-p",
                 desc: "使用核函数",
                 value: false,
@@ -86,6 +89,7 @@ export default {
                 extension: ["asd", "grqv", "wer"]
               }
             ]
+            }
           }
         ]
       }
@@ -97,7 +101,12 @@ export default {
     },
     openDialog(){
           this.$store.commit('openAlgAddDialog')
-        }
+        },
+    addModel(model){
+      console.log("config")
+      console.log(JSON.stringify(model))
+      this.aggreModel.models.push(model);
+    }
   },
   components:{
     'AlgorithmEdit':AlgorithmEdit,
