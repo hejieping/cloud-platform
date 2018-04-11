@@ -1,6 +1,6 @@
  <template>
  <div>
-   <RuleAddDialog ></RuleAddDialog>
+   <RuleAddDialog :ruleInfo="ruleInfo"></RuleAddDialog>
    <el-row type="flex">
      <el-button-group >
   <el-button type="primary" icon="el-icon-plus" @click="openDialog">新增</el-button>
@@ -39,7 +39,7 @@
       align='left'
       >
       <template slot-scope="scope">
-        <el-button type="text" size="small">编辑</el-button>
+        <el-button type="text" size="small" @click="editCol(scope.row)">编辑</el-button>
         <el-button type="text" size="small">删除</el-button>
       </template>
     </el-table-column>
@@ -76,10 +76,17 @@ export default {
           address: "上海市普陀区金沙江路 1516 弄"
         }
       ],
+      ruleInfo:{}
     };
   },
   methods:{
         openDialog(){
+          this.ruleInfo = {name:"",region:""};
+          this.$store.commit('openRuleAddDialog')
+        },
+        editCol(row){
+          console.log(JSON.stringify(row));
+          this.ruleInfo = {name:row.name,region:"shanghai"};
           this.$store.commit('openRuleAddDialog')
         }
     },
@@ -88,3 +95,8 @@ export default {
   }
 };
 </script>
+<style>
+.el-row {
+  margin-bottom: 20px;
+}
+</style>

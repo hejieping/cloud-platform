@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Data
 @Entity(name = "knowledge_rule")
-public class KnowledgeRulePO {
+public class RulePO {
     @Id
     @GeneratedValue
     private Long id;
@@ -21,6 +21,11 @@ public class KnowledgeRulePO {
      * 监控规则名称
      */
     private String name;
+    /**
+     * cpu最高利用率
+     */
+    private Integer cpuMax;
+
     /**
      * 规则创建时间
      */

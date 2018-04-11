@@ -1,6 +1,6 @@
 <template>
   <div>
-      <el-form  :rules="rules" ref="ruleForm" label-width="100px" align="left">
+      <el-form  :rules="rules" ref="ruleForm" label-width="100px" align="left" >
                           <el-row  >
                     <el-col :span="8">
           <el-form-item v-for="option in model.config.options" :key="option.key" :label="option.desc" :prop="option.key" >
@@ -28,6 +28,7 @@
             </el-form-item>  
             <el-form-item>
                 <el-button type="primary" @click="editModel">确认修改</el-button>
+                <el-button type="danger" @click="deleteModel">删除模型</el-button>
             </el-form-item>            
                     </el-col>
                 </el-row>
@@ -37,7 +38,7 @@
 </template>
 <script>
 import AlgorithmOption from "@/components/algorithmComp/AlgorithmOption.vue";
-import {saveModel} from "@/api/getData";
+import {saveModel,deleteModelByid} from "@/api/getData";
 export default {
   name: "AlgorithmEdit",
   data() {
@@ -62,11 +63,21 @@ export default {
     },
     async editModel(){
         this.model.config.options = this.formData;
-        let result = await saveModel(this.model);
-        if(result==true){
+        let response = await saveModel(this.model);
+        if(response.success){
             this.$message('保存配置成功');
         }else{
             this.$message('保存配置失败');
+        }
+    },
+    async deleteModel(){
+      let param = {id:this.model.id};
+      let response = await deleteModelByid(param);
+        if(response.success){
+            this.$emit('deleteModel',this.model.id);
+            this.$message('删除配置成功');
+        }else{
+            this.$message('删除配置失败');
         }
     },
     initRule() {

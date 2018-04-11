@@ -46,21 +46,23 @@ export default {
     closeDialog() {
       this.$store.commit("closeAlgAddDialog");
     },
-    
-    async getModelData (form){
-      const model = await getModel(form);
-      return model;
-    },
     async submit(form){
       this.closeDialog();
-      const model = await this.getModelData(form);
-      this.$emit('addModel',model);
-      
+      const  response = await getModel(form);
+      if(response.success){
+        this.$emit('addModel',response.result);
+        this.$message('新建模型成功');
+
+      }else{
+        this.$message('新建模型失败');
+      }
     },
     async initData() {
       try {
-        const options = await getModelTypes();
-        this.options = options;
+        const response = await getModelTypes();
+        if(response.success){
+            this.options = response.result;
+        }
       } catch (error) {
         console.log(error);
       }

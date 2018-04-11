@@ -68,8 +68,6 @@ public class FileConverter {
             loader.setNominalAttributes("9");
             loader.setSource(new File(resource));
             Instances data = loader.getDataSet();
-
-
             // save ARFF
             ArffSaver saver = new ArffSaver();
             saver.setInstances(data);

@@ -6,6 +6,7 @@ import CpuMonitor from '@/components/CpuMonitor'
 import SmartWarn from '@/components/SmartWarn'
 import WarnRule from '@/components/WarnRule'
 import AlgorithmConfig from '@/components/AlgorithmConfig'
+import SolutionConfig from '@/components/SolutionConfig'
 
 Vue.use(Router)
 
@@ -30,6 +31,9 @@ export default new Router({
       },{
         path: '/AlgorithmConfig',
         component: AlgorithmConfig,
+      },{
+        path: '/SolutionConfig',
+        component: SolutionConfig,
       }]
     }
   ]

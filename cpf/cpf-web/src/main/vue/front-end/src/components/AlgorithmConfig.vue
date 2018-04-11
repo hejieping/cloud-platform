@@ -17,7 +17,7 @@
     <el-row >
       <el-collapse >
         <el-collapse-item v-for="model in aggreModel.models" :key="model.name" :title="calTitle(model.name,model.weight)" >
-          <AlgorithmEdit :model="model"></AlgorithmEdit>
+          <AlgorithmEdit :model="model"  @deleteModel="deleteModel"></AlgorithmEdit>
         </el-collapse-item>
       </el-collapse>
     </el-row>
@@ -47,9 +47,18 @@ export default {
     addModel(model){
       this.aggreModel.models.push(model);
     },
+    deleteModel(id){
+      let models = this.aggreModel.models;
+      models.splice(models.findIndex(model => model.id == id), 1)
+    },
     async initModels(){
-      const models = await getAllModel();
-      this.aggreModel.models = models;
+      const response = await getAllModel();
+      if(response.success){
+        this.aggreModel.models = response.result;
+      }else{
+        this.$message('获取模型失败');
+      }
+      
     }
   },
   components:{

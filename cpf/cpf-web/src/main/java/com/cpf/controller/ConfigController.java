@@ -1,17 +1,22 @@
 package com.cpf.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.cpf.constants.ModelTypeEnum;
-import com.cpf.knowledgebase.dao.PO.KnowledgeRulePO;
+import com.cpf.knowledgebase.dao.PO.RulePO;
 import com.cpf.knowledgebase.manager.DO.ModelDO;
-import com.cpf.knowledgebase.manager.ModelDOManager;
+import com.cpf.knowledgebase.manager.ModelManager;
+import com.cpf.knowledgebase.manager.RuleManager;
 import com.cpf.service.CallbackResult;
-import com.cpf.service.KnowledgeService;
 import com.cpf.utils.ModelFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by jieping on 2018-04-05
@@ -21,25 +26,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/config")
 public class ConfigController {
     @Autowired
-    private KnowledgeService knowledgeService;
+    private RuleManager ruleManager;
     @Autowired
-    private ModelDOManager modelDOManager;
+    private ModelManager modelManager;
 
     /**
      * 添加实时监控规则
-     * @param knowledgeRulePO
+     * @param rulePO
      * @return
      */
     @RequestMapping(value = "/addRule", method = RequestMethod.POST)
-    ResponseEntity<Boolean> addRule(@RequestBody KnowledgeRulePO knowledgeRulePO){
-        knowledgeRulePO.setModifyTime(knowledgeRulePO.getCreateTime());
-        Boolean saveResult = null;
-        try {
-            saveResult = knowledgeService.save(knowledgeRulePO);
-        } catch (Exception e) {
-            return new ResponseEntity<Boolean>(false,HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<Boolean>(saveResult,HttpStatus.OK);
+    ResponseEntity<Object> addRule(@RequestBody RulePO rulePO){
+        rulePO.setModifyTime(rulePO.getCreateTime());
+        return new ResponseEntity<Object>(ruleManager.addRule(rulePO),HttpStatus.OK);
     }
 
     /**
@@ -48,7 +47,7 @@ public class ConfigController {
      */
     @RequestMapping(value = "/modelType", method = RequestMethod.GET)
     ResponseEntity<Object> modelType(){
-        return  new ResponseEntity<Object>(ModelTypeEnum.getEnums(),HttpStatus.OK);
+        return  new ResponseEntity<Object>(new CallbackResult<List<Map<String,String>>>(ModelTypeEnum.getEnums(),true),HttpStatus.OK);
     }
 
     /**
@@ -59,11 +58,8 @@ public class ConfigController {
      */
     @RequestMapping(value = "/model",method = RequestMethod.GET)
     ResponseEntity<Object> model(String name, String modelType){
-        ModelDO modelDO = modelDOManager.save(ModelFactory.getModel(name,modelType));
-        if(modelDO != null){
-            return new ResponseEntity<Object>(modelDO,HttpStatus.OK);
-        }
-        return new ResponseEntity<Object>(false,HttpStatus.INTERNAL_SERVER_ERROR);
+        CallbackResult<ModelDO> result = modelManager.addModel(ModelFactory.getModel(name,modelType));
+        return new ResponseEntity<Object>(result,HttpStatus.OK);
     }
 
     /**
@@ -74,7 +70,7 @@ public class ConfigController {
      */
     @RequestMapping(value = "/models",method = RequestMethod.GET)
     ResponseEntity<Object> models(){
-        return new ResponseEntity<Object>(modelDOManager.all(),HttpStatus.OK);
+        return new ResponseEntity<Object>(modelManager.all(),HttpStatus.OK);
     }
 
     /**
@@ -84,7 +80,12 @@ public class ConfigController {
      */
     @RequestMapping(value = "/model",method = RequestMethod.POST)
     ResponseEntity<Object> model(@RequestBody ModelDO modelDO){
-        CallbackResult<ModelDO> result = modelDOManager.modifyModel(modelDO);
-        return new ResponseEntity<Object>(result.getSuccess(),HttpStatus.OK);
+        CallbackResult<ModelDO> result = modelManager.modifyModel(modelDO);
+        return new ResponseEntity<Object>(result,HttpStatus.OK);
+    }
+    @RequestMapping(value = "/deleteModel",method = RequestMethod.GET)
+    ResponseEntity<Object> model(Long id){
+        CallbackResult<Object> result = modelManager.delete(id);
+        return new ResponseEntity<Object>(result,HttpStatus.OK);
     }
 }

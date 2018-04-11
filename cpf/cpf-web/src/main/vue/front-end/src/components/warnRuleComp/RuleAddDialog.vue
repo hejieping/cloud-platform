@@ -3,10 +3,10 @@
       <el-dialog title="收货地址" :visible.sync="RuleAddDialogState">
   <el-form :model="form">
     <el-form-item label="活动名称" :label-width="formLabelWidth">
-      <el-input v-model="form.name" auto-complete="off"></el-input>
+      <el-input v-model="ruleInfo.name" auto-complete="off"></el-input>
     </el-form-item>
     <el-form-item label="活动区域" :label-width="formLabelWidth">
-      <el-select v-model="form.region" placeholder="请选择活动区域">
+      <el-select v-model="ruleInfo.region" placeholder="请选择活动区域">
         <el-option label="区域一" value="shanghai"></el-option>
         <el-option label="区域二" value="beijing"></el-option>
       </el-select>
@@ -44,6 +44,9 @@ export default {
       this.$store.commit("closeRuleAddDialog");
     }
   },
+  props:{
+    ruleInfo:{}
+  },
   computed: {
     RuleAddDialogState: {
       get() {
@@ -55,5 +58,6 @@ export default {
       }
     }
   }
+
 };
 </script>

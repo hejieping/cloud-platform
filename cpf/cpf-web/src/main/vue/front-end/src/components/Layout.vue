@@ -40,7 +40,10 @@
              报警规则
             </el-menu-item>
             <el-menu-item index="AlgorithmConfig">
-             算法配置
+             预警算法
+            </el-menu-item>
+            <el-menu-item index="SolutionConfig">
+             解决方案
             </el-menu-item>
            </el-menu-item-group>  
           </el-submenu>
