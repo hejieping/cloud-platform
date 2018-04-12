@@ -12,4 +12,5 @@ public interface RuleDAO extends CrudRepository<RulePO, Long> {
     RulePO save(RulePO rulePO);
     RulePO getById(Long id);
     List<RulePO> findAll();
+    void deleteById(Long id);
 }

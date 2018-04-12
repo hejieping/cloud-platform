@@ -38,13 +38,13 @@
 </template>
 <script>
 import AlgorithmOption from "@/components/algorithmComp/AlgorithmOption.vue";
-import {saveModel,deleteModelByid} from "@/api/getData";
+import { saveModel, deleteModelByid } from "@/api/getData";
 export default {
   name: "AlgorithmEdit",
   data() {
     return {
       formData: {},
-      rules: {},
+      rules: {}
     };
   },
   props: {
@@ -61,24 +61,24 @@ export default {
       }
       callback();
     },
-    async editModel(){
-        this.model.config.options = this.formData;
-        let response = await saveModel(this.model);
-        if(response.success){
-            this.$message('保存配置成功');
-        }else{
-            this.$message('保存配置失败');
-        }
+    async editModel() {
+      this.model.config.options = this.formData;
+      let response = await saveModel(this.model);
+      if (response.success) {
+        this.$message("保存配置成功");
+      } else {
+        this.$message("保存配置失败");
+      }
     },
-    async deleteModel(){
-      let param = {id:this.model.id};
+    async deleteModel() {
+      let param = { id: this.model.id };
       let response = await deleteModelByid(param);
-        if(response.success){
-            this.$emit('deleteModel',this.model.id);
-            this.$message('删除配置成功');
-        }else{
-            this.$message('删除配置失败');
-        }
+      if (response.success) {
+        this.$emit("deleteModel", this.model.id);
+        this.$message("删除配置成功");
+      } else {
+        this.$message("删除配置失败");
+      }
     },
     initRule() {
       var checkInteger = (rule, value, callback, source, options) => {
@@ -88,26 +88,26 @@ export default {
         }
         callback();
       };
-    //   for (let option of this.config) {
-    //     if (option.valueType == "INTEGER") {
-    //       this.rules[option.key] = [
-    //         {validator: checkInteger, trigger: "blur" }
-    //       ];
-    //     }
-    //     if (option.valueType == "DOUBLE") {
-    //       this.rules[option.key] = [
-    //         { required: true, validator: this.checkDouble, trigger: "blur" }
-    //       ];
-    //     }
-    //   }
+      //   for (let option of this.config) {
+      //     if (option.valueType == "INTEGER") {
+      //       this.rules[option.key] = [
+      //         {validator: checkInteger, trigger: "blur" }
+      //       ];
+      //     }
+      //     if (option.valueType == "DOUBLE") {
+      //       this.rules[option.key] = [
+      //         { required: true, validator: this.checkDouble, trigger: "blur" }
+      //       ];
+      //     }
+      //   }
     }
   },
   components: {
     AlgorithmOption: AlgorithmOption
   },
   created() {
-        this.initRule();
-        this.formData = this.model.config.options;
+    this.initRule();
+    this.formData = this.model.config.options;
   }
 };
 </script>

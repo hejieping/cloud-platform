@@ -1,7 +1,5 @@
 package com.cpf.knowledgebase.manager;
 
-import com.cpf.constants.ErrorDesc;
-import com.cpf.exception.BusinessException;
 import com.cpf.knowledgebase.dao.PO.RulePO;
 import com.cpf.knowledgebase.dao.RuleDAO;
 import com.cpf.service.CallbackResult;
@@ -22,14 +20,12 @@ public class RuleManager extends ServiceTemplate {
     @Autowired
     private RuleDAO ruleDAO;
     private static Logger logger = LoggerFactory.getLogger(RuleManager.class);
-    public CallbackResult<RulePO> addRule(RulePO rulePO){
-        Object result = execute(logger, "all", new ServiceExecuteTemplate() {
+    public CallbackResult<RulePO> save(RulePO rulePO){
+        Object result = execute(logger, "save", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
-                if(rulePO.getId() != null){
-                    if(ruleDAO.getById(rulePO.getId()) != null){
-                        throw new BusinessException(new ErrorDesc("RULE_AREADY_EXIT","规则已经存在，无法新增"));
-                    }
+                if(rulePO == null){
+                    return CallbackResult.failure();
                 }
                 return CallbackResult.success();
             }
@@ -53,5 +49,22 @@ public class RuleManager extends ServiceTemplate {
             }
         });
         return (CallbackResult<List<RulePO>>)result;
+    }
+    public CallbackResult<Object> delete(Long id){
+        Object result = execute(logger, "delete", new ServiceExecuteTemplate() {
+            @Override
+            public CallbackResult<Object> checkParams() {
+                if(id == null){
+                    return CallbackResult.failure();
+                }
+                return CallbackResult.success();
+            }
+            @Override
+            public CallbackResult<Object> executeAction() {
+                ruleDAO.deleteById(id);
+                return CallbackResult.success();
+            }
+        });
+        return (CallbackResult<Object>)result;
     }
 }

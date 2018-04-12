@@ -25,9 +25,9 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import  AlgorithmEdit from '@/components/algorithmComp/AlgorithmEdit.vue'
-import AlgorithmAddDialog from '@/components/algorithmComp/AlgorithmAddDialog.vue'
-import {getAllModel} from "@/api/getData";
+import AlgorithmEdit from "@/components/algorithmComp/AlgorithmEdit.vue";
+import AlgorithmAddDialog from "@/components/algorithmComp/AlgorithmAddDialog.vue";
+import { getAllModel } from "@/api/getData";
 export default {
   name: "AlgorithmConfig",
   data() {
@@ -37,36 +37,35 @@ export default {
       }
     };
   },
-  methods:{
-    calTitle(name,weight){
-      return name+ "   权重：" + weight;
+  methods: {
+    calTitle(name, weight) {
+      return name + "   权重：" + weight;
     },
-    openDialog(){
-          this.$store.commit('openAlgAddDialog')
-        },
-    addModel(model){
+    openDialog() {
+      this.$store.commit("openAlgAddDialog");
+    },
+    addModel(model) {
       this.aggreModel.models.push(model);
     },
-    deleteModel(id){
+    deleteModel(id) {
       let models = this.aggreModel.models;
-      models.splice(models.findIndex(model => model.id == id), 1)
+      models.splice(models.findIndex(model => model.id == id), 1);
     },
-    async initModels(){
+    async initModels() {
       const response = await getAllModel();
-      if(response.success){
+      if (response.success) {
         this.aggreModel.models = response.result;
-      }else{
-        this.$message('获取模型失败');
+      } else {
+        this.$message("获取模型失败");
       }
-      
     }
   },
-  components:{
-    'AlgorithmEdit':AlgorithmEdit,
-    'AlgorithmAddDialog':AlgorithmAddDialog
+  components: {
+    AlgorithmEdit: AlgorithmEdit,
+    AlgorithmAddDialog: AlgorithmAddDialog
   },
-  created(){
-    this.initModels()
+  created() {
+    this.initModels();
   }
 };
 </script>

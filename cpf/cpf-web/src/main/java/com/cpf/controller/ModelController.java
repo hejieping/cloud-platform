@@ -24,23 +24,9 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/config")
-public class ConfigController {
-    @Autowired
-    private RuleManager ruleManager;
+public class ModelController {
     @Autowired
     private ModelManager modelManager;
-
-    /**
-     * 添加实时监控规则
-     * @param rulePO
-     * @return
-     */
-    @RequestMapping(value = "/addRule", method = RequestMethod.POST)
-    ResponseEntity<Object> addRule(@RequestBody RulePO rulePO){
-        rulePO.setModifyTime(rulePO.getCreateTime());
-        return new ResponseEntity<Object>(ruleManager.addRule(rulePO),HttpStatus.OK);
-    }
-
     /**
      * 获取模型的类型
      * @return
@@ -74,7 +60,7 @@ public class ConfigController {
     }
 
     /**
-     * 保存model
+     * 保存模型
      * @param modelDO
      * @return
      */
@@ -83,6 +69,12 @@ public class ConfigController {
         CallbackResult<ModelDO> result = modelManager.modifyModel(modelDO);
         return new ResponseEntity<Object>(result,HttpStatus.OK);
     }
+
+    /**
+     * 删除指定模型
+     * @param id 模型id
+     * @return
+     */
     @RequestMapping(value = "/deleteModel",method = RequestMethod.GET)
     ResponseEntity<Object> model(Long id){
         CallbackResult<Object> result = modelManager.delete(id);

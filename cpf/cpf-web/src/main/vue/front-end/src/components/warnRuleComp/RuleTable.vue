@@ -1,10 +1,10 @@
  <template>
  <div>
-   <RuleAddDialog :ruleInfo="ruleInfo"></RuleAddDialog>
+   <RuleAddDialog :data="ruleDialogData" @saveRule="saveRule"></RuleAddDialog>
    <el-row type="flex">
      <el-button-group >
   <el-button type="primary" icon="el-icon-plus" @click="openDialog">新增</el-button>
-   <el-button type="primary" icon="el-icon-minus">批量删除</el-button>
+   <!-- <el-button type="primary" icon="el-icon-minus">批量删除</el-button> -->
 </el-button-group>
    </el-row>
    <el-row>
@@ -18,29 +18,36 @@
     </el-table-column>
       <el-table-column
         align='left'
-        prop="date"
-        label="日期"
+        prop="id"
+        label="ID"
         width="150">
       </el-table-column>
       <el-table-column
       align='left'
         prop="name"
-        label="姓名"
+        label="名称"
         width="120">
       </el-table-column>
       <el-table-column
       align='left'
-        prop="address"
-        label="地址"
+        prop="cpuMax"
+        label="最大CPU率"
+         width="300">
+      </el-table-column>
+      <el-table-column
+      align='left'
+        prop="modifyTime"
+        label="修改日期"
          width="300">
       </el-table-column>
           <el-table-column
       label="操作"
       align='left'
+      fixed="right"
       >
       <template slot-scope="scope">
         <el-button type="text" size="small" @click="editCol(scope.row)">编辑</el-button>
-        <el-button type="text" size="small">删除</el-button>
+        <el-button type="text" size="small" @click="deleteRule(scope.row)">删除</el-button>
       </template>
     </el-table-column>
     </el-table>
@@ -48,50 +55,63 @@
  </div>
 </template>
 <script>
-import { mapState } from 'vuex'
-import RuleAddDialog from '@/components/warnRuleComp/RuleAddDialog.vue'
+import { mapState } from "vuex";
+import RuleAddDialog from "@/components/warnRuleComp/RuleAddDialog.vue";
+import { modifyRule, getAllRule,deleteRuleByid } from "@/api/getData";
+import copy from "@/utils/copy"
 export default {
   name: "RuleTable",
   data() {
     return {
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄"
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄"
-        }
-      ],
-      ruleInfo:{}
+      tableData: [],
+      ruleDialogData: {
+        title: "",
+        data: {}
+      }
     };
   },
-  methods:{
-        openDialog(){
-          this.ruleInfo = {name:"",region:""};
-          this.$store.commit('openRuleAddDialog')
-        },
-        editCol(row){
-          console.log(JSON.stringify(row));
-          this.ruleInfo = {name:row.name,region:"shanghai"};
-          this.$store.commit('openRuleAddDialog')
-        }
+  methods: {
+    openDialog() {
+      this.ruleDialogData.title = "新增监控规则";
+      this.ruleDialogData.data = {};
+      this.$store.commit("openRuleAddDialog");
     },
-  components:{
-    'RuleAddDialog':RuleAddDialog
+    editCol(row) {
+      this.ruleDialogData.title = "修改监控规则";
+      this.ruleDialogData.data = copy(row);
+      this.$store.commit("openRuleAddDialog");
+    },
+    saveRule(target) {
+      let index = this.tableData.findIndex(rule => rule.id == target.id);
+      if (index != -1) {
+         this.tableData[index] = target;
+      }else{
+        this.tableData.push(target);
+      }
+    },
+    async deleteRule(row){
+      let params = {id : row.id};
+      const response = await deleteRuleByid(params);
+      if (response.success) {
+        this.tableData.splice(this.tableData.findIndex(rule => rule.id == row.id), 1);
+      } else {
+        this.$message("删除监控规则失败");
+      }
+    },
+    async initTableData() {
+      const response = await getAllRule();
+      if (response.success) {
+        this.tableData = response.result;
+      } else {
+        this.$message("获取监控规则失败");
+      }
+    }
+  },
+  components: {
+    RuleAddDialog: RuleAddDialog
+  },
+  created(){
+    this.initTableData();
   }
 };
 </script>
