@@ -10,10 +10,7 @@ import com.cpf.utils.ModelFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -75,8 +72,8 @@ public class ModelController {
      * @param id 模型id
      * @return
      */
-    @RequestMapping(value = "/deleteModel",method = RequestMethod.GET)
-    ResponseEntity<Object> model(Long id){
+    @RequestMapping(value = "/model",method = RequestMethod.DELETE)
+    ResponseEntity<Object> model(@RequestParam Long id){
         CallbackResult<Object> result = modelManager.delete(id);
         return new ResponseEntity<Object>(result,HttpStatus.OK);
     }

@@ -16,7 +16,7 @@
    </el-row>
     <el-row >
       <el-collapse >
-        <el-collapse-item v-for="model in aggreModel.models" :key="model.name" :title="calTitle(model.name,model.weight)" >
+        <el-collapse-item v-for="model in aggreModel.models" :key="model.id" :title="calTitle(model.name,model.weight)" >
           <AlgorithmEdit :model="model"  @deleteModel="deleteModel"></AlgorithmEdit>
         </el-collapse-item>
       </el-collapse>

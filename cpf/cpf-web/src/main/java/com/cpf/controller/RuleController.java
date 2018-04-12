@@ -2,14 +2,10 @@ package com.cpf.controller;
 
 import com.cpf.knowledgebase.dao.PO.RulePO;
 import com.cpf.knowledgebase.manager.RuleManager;
-import com.cpf.service.CallbackResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by jieping on 2018-04-11
@@ -43,17 +39,9 @@ public class RuleController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/deleteRule", method = RequestMethod.GET)
-    ResponseEntity<Object> deleteRule(Long id){
+    @RequestMapping(value = "/rule", method = RequestMethod.DELETE)
+    ResponseEntity<Object> deleteRule(@RequestParam Long id){
         return new ResponseEntity<Object>(ruleManager.delete(id),HttpStatus.OK);
     }
-    /**
-     * 删除指定监控规则
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/rule", method = RequestMethod.DELETE)
-    ResponseEntity<Object> delete(@RequestBody RulePO rulePO){
-        return new ResponseEntity<Object>(new CallbackResult<Object>(rulePO,true),HttpStatus.OK);
-    }
+
 }

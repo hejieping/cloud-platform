@@ -57,7 +57,7 @@
 <script>
 import { mapState } from "vuex";
 import RuleAddDialog from "@/components/warnRuleComp/RuleAddDialog.vue";
-import { modifyRule, getAllRule,deleteRuleByid } from "@/api/getData";
+import { modifyRule, getAllRule,deleteRuleByid} from "@/api/getData";
 import copy from "@/utils/copy"
 export default {
   name: "RuleTable",
