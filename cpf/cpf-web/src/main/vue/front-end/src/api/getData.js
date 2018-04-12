@@ -14,3 +14,8 @@ export const getModel = data => fetch('/config/model',data);
 export const deleteModelByid = data => fetch('/config/model',data,'DELETE');
 export const saveModel = data => fetch('/config/model',data,'POST');
 
+
+export const getAllAggreModel = () => fetch('/config/aggremodels');
+export const saveAggreModel = data =>  fetch('/config/aggremodel',data,'POST');
+export const deleteAggreModelByid = data => fetch('/config/aggremodel',data,'DELETE');
+

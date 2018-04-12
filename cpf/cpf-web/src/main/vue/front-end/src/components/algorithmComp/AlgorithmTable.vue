@@ -1,6 +1,6 @@
  <template>
  <div>
-   <RuleAddDialog :data="ruleDialogData" @saveRule="saveRule"></RuleAddDialog>
+   <AggreModelAddDialog :aggremodel="aggreModelDialogData.data" :title="aggreModelDialogData.title"  @saveAggreModel="saveAggreModel"></AggreModelAddDialog>
    <el-row type="flex">
      <el-button-group >
   <el-button type="primary" icon="el-icon-plus" @click="openDialog">新增</el-button>
@@ -11,11 +11,6 @@
             <el-table
       :data="tableData"
       style="width: 100%">
-          <el-table-column
-      type="selection"
-      align='left'
-      width="55">
-    </el-table-column>
       <el-table-column
         align='left'
         prop="id"
@@ -30,24 +25,19 @@
       </el-table-column>
       <el-table-column
       align='left'
-        prop="cpuMax"
-        label="最大CPU率"
+        prop="scene"
+        label="目标设备"
          width="300">
       </el-table-column>
       <el-table-column
-      align='left'
-        prop="modifyTime"
-        label="修改日期"
-         width="300">
-      </el-table-column>
-          <el-table-column
       label="操作"
       align='left'
       fixed="right"
       >
       <template slot-scope="scope">
+        <el-button type="text" size="small" >算法配置</el-button>
         <el-button type="text" size="small" @click="editCol(scope.row)">编辑</el-button>
-        <el-button type="text" size="small" @click="deleteRule(scope.row)">删除</el-button>
+        <el-button type="text" size="small" @click="deleteAggreModel(scope.row)">删除</el-button>
       </template>
     </el-table-column>
     </el-table>
@@ -56,15 +46,15 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import RuleAddDialog from "@/components/warnRuleComp/RuleAddDialog.vue";
-import { modifyRule, getAllRule,deleteRuleByid} from "@/api/getData";
+import AggreModelAddDialog from "@/components/algorithmComp/AggreModelAddDialog.vue";
+import { modifyRule, getAllAggreModel,deleteAggreModelByid} from "@/api/getData";
 import copy from "@/utils/copy"
 export default {
-  name: "RuleTable",
+  name: "AlgorithmTable",
   data() {
     return {
       tableData: [],
-      ruleDialogData: {
+      aggreModelDialogData: {
         title: "",
         data: {}
       }
@@ -72,44 +62,46 @@ export default {
   },
   methods: {
     openDialog() {
-      this.ruleDialogData.title = "新增监控规则";
-      this.ruleDialogData.data = {};
-      this.$store.commit("openRuleAddDialog");
+      console.log('sad');
+      this.aggreModelDialogData.title = "新增应用场景";
+      this.aggreModelDialogData.data = {};
+      this.$store.commit("openAMAddDialog");
     },
     editCol(row) {
-      this.ruleDialogData.title = "修改监控规则";
-      this.ruleDialogData.data = copy(row);
-      this.$store.commit("openRuleAddDialog");
+      this.aggreModelDialogData.title = "修改应用场景";
+      this.aggreModelDialogData.data = copy(row);
+      this.$store.commit("openAMAddDialog");
     },
-    saveRule(target) {
+    saveAggreModel(target) {
       let index = this.tableData.findIndex(rule => rule.id == target.id);
       if (index != -1) {
          this.tableData[index].name = target.name;
-         this.tableData[index].cpuMax = target.cpuMax;
+         this.tableData[index].scene = target.scene;
+
       }else{
         this.tableData.push(target);
       }
     },
-    async deleteRule(row){
+    async deleteAggreModel(row){
       let params = {id : row.id};
-      const response = await deleteRuleByid(params);
+      const response = await deleteAggreModelByid(params);
       if (response.success) {
         this.tableData.splice(this.tableData.findIndex(rule => rule.id == row.id), 1);
       } else {
-        this.$message("删除监控规则失败");
+        this.$message("删除应用场景失败");
       }
     },
     async initTableData() {
-      const response = await getAllRule();
+      const response = await getAllAggreModel();
       if (response.success) {
         this.tableData = response.result;
       } else {
-        this.$message("获取监控规则失败");
+        this.$message("获取应用场景失败");
       }
     }
   },
   components: {
-    RuleAddDialog: RuleAddDialog
+    'AggreModelAddDialog': AggreModelAddDialog
   },
   created(){
     this.initTableData();

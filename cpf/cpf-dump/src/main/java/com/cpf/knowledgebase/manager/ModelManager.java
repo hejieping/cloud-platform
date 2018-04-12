@@ -3,7 +3,6 @@ package com.cpf.knowledgebase.manager;
 import com.cpf.constants.CpfDumpConstants;
 import com.cpf.exception.BusinessException;
 import com.cpf.knowledgebase.dao.ModelDAO;
-import com.cpf.knowledgebase.dao.ModelOptionsDAO;
 import com.cpf.knowledgebase.dao.PO.ModelPO;
 import com.cpf.knowledgebase.manager.DO.ModelDO;
 import com.cpf.service.CallbackResult;
@@ -24,11 +23,9 @@ import java.util.List;
 public class ModelManager extends ServiceTemplate {
     @Autowired
     private ModelDAO modelDAO;
-    @Autowired
-    private ModelOptionsDAO modelD;
     private static Logger logger = LoggerFactory.getLogger(ModelManager.class);
     public CallbackResult<ModelDO> addModel(ModelDO modelDO){
-        Object  result = execute(logger, "modifyModel", new ServiceExecuteTemplate() {
+        Object  result = execute(logger, "addModel", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
                 if(modelDO==null){
@@ -45,7 +42,7 @@ public class ModelManager extends ServiceTemplate {
         return (CallbackResult<ModelDO>)result;
     }
     public CallbackResult<List<ModelDO>> all(){
-        Object  result = execute(logger, "modifyModel", new ServiceExecuteTemplate() {
+        Object  result = execute(logger, "all", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
                 return CallbackResult.success();
@@ -79,7 +76,7 @@ public class ModelManager extends ServiceTemplate {
         return (CallbackResult<ModelDO>)result;
     }
     public CallbackResult<Object> delete(Long id){
-        Object  result = execute(logger, "modifyModel", new ServiceExecuteTemplate() {
+        Object  result = execute(logger, "delete", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
                 if(id==null){
@@ -95,4 +92,5 @@ public class ModelManager extends ServiceTemplate {
         });
         return (CallbackResult<Object>)result;
     }
+
 }

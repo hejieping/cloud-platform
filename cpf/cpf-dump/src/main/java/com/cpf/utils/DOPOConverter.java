@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.cpf.constants.ModelTypeEnum;
 import com.cpf.constants.OptionTypeEnum;
+import com.cpf.knowledgebase.dao.PO.AggreModelPO;
 import com.cpf.knowledgebase.dao.PO.ModelOptionPO;
 import com.cpf.knowledgebase.dao.PO.ModelOptionsPO;
 import com.cpf.knowledgebase.dao.PO.ModelPO;
+import com.cpf.knowledgebase.manager.DO.AggreModelDO;
 import com.cpf.knowledgebase.manager.DO.ModelDO;
 import com.cpf.knowledgebase.manager.DO.ModelOptionDO;
 import com.cpf.knowledgebase.manager.DO.ModelOptionsDO;
@@ -44,6 +46,15 @@ public class DOPOConverter {
         }
         return list;
     }
+    public static List<ModelPO> modelDOs2POs(List<ModelDO> modelDOList){
+        List<ModelPO> list = Lists.newArrayList();
+        if(CollectionUtils.isNotEmpty(modelDOList)){
+            for(ModelDO modelDO : modelDOList){
+                list.add(modelDO2PO(modelDO));
+            }
+        }
+        return list;
+    }
     public static ModelOptionPO modelOptionDO2PO(ModelOptionDO modelOptionDO){
         ModelOptionPO modelOptionPO = new ModelOptionPO();
         modelOptionPO.setDesc(modelOptionDO.getDesc());
@@ -75,6 +86,31 @@ public class DOPOConverter {
         modelOptionsPO.setModelType(modelOptionsDO.getModelType().toString());
         modelOptionsPO.setOptions(JSON.toJSONString(modelOptionsDO.getOptions()));
         return modelOptionsPO;
+    }
+    public static AggreModelDO aggreModelPO2DO(AggreModelPO aggreModelPO){
+        AggreModelDO aggreModelDO = new AggreModelDO();
+        aggreModelDO.setId(aggreModelPO.getId());
+        aggreModelDO.setName(aggreModelPO.getName());
+        aggreModelDO.setScene(aggreModelPO.getScene());
+        aggreModelDO.setModels(modelPOs2DOs(aggreModelPO.getModels()));
+        return aggreModelDO;
+    }
+    public static AggreModelPO aggreModelDO2PO(AggreModelDO aggreModelDO){
+        AggreModelPO aggreModelPO = new AggreModelPO();
+        aggreModelPO.setId(aggreModelDO.getId());
+        aggreModelPO.setScene(aggreModelDO.getScene());
+        aggreModelPO.setName(aggreModelDO.getName());
+        aggreModelPO.setModels(modelDOs2POs(aggreModelDO.getModels()));
+        return aggreModelPO;
+    }
+    public static List<AggreModelDO> aggreModelPOS2DOS(List<AggreModelPO> aggreModelPOList){
+        List<AggreModelDO> list = Lists.newArrayList();
+        if(CollectionUtils.isNotEmpty(aggreModelPOList)){
+            for(AggreModelPO aggreModelPO : aggreModelPOList){
+                list.add(aggreModelPO2DO(aggreModelPO));
+            }
+        }
+        return list;
     }
     public static void main(String[] args){
         ModelOptionsDO modelOptionsDO = new ModelOptionsDO();

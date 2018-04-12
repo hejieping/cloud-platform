@@ -29,11 +29,6 @@ export default {
   data() {
     return {
       formLabelWidth: "120px",
-      dialogFormVisible: false,
-      ruleInfo:{
-        name:"",
-        cpuMax:0
-      }
     };
   },
   methods: {
@@ -66,7 +61,6 @@ export default {
     }
   },
   created(){
-    //this.ruleInfo.name = 
   }
 
 };

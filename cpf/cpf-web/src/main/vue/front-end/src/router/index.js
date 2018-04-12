@@ -7,6 +7,8 @@ import SmartWarn from '@/components/SmartWarn'
 import WarnRule from '@/components/WarnRule'
 import AlgorithmConfig from '@/components/AlgorithmConfig'
 import SolutionConfig from '@/components/SolutionConfig'
+import AlgorithmTable from '@/components/algorithmComp/AlgorithmTable'
+import AlgorithmDetail from '@/components/algorithmComp/AlgorithmDetail'
 
 Vue.use(Router)
 
@@ -31,6 +33,15 @@ export default new Router({
       },{
         path: '/AlgorithmConfig',
         component: AlgorithmConfig,
+        children: [
+          {
+            path: '',
+            component: AlgorithmTable
+          },
+          {
+            path: 'detail',
+            component: AlgorithmDetail
+          },]
       },{
         path: '/SolutionConfig',
         component: SolutionConfig,

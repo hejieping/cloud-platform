@@ -1,8 +1,12 @@
 package com.cpf.controller;
 
 import com.cpf.constants.ModelTypeEnum;
+import com.cpf.knowledgebase.dao.PO.ModelOptionPO;
 import com.cpf.knowledgebase.dao.PO.RulePO;
+import com.cpf.knowledgebase.manager.AggreModelManager;
+import com.cpf.knowledgebase.manager.DO.AggreModelDO;
 import com.cpf.knowledgebase.manager.DO.ModelDO;
+import com.cpf.knowledgebase.manager.DO.ModelOptionsDO;
 import com.cpf.knowledgebase.manager.ModelManager;
 import com.cpf.knowledgebase.manager.RuleManager;
 import com.cpf.service.CallbackResult;
@@ -24,6 +28,8 @@ import java.util.Map;
 public class ModelController {
     @Autowired
     private ModelManager modelManager;
+    @Autowired
+    private AggreModelManager aggreModelManager;
     /**
      * 获取模型的类型
      * @return
@@ -76,5 +82,35 @@ public class ModelController {
     ResponseEntity<Object> model(@RequestParam Long id){
         CallbackResult<Object> result = modelManager.delete(id);
         return new ResponseEntity<Object>(result,HttpStatus.OK);
+    }
+
+    /**
+     * 获取所有聚合模型
+     * @return
+     */
+    @RequestMapping(value = "/aggremodels",method = RequestMethod.GET)
+    ResponseEntity<Object> aggremodels(){
+        return new ResponseEntity<Object>(aggreModelManager.all(),HttpStatus.OK);
+    }
+
+    /**
+     * 新增和保存聚合模型
+     * @param aggreModelDO
+     * @return
+     */
+    @RequestMapping(value = "/aggremodel",method = RequestMethod.POST)
+    ResponseEntity<Object> aggremodel(@RequestBody AggreModelDO aggreModelDO){
+        CallbackResult<AggreModelDO> result = aggreModelManager.save(aggreModelDO);
+        return new ResponseEntity<Object>(result,HttpStatus.OK);
+    }
+
+    /**
+     * 删除指定模型
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/aggremodel",method = RequestMethod.DELETE)
+    ResponseEntity<Object> aggremodel(@RequestParam Long id){
+        return new ResponseEntity<Object>(aggreModelManager.delete(id),HttpStatus.OK);
     }
 }
