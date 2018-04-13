@@ -1,6 +1,6 @@
 <template>
   <div>
- <algorithm-add-dialog @addModel="addModel"></algorithm-add-dialog>
+ <algorithm-add-dialog @addModel="addModel" ></algorithm-add-dialog>
 
   <el-row type="flex">
       <el-button-group >
@@ -38,7 +38,7 @@ export default {
       this.$store.commit("openAlgAddDialog");
     },
     addModel(model) {
-      this.aggreModel.models.push(model);
+      this.initModels();
     },
     deleteModel(id) {
       let models = this.aggreModel.models;

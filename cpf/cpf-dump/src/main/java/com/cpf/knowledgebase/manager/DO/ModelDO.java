@@ -14,7 +14,7 @@ public class ModelDO {
     /**
      * 模型占决策的比重
      */
-    private Long weight;
+    private Long weight = 0L;
     /**
      * 模型参数配置
      */

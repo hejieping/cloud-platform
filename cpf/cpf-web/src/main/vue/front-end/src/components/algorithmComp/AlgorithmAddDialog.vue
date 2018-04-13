@@ -38,7 +38,8 @@ export default {
       formLabelWidth: "80px",
       form: {
         modelType: "",
-        name:""
+        name:"",
+        aggreModelId:0
       }
     };
   },
@@ -81,6 +82,7 @@ export default {
   },
   created() {
     this.initData();
+    this.form.aggreModelId = this.$route.params.id
   }
 };
 </script>

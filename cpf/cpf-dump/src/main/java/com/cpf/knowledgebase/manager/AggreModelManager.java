@@ -2,7 +2,9 @@ package com.cpf.knowledgebase.manager;
 
 import com.cpf.knowledgebase.dao.AggreModelDAO;
 import com.cpf.knowledgebase.dao.PO.AggreModelPO;
+import com.cpf.knowledgebase.dao.PO.ModelPO;
 import com.cpf.knowledgebase.manager.DO.AggreModelDO;
+import com.cpf.knowledgebase.manager.DO.ModelDO;
 import com.cpf.service.CallbackResult;
 import com.cpf.service.ServiceExecuteTemplate;
 import com.cpf.service.ServiceTemplate;
@@ -38,6 +40,26 @@ public class AggreModelManager extends ServiceTemplate {
             }
         });
         return (CallbackResult<AggreModelDO>)result;
+    }
+    public CallbackResult<ModelDO> addModel(AggreModelDO aggreModelDO,ModelDO modelDO){
+        Object  result = execute(logger, "addModel", new ServiceExecuteTemplate() {
+            @Override
+            public CallbackResult<Object> checkParams() {
+                if(aggreModelDO == null || modelDO == null || modelDO.getId() != null){
+                    return CallbackResult.failure();
+                }
+                return CallbackResult.success();
+            }
+            @Override
+            public CallbackResult<Object> executeAction() {
+                ModelPO modelPO = DOPOConverter.modelDO2PO(modelDO);
+                AggreModelPO aggreModelPO = DOPOConverter.aggreModelDO2PO(aggreModelDO);
+                aggreModelPO.getModels().add(modelPO);
+                aggreModelDAO.save(aggreModelPO);
+                return new CallbackResult<Object>(DOPOConverter.modelPO2DO(modelPO),true);
+            }
+        });
+        return (CallbackResult<ModelDO>)result;
     }
     public CallbackResult<List<AggreModelDO>> all(){
         Object  result = execute(logger, "all", new ServiceExecuteTemplate() {

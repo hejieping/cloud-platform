@@ -46,8 +46,13 @@ public class ModelController {
      * @return
      */
     @RequestMapping(value = "/model",method = RequestMethod.GET)
-    ResponseEntity<Object> model(String name, String modelType){
-        CallbackResult<ModelDO> result = modelManager.addModel(ModelFactory.getModel(name,modelType));
+    ResponseEntity<Object> model(String name, String modelType,Long aggreModelId){
+        CallbackResult<AggreModelDO> result = aggreModelManager.getById(aggreModelId);
+        if(result.getSuccess()){
+            ModelDO modelDO = ModelFactory.getModel(name,modelType);
+            return new ResponseEntity<Object>(aggreModelManager.addModel(result.getResult(),modelDO),HttpStatus.OK);
+
+        }
         return new ResponseEntity<Object>(result,HttpStatus.OK);
     }
 
@@ -105,7 +110,7 @@ public class ModelController {
         return new ResponseEntity<Object>(result,HttpStatus.OK);
     }
     @RequestMapping(value = "/aggremodel",method = RequestMethod.GET)
-    ResponseEntity<Object> getAggreModel(@RequestParam Long id){
+    ResponseEntity<Object> getAggreModel( Long id){
         return new ResponseEntity<Object>(aggreModelManager.getById(id),HttpStatus.OK);
     }
 
