@@ -70,4 +70,20 @@ public class AggreModelManager extends ServiceTemplate {
         });
         return (CallbackResult<Object>)result;
     }
+    public CallbackResult<AggreModelDO> getById(Long id){
+        Object  result = execute(logger, "getById", new ServiceExecuteTemplate() {
+            @Override
+            public CallbackResult<Object> checkParams() {
+                if(id == null){
+                    return CallbackResult.failure();
+                }
+                return CallbackResult.success();
+            }
+            @Override
+            public CallbackResult<Object> executeAction() {
+                return new CallbackResult<Object>(DOPOConverter.aggreModelPO2DO(aggreModelDAO.getById(id)),true);
+            }
+        });
+        return (CallbackResult<AggreModelDO>)result;
+    }
 }

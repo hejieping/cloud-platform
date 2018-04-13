@@ -7,7 +7,7 @@
     <el-breadcrumb-item>预警算法配置</el-breadcrumb-item>
     </el-breadcrumb>
     </el-row>
-    <router-view></router-view> 
+    <router-view @goDetail="goDetail"></router-view> 
   </div>
 </template>
 <script>
@@ -17,6 +17,11 @@ export default {
   data() {
     return {
     };
+  },
+  methods:{
+    goDetail(id){
+      this.$router.push('/AlgorithmConfig/'+id);
+    }
   }
 };
 </script>

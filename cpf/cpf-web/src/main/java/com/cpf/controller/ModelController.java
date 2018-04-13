@@ -58,10 +58,11 @@ public class ModelController {
      * @return
      */
     @RequestMapping(value = "/models",method = RequestMethod.GET)
-    ResponseEntity<Object> models(){
+    ResponseEntity<Object> models(
+
+    ){
         return new ResponseEntity<Object>(modelManager.all(),HttpStatus.OK);
     }
-
     /**
      * 保存模型
      * @param modelDO
@@ -103,6 +104,10 @@ public class ModelController {
         CallbackResult<AggreModelDO> result = aggreModelManager.save(aggreModelDO);
         return new ResponseEntity<Object>(result,HttpStatus.OK);
     }
+    @RequestMapping(value = "/aggremodel",method = RequestMethod.GET)
+    ResponseEntity<Object> getAggreModel(@RequestParam Long id){
+        return new ResponseEntity<Object>(aggreModelManager.getById(id),HttpStatus.OK);
+    }
 
     /**
      * 删除指定模型
@@ -110,7 +115,7 @@ public class ModelController {
      * @return
      */
     @RequestMapping(value = "/aggremodel",method = RequestMethod.DELETE)
-    ResponseEntity<Object> aggremodel(@RequestParam Long id){
+    ResponseEntity<Object> deleteAggreModel(@RequestParam Long id){
         return new ResponseEntity<Object>(aggreModelManager.delete(id),HttpStatus.OK);
     }
 }

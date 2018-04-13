@@ -35,7 +35,7 @@
       fixed="right"
       >
       <template slot-scope="scope">
-        <el-button type="text" size="small" >算法配置</el-button>
+        <el-button type="text" size="small" @click="detail(scope.row)">算法配置</el-button>
         <el-button type="text" size="small" @click="editCol(scope.row)">编辑</el-button>
         <el-button type="text" size="small" @click="deleteAggreModel(scope.row)">删除</el-button>
       </template>
@@ -98,7 +98,9 @@ export default {
       } else {
         this.$message("获取应用场景失败");
       }
-    }
+    },
+    detail(row){
+      this.$emit("goDetail",row.id)    }
   },
   components: {
     'AggreModelAddDialog': AggreModelAddDialog

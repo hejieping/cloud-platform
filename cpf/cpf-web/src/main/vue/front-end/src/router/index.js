@@ -37,11 +37,10 @@ export default new Router({
           {
             path: '',
             component: AlgorithmTable
-          },
-          {
-            path: 'detail',
+          }, {
+            path: ':id',
             component: AlgorithmDetail
-          },]
+          }]
       },{
         path: '/SolutionConfig',
         component: SolutionConfig,

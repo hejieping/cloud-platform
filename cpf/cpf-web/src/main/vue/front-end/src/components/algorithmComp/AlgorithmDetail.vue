@@ -20,7 +20,7 @@
 import { mapState } from "vuex";
 import AlgorithmEdit from "@/components/algorithmComp/AlgorithmEdit.vue";
 import AlgorithmAddDialog from "@/components/algorithmComp/AlgorithmAddDialog.vue";
-import { getAllModel } from "@/api/getData";
+import { getAggreModel } from "@/api/getData";
 export default {
   name: 'AlgotithmDetail',
   data () {
@@ -45,9 +45,10 @@ export default {
       models.splice(models.findIndex(model => model.id == id), 1);
     },
     async initModels() {
-      const response = await getAllModel();
+      let params = {id : this.$route.params.id};
+      const response = await getAggreModel(params);
       if (response.success) {
-        this.aggreModel.models = response.result;
+        this.aggreModel = response.result;
       } else {
         this.$message("获取模型失败");
       }

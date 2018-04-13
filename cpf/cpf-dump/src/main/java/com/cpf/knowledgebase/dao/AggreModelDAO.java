@@ -9,4 +9,5 @@ public interface AggreModelDAO extends CrudRepository<AggreModelPO, Long> {
     AggreModelPO save(AggreModelPO aggreModelPO);
     List<AggreModelPO> findAll();
     void deleteById(Long id);
+    AggreModelPO getById(Long id);
 }
