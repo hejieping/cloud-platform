@@ -56,7 +56,7 @@ export default {
   },
 
   props: {
-    data: [],
+    data: {},
 
     canvasId: ""
   },

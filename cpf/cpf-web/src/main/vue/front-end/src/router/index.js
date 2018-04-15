@@ -2,13 +2,15 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/components/Layout'
 import ProcessMonitor from '@/components/ProcessMonitor'
-import CpuMonitor from '@/components/CpuMonitor'
+import Monitor from '@/components/Monitor'
 import SmartWarn from '@/components/SmartWarn'
 import WarnRule from '@/components/WarnRule'
 import AlgorithmConfig from '@/components/AlgorithmConfig'
 import SolutionConfig from '@/components/SolutionConfig'
 import AlgorithmTable from '@/components/algorithmComp/AlgorithmTable'
 import AlgorithmDetail from '@/components/algorithmComp/AlgorithmDetail'
+import monitorChart from '@/components/monitorComp/monitorChart'
+import monitorTable from '@/components/monitorComp/monitorTable'
 
 Vue.use(Router)
 
@@ -22,8 +24,15 @@ export default new Router({
         path: '/ProcessMonitor',
         component: ProcessMonitor,
       },{
-        path: '/CpuMonitor',
-        component: CpuMonitor,
+        path: '/Monitor',
+        component: Monitor,
+        children:[{
+          path: '',
+          component: monitorTable,
+        },{
+          path: ':id',
+          component: monitorChart,
+        }]
       },{
         path: '/SmartWarn',
         component: SmartWarn,

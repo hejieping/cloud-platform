@@ -100,7 +100,8 @@ export default {
       }
     },
     detail(row){
-      this.$emit("goDetail",row.id)    }
+      this.$router.push('/AlgorithmConfig/'+row.id);
+      }
   },
   components: {
     'AggreModelAddDialog': AggreModelAddDialog

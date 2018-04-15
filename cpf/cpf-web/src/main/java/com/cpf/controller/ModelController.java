@@ -63,9 +63,7 @@ public class ModelController {
      * @return
      */
     @RequestMapping(value = "/models",method = RequestMethod.GET)
-    ResponseEntity<Object> models(
-
-    ){
+    ResponseEntity<Object> models(){
         return new ResponseEntity<Object>(modelManager.all(),HttpStatus.OK);
     }
     /**

@@ -68,7 +68,6 @@ export default {
           }
           });
       console.log(result);
-
       const  response = await saveAggreModel(form);
       if(response.success){
         this.$emit('saveAggreModel',response.result);

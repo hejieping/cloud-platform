@@ -12,20 +12,20 @@
       <el-aside width="200px"> 
        <el-row > 
         <el-col> 
-         <el-menu default-active="2" class="el-menu-vertical" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" router> 
+         <el-menu default-active="2" class="el-menu-vertical" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" > 
           <el-submenu index='1'> 
            <template slot="title"> 
             <i class="el-icon-location"></i> 
             <span>监控</span> 
            </template> 
            <el-menu-item-group> 
-            <el-menu-item index="SmartWarn">
+            <el-menu-item index="SmartWarn" @click="$router.push('/SmartWarn')">
              智能预警
             </el-menu-item> 
-            <el-menu-item index="CpuMonitor">
+            <el-menu-item index="Monitor" @click="$router.push('/Monitor')">
              CPU
             </el-menu-item> 
-            <el-menu-item index="ProcessMonitor">
+            <el-menu-item  index="ProcessMonitor" @click="$router.push('/ProcessMonitor')">
              进程
             </el-menu-item> 
            </el-menu-item-group> 
@@ -36,13 +36,13 @@
             <span>配置</span> 
            </template> 
             <el-menu-item-group> 
-            <el-menu-item index="WarnRule">
+            <el-menu-item index="WarnRule" @click="$router.push('/WarnRule')">
              报警规则
             </el-menu-item>
-            <el-menu-item index="AlgorithmConfig">
+            <el-menu-item index="AlgorithmConfig" @click="$router.push('/AlgorithmConfig')">
              预警算法
             </el-menu-item>
-            <el-menu-item index="SolutionConfig">
+            <el-menu-item index="SolutionConfig" @click="$router.push('/SolutionConfig')">
              解决方案
             </el-menu-item>
            </el-menu-item-group>  

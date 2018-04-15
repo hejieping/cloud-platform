@@ -17,11 +17,6 @@ export default {
   data() {
     return {
     };
-  },
-  methods:{
-    goDetail(id){
-      this.$router.push('/AlgorithmConfig/'+id);
-    }
   }
 };
 </script>

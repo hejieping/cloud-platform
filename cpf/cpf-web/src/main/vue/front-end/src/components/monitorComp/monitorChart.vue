@@ -1,5 +1,5 @@
 <template> 
-   <div id="CpuMonitor"> 
+   <div > 
     <div> 
      <el-row> 
       <el-breadcrumb separator="/"> 
@@ -13,9 +13,6 @@
         cpu监控
        </el-breadcrumb-item> 
       </el-breadcrumb> 
-     </el-row>
-     <el-row type="flex">
-       <search></search>
      </el-row>
      <el-row :gutter="20"> 
       <el-col :span="12" > 
@@ -32,9 +29,8 @@
   </template> 
 <<script>
 import ChartCard from '@/components/monitorComp/ChartCard.vue'
-import  search from '@/components/monitorComp/search.vue'
   export default {
-  name: 'CpuMonitor',
+  name: 'monitorChart',
   data () {
     return {
             chartData: [
@@ -48,8 +44,7 @@ import  search from '@/components/monitorComp/search.vue'
     }
   },
   components: {
-    'ChartCard': ChartCard,
-    'search':search
+    'ChartCard': ChartCard
   }
 }
 </script>
