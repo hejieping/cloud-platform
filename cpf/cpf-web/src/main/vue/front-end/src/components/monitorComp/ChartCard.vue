@@ -1,6 +1,7 @@
 <template>
   <div>
-  
+      
+
     <el-card class="box-card" :body-style="{ padding: '0px'}">
   
       <schart :canvasId="canvasId" :type="type" :data="data" :options="options"></schart>
