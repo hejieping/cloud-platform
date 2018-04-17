@@ -46,6 +46,10 @@
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.miwurster</groupId>
+            <artifactId>spring-data-influxdb</artifactId>
+        </dependency>
     </dependencies>
 
 

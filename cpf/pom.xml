@@ -114,6 +114,11 @@
                 <version>1.2.0.Final</version>
                 <scope>provided</scope>
             </dependency>
+            <dependency>
+                <groupId>com.github.miwurster</groupId>
+                <artifactId>spring-data-influxdb</artifactId>
+                <version>1.7</version>
+            </dependency>
             <!-- https://mvnrepository.com/artifact/commons-collections/commons-collections -->
             <dependency>
                 <groupId>commons-collections</groupId>
