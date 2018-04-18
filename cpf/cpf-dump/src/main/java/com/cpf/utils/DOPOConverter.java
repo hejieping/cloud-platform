@@ -4,18 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.cpf.constants.ModelTypeEnum;
 import com.cpf.constants.OptionTypeEnum;
-import com.cpf.knowledgebase.dao.PO.AggreModelPO;
-import com.cpf.knowledgebase.dao.PO.ModelOptionPO;
-import com.cpf.knowledgebase.dao.PO.ModelOptionsPO;
-import com.cpf.knowledgebase.dao.PO.ModelPO;
-import com.cpf.knowledgebase.manager.DO.AggreModelDO;
-import com.cpf.knowledgebase.manager.DO.ModelDO;
-import com.cpf.knowledgebase.manager.DO.ModelOptionDO;
-import com.cpf.knowledgebase.manager.DO.ModelOptionsDO;
+import com.cpf.knowledgebase.dao.PO.*;
+import com.cpf.knowledgebase.manager.DO.*;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**DO PO 转换工具
  * Created by jieping on 2018-04-09
@@ -108,6 +103,35 @@ public class DOPOConverter {
         if(CollectionUtils.isNotEmpty(aggreModelPOList)){
             for(AggreModelPO aggreModelPO : aggreModelPOList){
                 list.add(aggreModelPO2DO(aggreModelPO));
+            }
+        }
+        return list;
+    }
+    public static RuleDO rulePO2DO(RulePO rulePO){
+        RuleDO ruleDO = new RuleDO();
+        ruleDO.setId(rulePO.getId());
+        ruleDO.setName(rulePO.getName());
+        ruleDO.setType(rulePO.getType());
+        ruleDO.setCreateTime(rulePO.getCreateTime());
+        ruleDO.setModifyTime(rulePO.getModifyTime());
+        ruleDO.setConfig(JSON.parseObject(rulePO.getConfig(),new TypeReference<Map<String,Object>>(){}));
+        return ruleDO;
+    }
+    public static RulePO ruleDO2PO(RuleDO ruleDO){
+        RulePO rulePO = new RulePO();
+        rulePO.setId(ruleDO.getId());
+        rulePO.setName(ruleDO.getName());
+        rulePO.setType(ruleDO.getType());
+        rulePO.setCreateTime(ruleDO.getCreateTime());
+        rulePO.setModifyTime(ruleDO.getModifyTime());
+        rulePO.setConfig(JSON.toJSONString(ruleDO.getConfig()));
+        return rulePO;
+    }
+    public static List<RuleDO> rulePOS2DOS(List<RulePO> rulePOList){
+        List<RuleDO> list = Lists.newArrayList();
+        if(CollectionUtils.isNotEmpty(rulePOList)){
+            for(RulePO rulePO : rulePOList){
+                list.add(rulePO2DO(rulePO));
             }
         }
         return list;

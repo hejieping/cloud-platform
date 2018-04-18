@@ -1,6 +1,6 @@
 package com.cpf.controller;
 
-import com.cpf.knowledgebase.dao.PO.RulePO;
+import com.cpf.knowledgebase.manager.DO.RuleDO;
 import com.cpf.knowledgebase.manager.RuleManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,9 +21,9 @@ public class RuleController {
      * @return
      */
     @RequestMapping(value = "/rule", method = RequestMethod.POST)
-    ResponseEntity<Object> rule(@RequestBody RulePO rulePO){
-        rulePO.setModifyTime(rulePO.getCreateTime());
-        return new ResponseEntity<Object>(ruleManager.save(rulePO),HttpStatus.OK);
+    ResponseEntity<Object> rule(@RequestBody RuleDO ruleDO){
+        ruleDO.setModifyTime(ruleDO.getCreateTime());
+        return new ResponseEntity<Object>(ruleManager.save(ruleDO),HttpStatus.OK);
     }
     /**
      * 获取所有监控规则

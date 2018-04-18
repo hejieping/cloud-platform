@@ -2,9 +2,11 @@ package com.cpf.knowledgebase.manager;
 
 import com.cpf.knowledgebase.dao.PO.RulePO;
 import com.cpf.knowledgebase.dao.RuleDAO;
+import com.cpf.knowledgebase.manager.DO.RuleDO;
 import com.cpf.service.CallbackResult;
 import com.cpf.service.ServiceExecuteTemplate;
 import com.cpf.service.ServiceTemplate;
+import com.cpf.utils.DOPOConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,23 +22,24 @@ public class RuleManager extends ServiceTemplate {
     @Autowired
     private RuleDAO ruleDAO;
     private static Logger logger = LoggerFactory.getLogger(RuleManager.class);
-    public CallbackResult<RulePO> save(RulePO rulePO){
+    public CallbackResult<RuleDO> save(RuleDO ruleDO){
         Object result = execute(logger, "save", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
-                if(rulePO == null){
+                if(ruleDO == null){
                     return CallbackResult.failure();
                 }
                 return CallbackResult.success();
             }
             @Override
             public CallbackResult<Object> executeAction() {
-                return new CallbackResult<>(ruleDAO.save(rulePO),true);
+                RulePO rulePO = ruleDAO.save(DOPOConverter.ruleDO2PO(ruleDO));
+                return new CallbackResult<>(DOPOConverter.rulePO2DO(rulePO),true);
             }
         });
-        return (CallbackResult<RulePO>)result;
+        return (CallbackResult<RuleDO>)result;
     }
-    public CallbackResult<List<RulePO>> all(){
+    public CallbackResult<List<RuleDO>> all(){
         Object result = execute(logger, "all", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
@@ -45,10 +48,10 @@ public class RuleManager extends ServiceTemplate {
 
             @Override
             public CallbackResult<Object> executeAction() {
-                return new CallbackResult<>(ruleDAO.findAll(),true);
+                return new CallbackResult<>(DOPOConverter.rulePOS2DOS(ruleDAO.findAll()),true);
             }
         });
-        return (CallbackResult<List<RulePO>>)result;
+        return (CallbackResult<List<RuleDO>>)result;
     }
     public CallbackResult<Object> delete(Long id){
         Object result = execute(logger, "delete", new ServiceExecuteTemplate() {

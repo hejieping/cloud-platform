@@ -1,18 +1,15 @@
-package com.cpf.knowledgebase.dao.PO;
+package com.cpf.knowledgebase.manager.DO;
 
 import lombok.Data;
 
-import javax.persistence.*;
 import java.util.Date;
+import java.util.Map;
 
 /**
- * Created by jieping on 2018-04-05
+ * Created by jieping on 2018-04-18
  */
 @Data
-@Entity(name = "rule")
-public class RulePO {
-    @Id
-    @GeneratedValue
+public class RuleDO {
     private Long id;
     /**
      * 监控规则名称
@@ -25,16 +22,13 @@ public class RulePO {
     /**
      * 规则配置
      */
-    @Lob
-    private String config;
+    private Map<String,Object> config;
     /**
      * 规则创建时间
      */
-    @Column(name = "create_time")
     private Date createTime = new Date();
     /**
      * 规则修改时间
      */
-    @Column(name = "modify_time")
     private Date modifyTime;
 }

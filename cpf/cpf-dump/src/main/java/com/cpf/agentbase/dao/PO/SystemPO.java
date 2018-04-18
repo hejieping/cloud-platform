@@ -4,6 +4,8 @@ import lombok.Data;
 import org.influxdb.annotation.Column;
 import org.influxdb.annotation.Measurement;
 
+import java.util.Date;
+
 /**
  * Created by jieping on 2018-04-16
  */
@@ -24,4 +26,8 @@ public class SystemPO {
     private Double systemCallsPersec;
     @Column(name = "System_Up_Time")
     private Double systemUpTime;
+    public static void main(String[] args){
+        Date date = new Date();
+        System.out.println(date.toInstant());
+    }
 }

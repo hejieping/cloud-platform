@@ -30,8 +30,8 @@
       </el-table-column>
       <el-table-column
       align='left'
-        prop="cpuMax"
-        label="最大CPU率"
+        prop="type"
+        label="类型"
          width="300">
       </el-table-column>
       <el-table-column
@@ -66,7 +66,9 @@ export default {
       tableData: [],
       ruleDialogData: {
         title: "",
-        data: {}
+        data: {
+          config:{}
+        }
       }
     };
   },
@@ -82,10 +84,12 @@ export default {
       this.$store.commit("openRuleAddDialog");
     },
     saveRule(target) {
+      console.log(target);
       let index = this.tableData.findIndex(rule => rule.id == target.id);
       if (index != -1) {
          this.tableData[index].name = target.name;
-         this.tableData[index].cpuMax = target.cpuMax;
+         this.tableData[index].type = target.type;
+         this.tableData[index].config = target.config;
       }else{
         this.tableData.push(target);
       }
