@@ -1,6 +1,4 @@
-package constants;
-
-import com.cpf.constants.ErrorDesc;
+package com.cpf.constants;
 
 /**
  * Created by jieping on 2018-04-07

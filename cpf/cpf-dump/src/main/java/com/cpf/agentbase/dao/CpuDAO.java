@@ -26,4 +26,15 @@ public class CpuDAO {
         List<CpuPO> influxDataList = mapper.toPOJO(result, CpuPO.class);
         return influxDataList;
     }
+
+    /**
+     * 查询指定时间内的平均值
+     * @param cpuPO
+     * @param minutes
+     * @return
+     */
+    public CpuPO queryAVGByTime(CpuPO cpuPO,Long minutes){
+        //TODO 需要去除mock接口
+        return cpuPO;
+    }
 }

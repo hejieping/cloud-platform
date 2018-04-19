@@ -13,21 +13,21 @@ public class CpuPO {
     @Column(name = "time")
     private Long time;
     @Column(name = "Percent_DPC_Time")
-    private Double percentDPCTime;
+    private Double Percent_DPC_Time;
     @Column(name = "Percent_Idle_Time")
-    private Double percentIdleTime;
+    private Double Percent_Idle_Time;
     @Column(name = "Percent_Interrupt_Time")
-    private Double percentInterruptTime;
+    private Double Percent_Interrupt_Time;
     @Column(name = "Percent_Privileged_Time")
-    private Double percentPrivilegedTime;
+    private Double Percent_Privileged_Time;
     @Column(name = "Percent_Processor_Time")
-    private Double percentProcessorTime;
+    private Double Percent_Processor_Time;
     @Column(name = "Percent_User_Time")
-    private Double percentUserTime;
+    private Double Percent_User_Time;
     @Column(name = "host",tag = true)
     private String host;
     @Column(name = "instance",tag = true)
     private String instance;
     @Column(name = "objectname",tag = true)
-    private String objectName;
+    private String objectname;
 }

@@ -2,6 +2,8 @@ package com.cpf.controller;
 
 import com.cpf.knowledgebase.manager.DO.RuleDO;
 import com.cpf.knowledgebase.manager.RuleManager;
+import com.cpf.monitor.RuleHolder;
+import com.cpf.service.CallbackResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,8 @@ import java.util.Date;
 public class RuleController {
     @Autowired
     private RuleManager ruleManager;
+    @Autowired
+    private RuleHolder ruleHolder;
     /**
      * 添加或者修改实时监控规则
      * @param rulePO
@@ -25,7 +29,12 @@ public class RuleController {
     @RequestMapping(value = "/rule", method = RequestMethod.POST)
     ResponseEntity<Object> rule(@RequestBody RuleDO ruleDO){
         ruleDO.setModifyTime(new Date());
-        return new ResponseEntity<Object>(ruleManager.save(ruleDO),HttpStatus.OK);
+        CallbackResult<RuleDO>  result = ruleManager.save(ruleDO);
+        if(result.getSuccess()){
+            //更新内存中的监控规则
+            ruleHolder.refresh();
+        }
+        return new ResponseEntity<Object>(result,HttpStatus.OK);
     }
     /**
      * 获取所有监控规则

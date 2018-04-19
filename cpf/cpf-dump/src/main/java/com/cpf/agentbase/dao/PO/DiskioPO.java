@@ -17,21 +17,21 @@ public class DiskioPO {
     @Column(name = "instance")
     private String instance;
     @Column(name = "objectname")
-    private String objectName;
+    private String objectname;
     @Column(name = "Current_Disk_Queue_Length")
-    private Double currentDiskQueueLength;
+    private Double Current_Disk_Queue_Length;
     @Column(name = "Disk_Read_Bytes_persec")
-    private Double diskReadBytesPersec;
+    private Double Disk_Read_Bytes_persec;
     @Column(name = "Disk_Reads_persec")
-    private Double diskReadsPersec;
+    private Double Disk_Reads_persec;
     @Column(name = "Disk_Write_Bytes_persec")
-    private Double diskWriteBytesPersec;
+    private Double Disk_Write_Bytes_persec;
     @Column(name = "Disk_Writes_persec")
-    private Double diskWritesPersec;
+    private Double Disk_Writes_persec;
     @Column(name = "Percent_Disk_Read_Time")
-    private Double percentDiskReadTime;
+    private Double Percent_Disk_Read_Time;
     @Column(name = "Percent_Disk_Time")
-    private Double percentDiskTime;
+    private Double Percent_Disk_Time;
     @Column(name = "Percent_Disk_Write_Time")
-    private Double percentDiskWriteTime;
+    private Double Percent_Disk_Write_Time;
 }

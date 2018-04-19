@@ -17,7 +17,7 @@ public class SwapPO {
     @Column(name = "instance")
     private String instance;
     @Column(name = "objectname")
-    private String objectName;
+    private String objectname;
     @Column(name = "Percent_Usage")
-    private Double percentUsage;
+    private Double Percent_Usage;
 }

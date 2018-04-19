@@ -19,13 +19,13 @@ public class SystemPO {
     @Column(name = "objectname")
     private String objectName;
     @Column(name = "Context_Switches_persec")
-    private Double contextSwitchesPersec;
+    private Double Context_Switches_persec;
     @Column(name = "Processor_Queue_Length")
-    private Integer processorQueueLength;
+    private Integer Processor_Queue_Length;
     @Column(name = "System_Calls_persec")
-    private Double systemCallsPersec;
+    private Double System_Calls_persec;
     @Column(name = "System_Up_Time")
-    private Double systemUpTime;
+    private Double System_Up_Time;
     public static void main(String[] args){
         Date date = new Date();
         System.out.println(date.toInstant());

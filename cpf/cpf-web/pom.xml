@@ -42,7 +42,10 @@
 			<groupId>com.cpf</groupId>
 			<artifactId>cpf-dump</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>com.cpf</groupId>
+			<artifactId>cpf-core</artifactId>
+		</dependency>
 
 
 		<dependency>
