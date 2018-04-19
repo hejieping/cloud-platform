@@ -21,7 +21,25 @@
       </div>
       <div v-else-if="data.data.type == 'diskio'">
           <DiskIORule :data="data.data"  @saveRule="saveRule"></DiskIORule>
-      </div>      
+      </div>
+      <div v-else-if="data.data.type == 'mem'">
+          <MemRule :data="data.data"  @saveRule="saveRule"></MemRule>
+      </div>     
+      <div v-else-if="data.data.type == 'net'">
+          <NetRule :data="data.data"  @saveRule="saveRule"></NetRule>
+      </div>
+      <div v-else-if="data.data.type == 'perf_counters'">
+          <PerfRule :data="data.data"  @saveRule="saveRule"></PerfRule>
+      </div>    
+      <div v-else-if="data.data.type == 'swap'">
+          <SwapRule :data="data.data"  @saveRule="saveRule"></SwapRule>
+      </div> 
+      <div v-else-if="data.data.type == 'system'">
+          <SystemRule :data="data.data"  @saveRule="saveRule"></SystemRule>
+      </div> 
+      <div v-else-if="data.data.type == 'system_days'">
+          <SystemDaysRule :data="data.data"  @saveRule="saveRule"></SystemDaysRule>
+      </div>
       <div v-else></div>
 
 </el-dialog>
@@ -30,9 +48,16 @@
 <script>
 import { mapState } from "vuex";
 import copy from "@/utils/copy"
-import CpuRule from "@/components/warnRuleComp/CpuRule.vue";
-import DiskRule from "@/components/warnRuleComp/DiskRule.vue";
-import DiskIORule from "@/components/warnRuleComp/DiskIORule.vue";
+import CpuRule from "@/components/warnRuleComp/CpuRule";
+import DiskRule from "@/components/warnRuleComp/DiskRule";
+import DiskIORule from "@/components/warnRuleComp/DiskIORule";
+import MemRule from "@/components/warnRuleComp/MemRule";
+import NetRule from "@/components/warnRuleComp/NetRule";
+import PerfRule from "@/components/warnRuleComp/PerfRule";
+import SwapRule from "@/components/warnRuleComp/SwapRule";
+import SystemRule from "@/components/warnRuleComp/SystemRule";
+import SystemDaysRule from "@/components/warnRuleComp/SystemDaysRule";
+
 export default {
   name: "RuleAddDialog",
   data() {
@@ -54,7 +79,7 @@ export default {
           value: 'system',
           label: '系统'
         },{
-          value: 'neit',
+          value: 'net',
           label: '网络'
         },{
           value: 'perf_counters',
@@ -97,7 +122,13 @@ export default {
   components:{
     'CpuRule':CpuRule,
     'DiskRule':DiskRule,
-    'DiskIORule':DiskIORule
+    'DiskIORule':DiskIORule,
+    'MemRule':MemRule,
+    'NetRule':NetRule,
+    'PerfRule':PerfRule,
+    'SwapRule':SwapRule,
+    'SystemRule':SystemRule,
+    'SystemDaysRule':SystemDaysRule
   }
 
 };

@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 /**
  * Created by jieping on 2018-04-11
  */
@@ -22,7 +24,7 @@ public class RuleController {
      */
     @RequestMapping(value = "/rule", method = RequestMethod.POST)
     ResponseEntity<Object> rule(@RequestBody RuleDO ruleDO){
-        ruleDO.setModifyTime(ruleDO.getCreateTime());
+        ruleDO.setModifyTime(new Date());
         return new ResponseEntity<Object>(ruleManager.save(ruleDO),HttpStatus.OK);
     }
     /**

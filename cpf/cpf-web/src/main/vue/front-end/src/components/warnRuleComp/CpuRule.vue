@@ -6,6 +6,9 @@
         <el-form-item label="名称" prop="name" >
           <el-input v-model="data.config.name" auto-complete="off" ></el-input>
         </el-form-item>
+        <el-form-item label="持续时间" prop="time" >
+          <el-input v-model="data.config.time" auto-complete="off" placeholder="单位为分钟，为空代表立即报警"></el-input>
+        </el-form-item>
         <el-form-item label="Percent_DPC_Time最大值" prop="Percent_DPC_Time">
             <el-input v-model="data.config.Percent_DPC_Time"  placeholder="0~100，为空条件不限制"></el-input>
         </el-form-item>
@@ -36,7 +39,7 @@
 <script>
 import { mapState } from "vuex";
 import {saveRule} from "@/api/getData";
-import {checkPercent} from "@/utils/validate"
+import {checkPercent,checkInteger} from "@/utils/validate"
 export default {
   name: "CpuRule",
   data() {
@@ -48,6 +51,7 @@ export default {
         Percent_Privileged_Time: [{ validator: checkPercent, trigger: "blur" }],
         Percent_Processor_Time: [{ validator: checkPercent, trigger: "blur" }],
         Percent_User_Time: [{ validator: checkPercent, trigger: "blur" }],
+        time:[{ validator: checkInteger, trigger: "blur" }],
         name:[{required:true,message:'不能为空'}]
       }
     };
@@ -67,6 +71,7 @@ export default {
     },
     async saveModel() {
       this.data.name = this.data.config.name;
+      this.data.time = this.data.config.time;
       const response = await saveRule(this.data);
       if(response.success){
         this.$emit("saveRule",response.result);

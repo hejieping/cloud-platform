@@ -31,4 +31,8 @@ public class RuleDO {
      * 规则修改时间
      */
     private Date modifyTime;
+    /**
+     * 持续时间
+     */
+    private Long time;
 }

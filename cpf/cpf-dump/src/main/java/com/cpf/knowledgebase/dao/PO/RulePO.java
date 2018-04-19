@@ -28,6 +28,10 @@ public class RulePO {
     @Lob
     private String config;
     /**
+     * 持续时间
+     */
+    private Long time;
+    /**
      * 规则创建时间
      */
     @Column(name = "create_time")
