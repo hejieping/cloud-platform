@@ -9,8 +9,8 @@
         <el-form-item label="持续时间" prop="time" >
           <el-input v-model="data.config.time" auto-complete="off" placeholder="单位为分钟，为空代表立即报警"></el-input>
         </el-form-item>
-        <el-form-item label="Available_MB最大值" prop="Available_MB">
-            <el-input v-model="data.config.Available_MB"  placeholder="单位为MB，为空条件不限制"></el-input>
+        <el-form-item label="Available_MB最大值" prop="Available_Bytes">
+            <el-input v-model="data.config.Available_Bytes"  placeholder="单位为MB，为空条件不限制"></el-input>
         </el-form-item>
         <el-form-item label="Cache_Faults_persec最大值" prop="Cache_Faults_persec">
             <el-input v-model="data.config.Cache_Faults_persec" placeholder="正浮点数，为空条件不限制"></el-input>
@@ -24,20 +24,20 @@
         <el-form-item label="Pages_persec最大值" prop="Pages_persec">
             <el-input v-model="data.config.Pages_persec"  placeholder="正浮点数，为空条件不限制"></el-input>
         </el-form-item>
-        <el-form-item label="Pool_Nonpaged_MB最大值" prop="Pool_Nonpaged_MB">
-            <el-input v-model="data.config.Pool_Nonpaged_MB"  placeholder="单位为MB，为空条件不限制"></el-input>
+        <el-form-item label="Pool_Nonpaged_MB最大值" prop="Pool_Nonpaged_Bytes">
+            <el-input v-model="data.config.Pool_Nonpaged_Bytes"  placeholder="单位为MB，为空条件不限制"></el-input>
         </el-form-item> 
-        <el-form-item label="Pool_Paged_MB最大值" prop="Pool_Paged_MB">
-            <el-input v-model="data.config.Pool_Paged_MB"  placeholder="单位为MB，为空条件不限制"></el-input>
+        <el-form-item label="Pool_Paged_MB最大值" prop="Pool_Paged_Bytes">
+            <el-input v-model="data.config.Pool_Paged_Bytes"  placeholder="单位为MB，为空条件不限制"></el-input>
         </el-form-item>
-        <el-form-item label="Standby_Cache_Core_MB最大值" prop="Standby_Cache_Core_MB">
-            <el-input v-model="data.config.Standby_Cache_Core_MB"  placeholder="单位为MB，为空条件不限制"></el-input>
+        <el-form-item label="Standby_Cache_Core_MB最大值" prop="Standby_Cache_Core_Bytes">
+            <el-input v-model="data.config.Standby_Cache_Core_Bytes"  placeholder="单位为MB，为空条件不限制"></el-input>
         </el-form-item>
-        <el-form-item label="Standby_Cache_Normal_Priority_MB最大值" prop="Standby_Cache_Normal_Priority_MB">
-            <el-input v-model="data.config.Standby_Cache_Normal_Priority_MB"  placeholder="单位为MB，为空条件不限制"></el-input>
+        <el-form-item label="Standby_Cache_Normal_Priority_MB最大值" prop="Standby_Cache_Normal_Priority_Bytes">
+            <el-input v-model="data.config.Standby_Cache_Normal_Priority_Bytes"  placeholder="单位为MB，为空条件不限制"></el-input>
         </el-form-item>
-        <el-form-item label="Standby_Cache_Reserve_MB最大值" prop="Standby_Cache_Reserve_MB">
-            <el-input v-model="data.config.Standby_Cache_Reserve_MB"  placeholder="单位为MB，为空条件不限制"></el-input>
+        <el-form-item label="Standby_Cache_Reserve_MB最大值" prop="Standby_Cache_Reserve_Bytes">
+            <el-input v-model="data.config.Standby_Cache_Reserve_Bytes"  placeholder="单位为MB，为空条件不限制"></el-input>
         </el-form-item>
         <el-form-item label="Transition_Faults_persec最大值" prop="Transition_Faults_persec">
             <el-input v-model="data.config.Transition_Faults_persec"  placeholder="0~100，为空条件不限制"></el-input>
@@ -60,21 +60,43 @@ export default {
   data() {
     return {
       rules: {
-        Available_MB: [{ validator: checkInteger, trigger: "blur" }],
+        Available_Bytes: [{ validator: checkInteger, trigger: "blur" }],
         Cache_Faults_persec: [{ validator: checkDouble, trigger: "blur" }],
         Demand_Zero_Faults_persec: [{ validator: checkDouble, trigger: "blur" }],
         Page_Faults_persec: [{ validator: checkDouble, trigger: "blur" }],
         Pages_persec: [{ validator: checkDouble, trigger: "blur" }],
-        Pool_Nonpaged_MB: [{ validator: checkInteger, trigger: "blur" }],
-        Pool_Paged_MB: [{ validator: checkInteger, trigger: "blur" }],
-        Standby_Cache_Core_MB: [{ validator: checkInteger, trigger: "blur" }],
-        Standby_Cache_Normal_Priority_MB: [{ validator: checkInteger, trigger: "blur" }],
-        Standby_Cache_Reserve_MB: [{ validator: checkInteger, trigger: "blur" }],
+        Pool_Nonpaged_Bytes: [{ validator: checkInteger, trigger: "blur" }],
+        Pool_Paged_Bytes: [{ validator: checkInteger, trigger: "blur" }],
+        Standby_Cache_Core_Bytes: [{ validator: checkInteger, trigger: "blur" }],
+        Standby_Cache_Normal_Priority_Bytes: [{ validator: checkInteger, trigger: "blur" }],
+        Standby_Cache_Reserve_Bytes: [{ validator: checkInteger, trigger: "blur" }],
         Transition_Faults_persec: [{ validator: checkDouble, trigger: "blur" }],
         time:[{ validator: checkInteger, trigger: "blur" }],
         name:[{required:true,message:'不能为空', trigger: 'blur'}]
       }
     };
+  },
+  computed:{
+    //MB转bytes
+    Available_Bytes(){
+      return this.data.config.Available_Bytes*(2**20);
+    },
+    Pool_Nonpaged_Bytes(){
+      return this.data.config.Pool_Nonpaged_Bytes*(2**20);
+    },
+    Pool_Paged_Bytes(){
+      return this.data.config.Pool_Paged_Bytes*(2**20);
+    },
+    Standby_Cache_Core_Bytes(){
+      return this.data.config.Standby_Cache_Core_Bytes*(2**20);
+    },
+    Standby_Cache_Normal_Priority_Bytes(){
+      return this.data.config.Standby_Cache_Normal_Priority_Bytes*(2**20);
+    },
+    Standby_Cache_Reserve_Bytes(){
+      return this.data.config.Standby_Cache_Reserve_Bytes*(2**20);
+    }
+    
   },
   methods: {
      submit() {
@@ -92,6 +114,12 @@ export default {
     async saveModel() {
       this.data.name = this.data.config.name;
       this.data.time = this.data.config.time;
+      this.data.config.Available_Bytes = this.Available_Bytes;
+      this.data.config.Pool_Nonpaged_Bytes = this.Pool_Nonpaged_Bytes;
+      this.data.config.Pool_Paged_Bytes = this.Pool_Paged_Bytes;
+      this.data.config.Standby_Cache_Core_Bytes = this.Standby_Cache_Core_Bytes;
+      this.data.config.Standby_Cache_Normal_Priority_Bytes = this.Standby_Cache_Normal_Priority_Bytes;
+      this.data.config.Standby_Cache_Reserve_Bytes = this.Standby_Cache_Reserve_Bytes;
       const response = await saveRule(this.data);
       if(response.success){
         this.$emit("saveRule",response.result);

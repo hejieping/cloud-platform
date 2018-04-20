@@ -3,8 +3,6 @@ package com.cpf.agentbase.dao;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.cpf.agentbase.dao.PO.CpuPO;
-import com.cpf.agentbase.manager.DO.MonitorDO;
-import com.google.common.collect.Lists;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 import org.influxdb.impl.InfluxDBResultMapper;
@@ -12,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.influxdb.DefaultInfluxDBTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -57,8 +54,10 @@ public class MonitorDAO {
         cpuPO.setPercent_User_Time(9.6);
         String jsonStr = JSON.toJSONString(cpuPO);
         System.out.println(jsonStr);
+
         Map<String,String> map = JSON.parseObject(jsonStr,new TypeReference<Map<String,String>>(){});
 
         System.out.println(JSON.toJSONString(map));
+        System.out.println(1524218182184861300L);
     }
 }

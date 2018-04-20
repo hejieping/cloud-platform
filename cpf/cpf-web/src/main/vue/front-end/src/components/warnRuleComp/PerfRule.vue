@@ -9,11 +9,11 @@
         <el-form-item label="持续时间" prop="time" >
           <el-input v-model="data.config.time" auto-complete="off" placeholder="单位为分钟，为空代表立即报警"></el-input>
         </el-form-item>
-        <el-form-item label="MB_Received_persec最大值" prop="MB_Received_persec">
-            <el-input v-model="data.config.MB_Received_persec"  placeholder="单位为MB，正浮点数，为空条件不限制"></el-input>
+        <el-form-item label="MB_Received_persec最大值" prop="Bytes_Received_persec">
+            <el-input v-model="data.config.Bytes_Received_persec"  placeholder="单位为MB，正浮点数，为空条件不限制"></el-input>
         </el-form-item>
-        <el-form-item label="MB_Sent_persec最大值" prop="MB_Sent_persec">
-            <el-input v-model="data.config.MB_Sent_persec" placeholder="单位为MB，正浮点数，为空条件不限制"></el-input>
+        <el-form-item label="MB_Sent_persec最大值" prop="Bytes_Sent_persec">
+            <el-input v-model="data.config.Bytes_Sent_persec" placeholder="单位为MB，正浮点数，为空条件不限制"></el-input>
         </el-form-item>    
         <el-form-item label="Packets_Outbound_Discarded最大值" prop="Packets_Outbound_Discarded">
             <el-input v-model="data.config.Packets_Outbound_Discarded"  placeholder="正整数，为空条件不限制"></el-input>
@@ -51,8 +51,8 @@ export default {
   data() {
     return {
       rules: {
-        MB_Received_persec: [{ validator: checkDouble, trigger: "blur" }],
-        MB_Sent_persec: [{ validator: checkDouble, trigger: "blur" }],
+        Bytes_Received_persec: [{ validator: checkDouble, trigger: "blur" }],
+        Bytes_Sent_persec: [{ validator: checkDouble, trigger: "blur" }],
         Packets_Outbound_Discarded: [{ validator: checkInteger, trigger: "blur" }],
         Packets_Outbound_Errors: [{ validator: checkInteger, trigger: "blur" }],
         Packets_Received_Discarded: [{ validator: checkInteger, trigger: "blur" }],
@@ -63,6 +63,14 @@ export default {
         name:[{required:true,message:'不能为空', trigger: 'blur'}]
       }
     };
+  },
+  computed:{
+    Bytes_Received_persec(){
+      return this.data.config.Bytes_Received_persec*(2**20);
+    },
+    Bytes_Sent_persec(){
+      return this.data.config.Bytes_Sent_persec*(2**20);
+    }
   },
   methods: {
      submit() {
@@ -80,6 +88,8 @@ export default {
     async saveModel() {
       this.data.name = this.data.config.name;
       this.data.time = this.data.config.time;
+      this.data.config.Bytes_Received_persec = this.Bytes_Received_persec;
+      this.data.config.Bytes_Sent_persec = this.Bytes_Sent_persec;
       const response = await saveRule(this.data);
       if(response.success){
         this.$emit("saveRule",response.result);
