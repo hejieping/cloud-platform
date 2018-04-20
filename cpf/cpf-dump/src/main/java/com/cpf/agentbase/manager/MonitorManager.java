@@ -8,6 +8,7 @@ import com.cpf.utils.TagUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.influxdb.dto.QueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,8 +38,38 @@ public class MonitorManager {
             throw new BusinessException(CpfDumpConstants.QUERY_AVG_DATA_FAILED);
         }
     }
+
+    /**
+     * 将查询结果转换为MonitorDO
+     * @param result
+     * @return
+     */
     private List<MonitorDO> parseQueryResult(QueryResult result){
-        //TODO
-        return Lists.newArrayList();
+        List<MonitorDO> list = Lists.newArrayList();
+        QueryResult.Series series = result.getResults().get(0).getSeries().get(0);
+        //如果返回的是平均结果，需要去除结果属性的mean_前缀
+        List<String> keys =  deleteMeanPrefix(series.getColumns());
+        for(List<Object> values : series.getValues()){
+             MonitorDO monitorDO = new MonitorDO();
+             monitorDO.setType(series.getName());
+             Map<String,String> data = Maps.newHashMap();
+             for(int i = 0; i < values.size();i++){
+                 data.put(keys.get(i),values.get(i).toString());
+             }
+             monitorDO.setData(data);
+             list.add(monitorDO);
+        }
+        return list;
+    }
+    private List<String> deleteMeanPrefix(List<String> keys){
+        List<String> list = Lists.newArrayList();
+        for(String key : keys){
+            list.add(StringUtils.stripStart(key,"mean_"));
+        }
+        return list;
+    }
+    public static void main(String[] args){
+        String s = "mean_Percent_time";
+        System.out.println(StringUtils.stripStart(s,"mean_"));
     }
 }

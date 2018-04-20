@@ -20,7 +20,6 @@ public class TestController {
     private CpuDAO cpuDAO;
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ResponseEntity<Object> test(){
-
         return new ResponseEntity<>(cpuDAO.all(),HttpStatus.OK);
     }
 }

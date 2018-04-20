@@ -1,6 +1,7 @@
 package com.cpf.monitor;
 
 import com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.Map;
@@ -30,7 +31,7 @@ public class ComparatorMap {
     private static MonitorComparator MaxDoubleComparator(){
         return ( monitorValue, ruleValue)->{
             //为空代表条件不限制
-            if(ruleValue == "" || monitorValue == ""){
+            if(StringUtils.isBlank(ruleValue) || StringUtils.isBlank(monitorValue)){
                 return true;
             }else {
                 return NumberUtils.toDouble(monitorValue) >= NumberUtils.toDouble(ruleValue);
@@ -44,7 +45,7 @@ public class ComparatorMap {
     private static MonitorComparator MinDoubleComparator(){
         return ( monitorValue, ruleValue)->{
             //为空代表条件不限制
-            if(ruleValue == "" || monitorValue == ""){
+            if(StringUtils.isBlank(ruleValue) || StringUtils.isBlank(monitorValue)){
                 return true;
             }else {
                 return NumberUtils.toDouble(monitorValue) <= NumberUtils.toDouble(ruleValue);
@@ -58,11 +59,16 @@ public class ComparatorMap {
     private static MonitorComparator MaxLongComparator(){
         return ( monitorValue, ruleValue)->{
             //为空代表条件不限制
-            if(ruleValue == "" || monitorValue == ""){
+            if(StringUtils.isBlank(ruleValue) || StringUtils.isBlank(monitorValue)){
                 return true;
             }else {
                 return NumberUtils.toLong(monitorValue) >= NumberUtils.toLong(ruleValue);
             }
         };
+    }
+    public static void main(String[] args){
+        System.out.println(StringUtils.isNotBlank("a"));
+        System.out.println(StringUtils.isNotBlank(null));
+
     }
 }
