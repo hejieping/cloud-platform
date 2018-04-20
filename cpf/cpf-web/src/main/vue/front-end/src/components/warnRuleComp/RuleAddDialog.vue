@@ -13,31 +13,31 @@
       </el-select>
         </el-form-item>
       </el-form>
-      <div v-if="data.data.type == 'cpu'">
+      <div v-if="data.data.type == 'win_cpu'">
           <CpuRule :data="data.data"  @saveRule="saveRule"></CpuRule>
       </div>
-      <div v-else-if="data.data.type == 'disk'">
+      <div v-else-if="data.data.type == 'win_disk'">
           <DiskRule :data="data.data"  @saveRule="saveRule"></DiskRule>
       </div>
-      <div v-else-if="data.data.type == 'diskio'">
+      <div v-else-if="data.data.type == 'win_diskio'">
           <DiskIORule :data="data.data"  @saveRule="saveRule"></DiskIORule>
       </div>
-      <div v-else-if="data.data.type == 'mem'">
+      <div v-else-if="data.data.type == 'win_mem'">
           <MemRule :data="data.data"  @saveRule="saveRule"></MemRule>
       </div>     
-      <div v-else-if="data.data.type == 'net'">
+      <div v-else-if="data.data.type == 'win_net'">
           <NetRule :data="data.data"  @saveRule="saveRule"></NetRule>
       </div>
-      <div v-else-if="data.data.type == 'perf_counters'">
+      <div v-else-if="data.data.type == 'win_perf_counters'">
           <PerfRule :data="data.data"  @saveRule="saveRule"></PerfRule>
       </div>    
-      <div v-else-if="data.data.type == 'swap'">
+      <div v-else-if="data.data.type == 'win_swap'">
           <SwapRule :data="data.data"  @saveRule="saveRule"></SwapRule>
       </div> 
-      <div v-else-if="data.data.type == 'system'">
+      <div v-else-if="data.data.type == 'win_system'">
           <SystemRule :data="data.data"  @saveRule="saveRule"></SystemRule>
       </div> 
-      <div v-else-if="data.data.type == 'system_days'">
+      <div v-else-if="data.data.type == 'win_system_days'">
           <SystemDaysRule :data="data.data"  @saveRule="saveRule"></SystemDaysRule>
       </div>
       <div v-else></div>
@@ -64,31 +64,31 @@ export default {
     return {
       formLabelWidth: "120px",
       options: [{
-          value: 'cpu',
+          value: 'win_cpu',
           label: '处理器'
         }, {
-          value: 'mem',
+          value: 'win_mem',
           label: '内存'
         }, {
-          value: 'disk',
+          value: 'win_disk',
           label: '硬盘'
         }, {
-          value: 'diskio',
+          value: 'win_diskio',
           label: '硬盘IO'
         }, {
-          value: 'system',
+          value: 'win_system',
           label: '系统'
         },{
-          value: 'net',
+          value: 'win_net',
           label: '网络'
         },{
-          value: 'perf_counters',
+          value: 'win_perf_counters',
           label: '性能计数器'
         },{
-          value: 'swap',
+          value: 'win_swap',
           label: '交换区'
         },{
-          value: 'system_days',
+          value: 'win_system_days',
           label: '系统天数'
         }],
         validateResult:{}

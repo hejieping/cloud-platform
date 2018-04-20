@@ -115,7 +115,7 @@ public class DOPOConverter {
         ruleDO.setCreateTime(rulePO.getCreateTime());
         ruleDO.setModifyTime(rulePO.getModifyTime());
         ruleDO.setTime(rulePO.getTime());
-        ruleDO.setConfig(JSON.parseObject(rulePO.getConfig(),new TypeReference<Map<String,Object>>(){}));
+        ruleDO.setConfig(JSON.parseObject(rulePO.getConfig(),new TypeReference<Map<String,String>>(){}));
         return ruleDO;
     }
     public static RulePO ruleDO2PO(RuleDO ruleDO){

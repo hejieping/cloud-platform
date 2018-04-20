@@ -1,9 +1,9 @@
 package com.cpf.monitor;
 
 import com.alibaba.fastjson.JSON;
-import com.cpf.agentbase.dao.CpuDAO;
-import com.cpf.agentbase.dao.PO.CpuPO;
-import com.cpf.constants.RuleTypeEnum;
+import com.cpf.agentbase.dao.MonitorDAO;
+import com.cpf.agentbase.manager.DO.MonitorDO;
+import com.cpf.agentbase.manager.MonitorManager;
 import com.cpf.knowledgebase.manager.DO.RuleDO;
 import com.cpf.logger.BusinessLogger;
 import com.cpf.service.ServiceTemplate;
@@ -26,15 +26,15 @@ public class MonitorEngine extends ServiceTemplate {
     @Autowired
     private RuleHolder ruleHolder;
     @Autowired
-    private CpuDAO cpuDAO;
-    public void monitor(CpuPO cpuPO){
-        List<RuleDO> ruleDOList = ruleHolder.getRules(RuleTypeEnum.CPU.getType());
+    private MonitorManager monitorManager;
+    public void monitor(MonitorDO monitorDO){
+        List<RuleDO> ruleDOList = ruleHolder.getRules(monitorDO.getType());
         for(RuleDO ruleDO : ruleDOList){
-            //校验该时刻是否命中监控规则
-            if(verify(cpuPO,ruleDO)){
-                //如果该时刻命中规则，再判断一段时间内是否命中该规则
-                if(verify(cpuDAO.queryAVGByTime(cpuPO,ruleDO.getTime()),ruleDO)){
-                    warn(cpuPO,ruleDO);
+            //判断该时刻是否满足监控规则
+            if(verify(monitorDO,ruleDO)){
+                //判断一定时间内的平均值是否满足监控规则
+                if(verify(monitorManager.queryAVGByTime(monitorDO,ruleDO.getTime()),ruleDO)){
+                    warn(monitorDO,ruleDO);
                 }
             }
         }
@@ -46,32 +46,15 @@ public class MonitorEngine extends ServiceTemplate {
      * @param ruleDO
      * @return
      */
-    private boolean verify(CpuPO cpuPO,RuleDO ruleDO){
-        boolean result = true;
-        Map<String,Object> config = ruleDO.getConfig();
-        if(cpuPO.getPercent_DPC_Time() < parseValueDefaultMax(config.get("Percent_DPC_Time").toString())){
-            result = false;
-            return result;
-        }
-        if(cpuPO.getPercent_Idle_Time() < parseValueDefaultMax(config.get("Percent_Idle_Time").toString())){
-            result = false;
-            return result;
-        }
-        if(cpuPO.getPercent_Interrupt_Time() < parseValueDefaultMax(config.get("Percent_Interrupt_Time").toString())){
-            result = false;
-            return result;
-        }
-        if(cpuPO.getPercent_Privileged_Time() < parseValueDefaultMax(config.get("Percent_Privileged_Time").toString())){
-            result = false;
-            return result;
-        }
-        if(cpuPO.getPercent_Processor_Time() < parseValueDefaultMax(config.get("Percent_Processor_Time").toString())){
-            result = false;
-            return result;
-        }
-        if(cpuPO.getPercent_User_Time() < parseValueDefaultMax(config.get("Percent_User_Time").toString())){
-            result = false;
-            return result;
+    private boolean verify(MonitorDO monitorDO,RuleDO ruleDO){
+        Boolean result = true;
+        for(Map.Entry<String,String> entry : ruleDO.getConfig().entrySet()){
+            MonitorComparator comparator = ComparatorMap.getComparator(entry.getKey());
+            //监控数据没有满足 规则
+            if(!comparator.compare(monitorDO.getData().get(entry.getKey()),entry.getValue())){
+                result = false;
+                return result;
+            }
         }
         return result;
     }
@@ -82,9 +65,9 @@ public class MonitorEngine extends ServiceTemplate {
             return NumberUtils.toDouble(value);
         }
     }
-    private void warn(Object object,RuleDO ruleDO){
+    private void warn(MonitorDO monitorDO,RuleDO ruleDO){
         BusinessLogger.errorLog("MonitorEngine.monitor",
-                new String[]{JSON.toJSONString(object),JSON.toJSONString(ruleDO)},
+                new String[]{JSON.toJSONString(monitorDO),JSON.toJSONString(ruleDO)},
                 "MONITOR_DANGER","监控报警",logger);
     }
 }

@@ -1,5 +1,6 @@
 package com.cpf.controller;
 
+import com.cpf.agentbase.dao.CpuDAO;
 import com.cpf.monitor.RuleHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,8 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
     @Autowired
     private RuleHolder ruleHolder;
+    @Autowired
+    private CpuDAO cpuDAO;
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ResponseEntity<Object> test(){
-        return new ResponseEntity<>(ruleHolder.getRuleMap(),HttpStatus.OK);
+
+        return new ResponseEntity<>(cpuDAO.all(),HttpStatus.OK);
     }
 }

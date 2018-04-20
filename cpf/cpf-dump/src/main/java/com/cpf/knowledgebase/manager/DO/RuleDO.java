@@ -22,7 +22,7 @@ public class RuleDO {
     /**
      * 规则配置
      */
-    private Map<String,Object> config;
+    private Map<String,String> config;
     /**
      * 规则创建时间
      */
