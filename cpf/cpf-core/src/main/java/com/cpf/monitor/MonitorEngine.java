@@ -27,6 +27,11 @@ public class MonitorEngine extends ServiceTemplate{
     private RuleHolder ruleHolder;
     @Autowired
     private MonitorManager monitorManager;
+
+    /**
+     * 实时监控，先判断该时刻数据是否满足监控规则，满足则判断监控规则规定的时间段内 监控数据平均值是否满足监控规则，满足则报警
+     * @param monitorDO 实时监控的数据
+     */
     public void monitor(MonitorDO monitorDO){
         execute(logger, "monitor", new ServiceExecuteTemplate() {
             @Override
@@ -79,7 +84,14 @@ public class MonitorEngine extends ServiceTemplate{
         }
         return result;
     }
+
+    /**
+     * 报警
+     * @param monitorDO
+     * @param ruleDO
+     */
     private void warn(MonitorDO monitorDO,RuleDO ruleDO){
+        //TODO 添加报警措施
         BusinessLogger.errorLog("MonitorEngine.monitor",
                 new String[]{JSON.toJSONString(monitorDO),JSON.toJSONString(ruleDO)},
                 "MONITOR_DANGER","监控报警",logger);

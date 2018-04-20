@@ -9,6 +9,7 @@ import org.springframework.data.influxdb.InfluxDBConnectionFactory;
 import org.springframework.data.influxdb.InfluxDBProperties;
 
 /**
+ * influxdb 配置
  * Created by jieping on 2018-04-17
  */
 @Configuration

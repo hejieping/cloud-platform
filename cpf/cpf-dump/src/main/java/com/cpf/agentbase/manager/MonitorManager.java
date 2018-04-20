@@ -23,6 +23,13 @@ import java.util.Map;
 public class MonitorManager {
     @Autowired
     private MonitorDAO monitorDAO;
+
+    /**
+     * 查询过去一段时间的数据平均值
+     * @param monitorDO
+     * @param minutes
+     * @return
+     */
     public MonitorDO queryAVGByTime(MonitorDO monitorDO, Long minutes){
         Map<String,String> tagMap = Maps.newHashMap();
         //组装表的标签
@@ -61,6 +68,12 @@ public class MonitorManager {
         }
         return list;
     }
+
+    /**
+     * 去除 mean_ 前缀
+     * @param keys
+     * @return
+     */
     private List<String> deleteMeanPrefix(List<String> keys){
         List<String> list = Lists.newArrayList();
         for(String key : keys){

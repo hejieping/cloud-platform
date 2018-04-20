@@ -9,7 +9,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
-import org.influxdb.impl.InfluxDBResultMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.influxdb.DefaultInfluxDBTemplate;
 import org.springframework.stereotype.Component;
@@ -19,15 +18,13 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * influxdb 监控数据 DAO
  * Created by jieping on 2018-04-15
  */
 @Component
 public class MonitorDAO {
     @Autowired
     private DefaultInfluxDBTemplate template;
-    @Autowired
-    private InfluxDBResultMapper mapper;
-
     /**
      * 查询指定时间内的监控数据平均值
      * @param tags 表 tags
@@ -41,6 +38,14 @@ public class MonitorDAO {
         QueryResult result = template.query(query, TimeUnit.MILLISECONDS);
         return result;
     }
+
+    /**
+     * influx查询语句生成器
+     * @param tags
+     * @param tableName
+     * @param minutes
+     * @return
+     */
     private String InfluxSQLGenerator(Map<String,String> tags,String tableName,Long minutes){
         String sql = "select mean(*) from " + tableName + " where ";
         List<String> conditionList = Lists.newArrayList();

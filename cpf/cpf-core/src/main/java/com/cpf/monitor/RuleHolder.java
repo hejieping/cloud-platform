@@ -47,13 +47,16 @@ public class RuleHolder {
             BusinessLogger.errorLog("RuleHolder.refresh",new String[]{JSON.toJSONString(result)},"RULES_REFRESH_FAILED","监控规则刷新失败",logger);
         }
     }
+
+    /**
+     * 获取指定类型的监控规则
+     * @param type
+     * @return
+     */
     public List<RuleDO> getRules(String type){
         if(ruleMap.get(type) == null){
             ruleMap.put(type,Lists.newArrayList());
         }
         return ruleMap.get(type);
-    }
-    public Map<String,List<RuleDO>> getRuleMap(){
-        return ruleMap;
     }
 }
