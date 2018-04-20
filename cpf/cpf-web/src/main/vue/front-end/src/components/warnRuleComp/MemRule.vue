@@ -9,7 +9,7 @@
         <el-form-item label="持续时间" prop="time" >
           <el-input v-model="data.config.time" auto-complete="off" placeholder="单位为分钟，为空代表立即报警"></el-input>
         </el-form-item>
-        <el-form-item label="Available_MB最大值" prop="Available_Bytes">
+        <el-form-item label="Available_MB最小值" prop="Available_Bytes">
             <el-input v-model="data.config.Available_Bytes"  placeholder="单位为MB，为空条件不限制"></el-input>
         </el-form-item>
         <el-form-item label="Cache_Faults_persec最大值" prop="Cache_Faults_persec">
