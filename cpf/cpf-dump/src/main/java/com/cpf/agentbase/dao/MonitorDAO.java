@@ -3,8 +3,8 @@ package com.cpf.agentbase.dao;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.cpf.agentbase.dao.PO.CpuPO;
-import com.cpf.utils.TimeStampUtil;
-import com.google.common.base.Joiner;
+import com.cpf.constants.RuleTypeEnum;
+import com.cpf.utils.InfluxSQLGenerator;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.influxdb.dto.Query;
@@ -25,52 +25,56 @@ import java.util.concurrent.TimeUnit;
 public class MonitorDAO {
     @Autowired
     private DefaultInfluxDBTemplate template;
+
     /**
-     * 查询指定时间内的监控数据平均值
-     * @param tags 表 tags
+     * 查询指定时间内的性能数据平均值
+     * @param tags tag条件
      * @param tableName 表名
-     * @param minutes 指定时间
+     * @param startTime 开始时间
+     * @param endTime 结束时间
      * @return
      */
-    public QueryResult queryAVGByTime(Map<String,String> tags,String tableName,Long minutes){
-        String SQL = InfluxSQLGenerator(tags,tableName,minutes);
+    public QueryResult queryAVGByTime(Map<String,String> tags,String tableName,Long startTime,Long endTime){
+
+        String SQL =  InfluxSQLGenerator.meanDataSQL(tags,tableName,startTime,endTime);
         Query query = new Query(SQL, template.getDatabase());
         QueryResult result = template.query(query, TimeUnit.MILLISECONDS);
         return result;
     }
 
     /**
-     * influx查询语句生成器
-     * @param tags
-     * @param tableName
-     * @param minutes
+     * 查询所主机 一段时间的平均性能数据
+     * @param tags tag属性 ，只包含host属性
+     * @param startTime 开始时间
+     * @param endTime 结束时间
      * @return
      */
-    private String InfluxSQLGenerator(Map<String,String> tags,String tableName,Long minutes){
-        String sql = "select mean(*) from " + tableName + " where ";
-        List<String> conditionList = Lists.newArrayList();
-        //组装tag条件
-        for(Map.Entry<String,String> tag : tags.entrySet()){
-            StringBuffer condition = new StringBuffer();
-            condition.append(tag.getKey());
-            condition.append("='");
-            condition.append(tag.getValue());
-            condition.append("'");
-            conditionList.add(condition.toString());
+    public QueryResult queryAllAVGByTime(Map<String,String> tags,Long startTime,Long endTime){
+        StringBuffer sqls = new StringBuffer();
+        List<RuleTypeEnum> ruleTypeEnumList = Lists.newArrayList(RuleTypeEnum.values());
+        for(RuleTypeEnum ruleTypeEnum : RuleTypeEnum.values()){
+            sqls.append(InfluxSQLGenerator.meanDataSQL(tags,ruleTypeEnum.getType(),startTime,endTime));
         }
-        //组装监控规则的时间段，转换为influx时间戳
-        Long endTime = System.currentTimeMillis();
-        Long startTime = endTime - TimeStampUtil.minutes2Time(minutes);
-        startTime = TimeStampUtil.javaTime2Influx(startTime);
-        endTime = TimeStampUtil.javaTime2Influx(endTime);
-        String startTimeCondition = "time >" + startTime;
-        String endTimeCondition = "time < " + endTime;
-        conditionList.add(startTimeCondition);
-        conditionList.add(endTimeCondition);
-        sql += Joiner.on(" and ").join(conditionList);
-        //组装时间条件
-        return sql;
+        Query query = new Query(sqls.toString(), template.getDatabase());
+        QueryResult result = template.query(query, TimeUnit.MILLISECONDS);
+        return result;
     }
+
+    /**
+     * 查询指定时间内的连续性能数据
+     * @param tags
+     * @param startTime
+     * @param endTime
+     * @param ruleTypeEnum
+     * @return
+     */
+    public QueryResult queryDatasByTime(Map<String,String> tags,Long startTime,Long endTime,RuleTypeEnum ruleTypeEnum){
+        Query query = new Query(InfluxSQLGenerator.meanDatasSql(tags,ruleTypeEnum.getType(),startTime,endTime),template.getDatabase());
+        QueryResult result = template.query(query, TimeUnit.MILLISECONDS);
+        return result;
+    }
+
+
 
     public static void main(String[] args){
         CpuPO cpuPO = new CpuPO();
@@ -94,8 +98,8 @@ public class MonitorDAO {
         tagMap.put("instance","0");
         tagMap.put("objectname","PC-44");
         tagMap.put("host","intel");
-        MonitorDAO monitorDAO = new MonitorDAO();
-        System.out.println(monitorDAO.InfluxSQLGenerator(tagMap,"win_cpu",10L));
+        System.out.println(InfluxSQLGenerator.meanDataSQL(tagMap,"win_cpu",12L,20L));
+        System.out.println(InfluxSQLGenerator.meanDatasSql(tagMap,"win_cpu",12L,20L));
 
     }
 }

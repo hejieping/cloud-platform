@@ -10,7 +10,7 @@ import java.util.Map;
 @Data
 public class MonitorDO {
     /**
-     * 监控数据类型
+     * 监控数据类型 对应数据库表名
      */
     private String type;
     /**

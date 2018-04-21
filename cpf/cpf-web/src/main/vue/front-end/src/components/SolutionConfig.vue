@@ -10,6 +10,17 @@
       <el-row>
           <SolutionTable></SolutionTable>
       </el-row>
+      <el-row>
+      <el-date-picker
+      v-model="startTime"
+      type="datetime"
+      placeholder="选择日期时间"
+      value-format="yyyy-MM-dd HH:mm:ss">
+    </el-date-picker>
+      </el-row>
+      <el-row>
+        <el-button type="primary" @click="click">主要按钮</el-button>
+      </el-row>
   </div>
 </template>
 <script>
@@ -19,6 +30,12 @@ export default {
   name: 'SolutionConfig',
   data () {
     return {
+      startTime:''
+    }
+  },
+  methods:{
+    click(){
+      console.log(this.startTime)
     }
   },
   components:{

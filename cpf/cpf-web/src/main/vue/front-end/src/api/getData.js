@@ -22,3 +22,5 @@ export const deleteAggreModelByid = data => fetch('/config/aggremodel',data,'DEL
 
 export const getPerformance =  () => fetch('/monitor/performance');
 
+export const getAVGData = data => fetch('/monitor/allAVG',data);
+

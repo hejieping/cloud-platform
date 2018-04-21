@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by jieping on 2018-04-15
  */
 @RestController
-@RequestMapping("/com/cpf/monitor")
+@RequestMapping("/monitor")
 public class PerformanceController {
     @Autowired
     private PerformanceManager performanceManager;

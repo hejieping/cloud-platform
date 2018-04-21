@@ -66,6 +66,7 @@ export default {
   },
   computed:{
     Bytes_Received_persec(){
+      
       return this.data.config.Bytes_Received_persec*(2**20);
     },
     Bytes_Sent_persec(){

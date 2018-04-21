@@ -18,22 +18,18 @@
        <search></search>
      </el-row>
      <el-row :gutter="20"> 
-      <el-col :span="12" > 
-        <ChartCard :canvasId="chartId1" :data="chartData">
-        </ChartCard>
-      </el-col> 
-            <el-col :span="12" > 
-        <ChartCard :canvasId="chartId2" :data="chartData">
-        </ChartCard>
+      <el-col :span="12" >
+        <AVGChard :content="AVGData"></AVGChard>
       </el-col> 
      </el-row> 
     </div> 
    </div> 
   </template> 
 <<script>
+import {getAVGData} from "@/api/getData";
+import AVGChard from '@/components/monitorComp/AVGChard.vue'
 import ChartCard from '@/components/monitorComp/ChartCard.vue'
 import search from "@/components/monitorComp/search.vue";
-
   export default {
   name: 'monitorChart',
   data () {
@@ -45,12 +41,27 @@ import search from "@/components/monitorComp/search.vue";
                 {name: '2017', value: 1795},
             ],
             chartId1:'sad',
-            chartId2:'gad'
+            chartId2:'gad',
+            AVGData:{}
+    }
+  },
+    methods:{
+    async initData(){
+      var params = {host:'DESKTOP-HQ4VTVM',startTime:'2017-10-11 10:00:00',endTime:'2017-10-12 15:00:00'};
+      let response = await getAVGData(params);
+      if(response.success){
+        this.AVGData = response.result[0];
+      }
+      
     }
   },
   components: {
     'ChartCard': ChartCard,
-    'search':search
+    'search':search,
+    'AVGChard':AVGChard
+  },
+  created(){
+    this.initData();
   }
 }
 </script>

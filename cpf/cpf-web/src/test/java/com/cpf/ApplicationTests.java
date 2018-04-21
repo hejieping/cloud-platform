@@ -1,5 +1,6 @@
 package com.cpf;
 
+import com.cpf.agentbase.dao.CpuDAO;
 import com.cpf.agentbase.manager.DO.MonitorDO;
 import com.cpf.monitor.MonitorEngine;
 import com.google.common.collect.Maps;
@@ -16,8 +17,10 @@ import java.util.Map;
 public class ApplicationTests {
 	@Autowired
 	private MonitorEngine monitorEngine;
+	@Autowired
+	private CpuDAO cpuDAO;
 	@Test
-	public void test() {
+	public void testMonitor() {
 		MonitorDO monitorDO = new MonitorDO();
 		monitorDO.setType("win_cpu");
 		Map<String,String> data = Maps.newHashMap();
@@ -32,6 +35,10 @@ public class ApplicationTests {
 		data.put("objectname","Processor");
 		monitorDO.setData(data);
 		monitorEngine.monitor(monitorDO);
+	}
+	@Test
+	public void testSelect(){
+		cpuDAO.all();
 	}
 
 }

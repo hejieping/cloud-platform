@@ -20,6 +20,8 @@ public class TagUtil {
         cpuTags.add("instance");
         cpuTags.add("objectname");
         tagMap.put(RuleTypeEnum.CPU.getType(),cpuTags);
+
+
     }
     public static List<String> getTags(String type){
         List<String> tagList = tagMap.get(type);

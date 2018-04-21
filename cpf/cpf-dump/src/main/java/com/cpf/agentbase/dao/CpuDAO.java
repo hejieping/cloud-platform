@@ -21,7 +21,7 @@ public class CpuDAO {
     @Autowired
     private InfluxDBResultMapper mapper;
     public List<CpuPO> all() {
-        Query query = new Query("SELECT MEAN(*) FROM win_cpu WHERE host='DESKTOP-HQ4VTVM' AND instance='0' AND objectname='Processor'", template.getDatabase());
+        Query query = new Query("select mean(*) from win_cpu group by time(10080m) fill(0);", template.getDatabase());
         QueryResult result = template.query(query, TimeUnit.MILLISECONDS);
         List<CpuPO> influxDataList = mapper.toPOJO(result, CpuPO.class);
         return influxDataList;
