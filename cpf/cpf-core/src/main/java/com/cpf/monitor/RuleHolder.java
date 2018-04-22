@@ -1,8 +1,8 @@
 package com.cpf.monitor;
 
 import com.alibaba.fastjson.JSON;
-import com.cpf.knowledgebase.manager.DO.RuleDO;
-import com.cpf.knowledgebase.manager.RuleManager;
+import com.cpf.mysql.manager.DO.RuleDO;
+import com.cpf.mysql.manager.RuleManager;
 import com.cpf.logger.BusinessLogger;
 import com.cpf.service.CallbackResult;
 import com.google.common.collect.Lists;

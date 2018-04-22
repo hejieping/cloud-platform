@@ -2,9 +2,9 @@ package com.cpf.utils;
 
 import com.cpf.constants.ModelTypeEnum;
 import com.cpf.constants.OptionTypeEnum;
-import com.cpf.knowledgebase.manager.DO.ModelDO;
-import com.cpf.knowledgebase.manager.DO.ModelOptionDO;
-import com.cpf.knowledgebase.manager.DO.ModelOptionsDO;
+import com.cpf.mysql.manager.DO.ModelDO;
+import com.cpf.mysql.manager.DO.ModelOptionDO;
+import com.cpf.mysql.manager.DO.ModelOptionsDO;
 import com.google.common.collect.Lists;
 
 import java.util.List;

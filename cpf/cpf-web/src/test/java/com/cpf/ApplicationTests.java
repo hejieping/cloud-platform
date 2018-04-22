@@ -1,7 +1,7 @@
 package com.cpf;
 
-import com.cpf.agentbase.dao.CpuDAO;
-import com.cpf.agentbase.manager.DO.MonitorDO;
+import com.cpf.influx.dao.CpuDAO;
+import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.monitor.MonitorEngine;
 import com.google.common.collect.Maps;
 import org.junit.Test;

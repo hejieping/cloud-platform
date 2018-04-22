@@ -4,8 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.cpf.constants.ModelTypeEnum;
 import com.cpf.constants.OptionTypeEnum;
-import com.cpf.knowledgebase.dao.PO.*;
-import com.cpf.knowledgebase.manager.DO.*;
+import com.cpf.mysql.dao.PO.*;
+import com.cpf.mysql.manager.DO.*;
+import com.cpf.utils.mapper.AssetMapper;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -137,6 +138,9 @@ public class DOPOConverter {
             }
         }
         return list;
+    }
+    public static List<AssetDO> assetPOS2DOS(List<AssetPO> assetPOList){
+        return AssetMapper.INSTANCE.assetPOS2DOS(assetPOList);
     }
     public static void main(String[] args){
         ModelOptionsDO modelOptionsDO = new ModelOptionsDO();

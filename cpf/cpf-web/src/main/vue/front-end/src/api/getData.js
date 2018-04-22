@@ -24,3 +24,4 @@ export const getPerformance =  () => fetch('/monitor/performance');
 
 export const getAVGData = data => fetch('/monitor/allAVG',data);
 
+export const getAssets = () => fetch('/monitor/assets');

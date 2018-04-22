@@ -1,7 +1,7 @@
 package com.cpf.controller;
 
-import com.cpf.knowledgebase.manager.DO.RuleDO;
-import com.cpf.knowledgebase.manager.RuleManager;
+import com.cpf.mysql.manager.DO.RuleDO;
+import com.cpf.mysql.manager.RuleManager;
 import com.cpf.monitor.RuleHolder;
 import com.cpf.service.CallbackResult;
 import org.springframework.beans.factory.annotation.Autowired;

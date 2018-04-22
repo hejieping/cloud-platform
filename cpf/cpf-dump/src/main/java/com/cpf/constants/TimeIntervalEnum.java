@@ -43,6 +43,6 @@ public enum TimeIntervalEnum {
      */
     public static String interval(Long startTime,Long endTime){
         Long diff = (endTime - startTime)/100;
-        return generateInterval(MINUTE,diff/M);
+        return generateInterval(MINUTE,diff/M+1);
     }
 }

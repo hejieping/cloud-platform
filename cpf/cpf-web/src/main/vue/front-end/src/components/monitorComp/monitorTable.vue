@@ -23,19 +23,25 @@
       <el-table-column
         align='left'
         prop="id"
-        label="ID"
-        width="150">
+        label="id"
+        width="350">
       </el-table-column>
       <el-table-column
       align='left'
-        prop="uniCode"
-        label="设备编码"
+        prop="aid"
+        label="aid"
+        width="350">
+      </el-table-column>
+            <el-table-column
+      align='left'
+        prop="ipaddr"
+        label="ip"
         width="120">
       </el-table-column>
       <el-table-column
       align='left'
-        prop="cpu"
-        label="cpu利用率"
+        prop="hostname"
+        label="hostname"
          width="300">
       </el-table-column>
       <el-table-column
@@ -52,7 +58,7 @@
  </div>
 </template>
 <script>
-import { getPerformance } from "@/api/getData";
+import { getAssets } from "@/api/getData";
 import search from "@/components/monitorComp/search.vue";
 
 export default {
@@ -64,7 +70,7 @@ export default {
   },
   methods: {
     async initTableData() {
-      const response = await getPerformance();
+      const response = await getAssets();
       if (response.success) {
         this.tableData = response.result;
       } else {
@@ -72,7 +78,7 @@ export default {
       }
     },
     detail(row) {
-      this.$router.push("/Monitor/" + row.id);
+      this.$router.push("/Monitor/" + row.hostname);
     }
   },
   created() {

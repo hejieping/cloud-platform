@@ -10,6 +10,7 @@ public class CpfDumpConstants {
     public static ErrorDesc NOT_FOUND_MODEL = new ErrorDesc("NOT_FOUND_MODEL","找不到指定模型");
     public static ErrorDesc QUERY_AVG_DATA_FAILED = new ErrorDesc("QUERY_AVG_DATA_FAILED","查询一定时间的平均监控数据失败");
     public static ErrorDesc MONITOR_DATA_TYPE_ERROR = new ErrorDesc("MONITOR_DATA_TYPE_ERROR","监控数据类型错误");
+    public static ErrorDesc QUERY_CHART_DATA_FAILED = new ErrorDesc("QUERY_CHART_DATA_FAILED","查询图表监控数据失败");
 
 
 

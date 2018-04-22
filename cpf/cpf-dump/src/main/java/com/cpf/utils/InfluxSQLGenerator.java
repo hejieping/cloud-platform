@@ -19,6 +19,7 @@ public class InfluxSQLGenerator {
     private static String AND = " and ";
     private static String FILL = "  fill(0);";
     private static String COMMA = " , ";
+
     /**
      *  生成 select mean(*) from tableName where [tag=tagValue] and time > startTime and time < endTime fill(0);
      * @param tags 条件
@@ -28,7 +29,7 @@ public class InfluxSQLGenerator {
      * @return
      */
     public static String meanDataSQL(Map<String,String> tags, String tableName, Long startTime, Long endTime){
-        return sql(tags,tableName,startTime,endTime) + FILL;
+        return sql(tags,null,tableName,startTime,endTime) + FILL;
     }
 
     /**
@@ -39,13 +40,13 @@ public class InfluxSQLGenerator {
      * @param endTime
      * @return
      */
-    public static String meanDatasSql(Map<String,String> tags, String tableName, Long startTime, Long endTime){
-        String sql = sql(tags,tableName,startTime,endTime);
+    public static String meanDatasSql(Map<String,String> tags,List<String> meanList, String tableName, Long startTime, Long endTime){
+        String sql = sql(tags,meanList,tableName,startTime,endTime);
         String group = GROUP_BY + "time(" + TimeIntervalEnum.interval(startTime,endTime) +")";
         return sql + group + FILL;
     }
-    private static String sql(Map<String,String> tags, String tableName, Long startTime, Long endTime){
-        String sql = SELECT + mean(Lists.newArrayList("*")) + FROM + tableName + WHERE;
+    private static String sql(Map<String,String> tags,List<String> meanList, String tableName, Long startTime, Long endTime){
+        String sql = SELECT + mean(meanList) + FROM + tableName + WHERE;
         //组装tag条件
         String conditionStr = condition(tags);
         //组装监控规则的时间段，转换为influx时间戳
@@ -64,9 +65,13 @@ public class InfluxSQLGenerator {
      * @return
      */
     private  static String mean(List<String> selectList){
+        //为空代表全选
+        if(selectList == null){
+            return " mean(*) ";
+        }
         List<String> means = Lists.newArrayList();
         for(String select : selectList){
-            String str = " mean(" + select + ") ";
+            String str = " mean(" + select + ") as " + select + " ";
             means.add(str);
         }
         return Joiner.on(COMMA).join(means);

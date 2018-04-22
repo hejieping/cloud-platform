@@ -1,14 +1,10 @@
 package com.cpf.controller;
 
 import com.cpf.constants.ModelTypeEnum;
-import com.cpf.knowledgebase.dao.PO.ModelOptionPO;
-import com.cpf.knowledgebase.dao.PO.RulePO;
-import com.cpf.knowledgebase.manager.AggreModelManager;
-import com.cpf.knowledgebase.manager.DO.AggreModelDO;
-import com.cpf.knowledgebase.manager.DO.ModelDO;
-import com.cpf.knowledgebase.manager.DO.ModelOptionsDO;
-import com.cpf.knowledgebase.manager.ModelManager;
-import com.cpf.knowledgebase.manager.RuleManager;
+import com.cpf.mysql.manager.AggreModelManager;
+import com.cpf.mysql.manager.DO.AggreModelDO;
+import com.cpf.mysql.manager.DO.ModelDO;
+import com.cpf.mysql.manager.ModelManager;
 import com.cpf.service.CallbackResult;
 import com.cpf.utils.ModelFactory;
 import org.springframework.beans.factory.annotation.Autowired;

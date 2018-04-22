@@ -1,6 +1,7 @@
 package com.cpf.controller;
 
-import com.cpf.agentbase.manager.MonitorManager;
+import com.cpf.influx.manager.MonitorManager;
+import com.cpf.mysql.manager.DO.AssetManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,8 @@ import java.util.Date;
 public class MonitorController {
     @Autowired
     private MonitorManager monitorManager;
+    @Autowired
+    private AssetManager assetManager;
 
     /**
      * 获取指定主机的在指定时间段内的所有性能数据平均值
@@ -28,8 +31,20 @@ public class MonitorController {
      * @return
      */
     @RequestMapping(value = "/allAVG", method = RequestMethod.GET)
-    ResponseEntity<Object> allAVG(String host, @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime, @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")Date endTime){
+    ResponseEntity<Object> allAVG(String host,
+                                  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
+                                  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")Date endTime){
         return new ResponseEntity<>(monitorManager.queryAllAVGByTime(host,startTime,endTime),HttpStatus.OK);
+    }
+    @RequestMapping(value = "/chartdata", method = RequestMethod.GET)
+    ResponseEntity<Object> chartdata(String host,String table,String col,
+                                  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
+                                  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")Date endTime){
+        return new ResponseEntity<>(monitorManager.queryChartDataByTime(host,table,col,startTime,endTime),HttpStatus.OK);
+    }
+    @RequestMapping(value = "/assets", method = RequestMethod.GET)
+    ResponseEntity<Object> assets(){
+        return new ResponseEntity<>(assetManager.all(),HttpStatus.OK);
     }
 
 }

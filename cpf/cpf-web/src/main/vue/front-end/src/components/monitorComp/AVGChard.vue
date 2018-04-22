@@ -1,13 +1,14 @@
 <template>
-    <el-card class="box-card" :body-style="{ padding: '0px'}" >
-        <div slot="header" class="clearfix">
-            <span>{{content.type}}</span>
+    <el-card class="box-card" :body-style="{ padding: '0px'}" align="left">
+        <div slot="header" class="clearfix" >
+            <h4>{{content.type}}</h4>
         </div>
-        <ul id="example-1">
-            <li v-for="(val, key) in content.data" :key="key">
-                {{key + ":" + val }}
-            </li>
-        </ul>
+        <el-row></el-row>
+        <el-row v-for="(val, key) in content.data" :key="key">
+            <el-col :offset="1">
+                <el-tag type="info"> {{key + ":" + val }}</el-tag>
+            </el-col>
+        </el-row>
     </el-card>
 </template>
 <script>
@@ -42,6 +43,10 @@ export default {
   }
 
   .box-card {
-    width: 480px;
+    width: 400px;
+    height:600px;
   }
+  .el-row {
+  margin-bottom: 50px;
+}
 </style>

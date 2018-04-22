@@ -30,7 +30,7 @@ export default new Router({
           path: '',
           component: monitorTable,
         },{
-          path: ':id',
+          path: ':hostname',
           component: monitorChart,
         }]
       },{

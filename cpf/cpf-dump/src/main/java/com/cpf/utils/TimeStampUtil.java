@@ -1,5 +1,9 @@
 package com.cpf.utils;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
+import java.text.DecimalFormat;
+
 /**
  * Created by jieping on 2018-04-20
  */
@@ -23,8 +27,12 @@ public class TimeStampUtil {
      * @param timestamp
      * @return
      */
-    public static Long InfluxTime2java(Long timestamp){
+    public static Long influxTime2Java(Long timestamp){
         return  timestamp/MULTIPLE;
+    }
+
+    public static String influxTime2Java(String timestamp){
+        return new DecimalFormat("0").format(NumberUtils.toDouble(timestamp));
     }
 
     /**
@@ -34,5 +42,11 @@ public class TimeStampUtil {
      */
     public static Long minutes2Time(Long minutes){
         return minutes*60*1000;
+    }
+    public static void main(String[] args){
+     Double a = new Double("1.50675336E12");
+     Double b = NumberUtils.toDouble("1.50675336E12");
+     DecimalFormat df = new DecimalFormat("0");
+     System.out.println(df.format(a));
     }
 }

@@ -1,6 +1,6 @@
 package com.cpf.controller;
 
-import com.cpf.agentbase.manager.PerformanceManager;
+import com.cpf.influx.manager.PerformanceManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
