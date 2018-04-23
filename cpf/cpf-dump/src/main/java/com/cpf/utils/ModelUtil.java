@@ -2,24 +2,35 @@ package com.cpf.utils;
 
 import com.cpf.constants.CpfDumpConstants;
 import com.cpf.constants.OptionTypeEnum;
+import com.cpf.constants.RuleTypeEnum;
 import com.cpf.exception.BusinessException;
 import com.cpf.exception.SystemException;
+import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.mysql.manager.DO.ModelDO;
 import com.cpf.mysql.manager.DO.ModelOptionDO;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import weka.core.OptionHandler;
-import weka.core.SerializationHelper;
+import weka.core.*;
+import weka.core.converters.ArffSaver;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Created by jieping on 2018-04-08
  */
 public class ModelUtil  {
-    public static String modelPath =  "cpf-dump/src/main/resources/";
-    public static String suffix = ".model";
+    public static String MODEL_PATH =  "cpf-dump/src/main/resources/";
+    public static String MODEL_SUFFIX = ".model";
+    public static String ARFF_SUFFIX = ".arff";
 
     /**
      * 将训练模型持久化
@@ -28,7 +39,7 @@ public class ModelUtil  {
      */
     public static void serialization(Long id, Object classifier){
         try {
-            SerializationHelper.write(modelPath+id+suffix,classifier);
+            SerializationHelper.write(MODEL_PATH +id+ MODEL_SUFFIX,classifier);
         } catch (Exception e) {
             throw new SystemException(CpfDumpConstants.SERIALIZATION_ERROR,e);
         }
@@ -42,47 +53,12 @@ public class ModelUtil  {
     public static Object deSerialization(Long id){
         Object classifier = null;
         try {
-            classifier  =  SerializationHelper.read(modelPath+id+suffix);
+            classifier  =  SerializationHelper.read(MODEL_PATH +id+ MODEL_SUFFIX);
         } catch (Exception e) {
             throw new SystemException(CpfDumpConstants.DESERIALIZATION_ERROR,e);
         }
         return classifier;
     }
-
-    /**
-     * 解析modelPO相关联的模型，并提取出模型的参数
-     * @param modelDO
-     * @return
-     */
-//    public static ModelOptionsDO getOptions(ModelDO modelDO){
-//        OptionHandler optionHandler = (OptionHandler) deSerialization(modelDO.getId());
-//        String[] options = optionHandler.getOptions();
-//        ModelOptionsDO optionsDO = new ModelOptionsDO();
-//        //复制option，使函数不影响原来model的配置
-//        BeanUtils.copyProperties(optionsDO,modelDO.getConfig(),ModelOptionDO.class);
-//        Iterator<String> iterator = Lists.newArrayList(options).iterator();
-//        //将参数解析成对象
-//        while(iterator.hasNext()){
-//            String key = iterator.next();
-//            ModelOptionDO option = optionsDO.getOptions().get(key);
-//            if(option != null){
-//                //如果参数为bool类型，不需要设置参数的值
-//                if(option.getValueType() == OptionTypeEnum.BOOLEAN){
-//                    continue;
-//                }
-//                //设定参数的值
-//                if(judgeOptionType(key,option)){
-//                    if(iterator.hasNext()){
-//                        option.setValue(iterator.next());
-//
-//                    }
-//                }
-//            }
-//        }
-//        return modelDO.getConfig();
-//
-//    }
-
     /**
      * 设置模型参数，并持久化
      * @param modelDO
@@ -102,6 +78,62 @@ public class ModelUtil  {
             throw new BusinessException(CpfDumpConstants.SET_OPTION_ERROR,e);
         }
         serialization(modelDO.getId(),optionHandler);
+    }
+
+    /**
+     * 将监控数据转换为arff文件
+     * @param monitorDOList
+     * @return 文件路径+文件名称
+     */
+    public static String MonitorDOS2arff(List<MonitorDO> monitorDOList){
+        if(CollectionUtils.isEmpty(monitorDOList)){
+            return null;
+        }
+        Map<String,List<String>> monitorMap = Maps.newHashMap();
+        for(MonitorDO monitorDO : monitorDOList){
+            for(Map.Entry<String,String> entry : monitorDO.getData().entrySet()) {
+                List<String> list = monitorMap.get(entry.getKey());
+                if(list == null){
+                    list = Lists.newArrayList();
+                    monitorMap.put(entry.getKey(),list);
+                }
+                list.add(entry.getValue());
+            }
+        }
+
+        List<String> tagList = RuleTypeEnum.CPU.getTagList();
+        ArrayList<Attribute> attributeArrayList = Lists.newArrayList();
+        for(String key : monitorMap.keySet()){
+            Attribute attribute = null;
+            //如果该属性为标签属性，则设置为nominal属性
+            if(tagList.contains(key)){
+                List<String> nominalList = monitorMap.get(key).stream().distinct().collect(Collectors.toList());
+                attribute = new Attribute(key,nominalList);
+            }else {
+                attribute = new Attribute(key);
+            }
+            attributeArrayList.add(attribute);
+        }
+        Map<String,Attribute> attributeMap = attributeArrayList.stream().collect(Collectors.toMap(Attribute::name,Function.identity()));
+        Instances instances = new Instances(monitorDOList.get(0).getType(),attributeArrayList,0);
+        instances.setClassIndex(instances.numAttributes()-1);
+        for(MonitorDO monitorDO : monitorDOList){
+            Instance instance = new DenseInstance(attributeArrayList.size());
+            for(Map.Entry<String,String> entry : monitorDO.getData().entrySet()){
+                instance.setValue(attributeMap.get(entry.getKey()),entry.getValue());
+            }
+            instances.add(instance);
+        }
+        ArffSaver saver = new ArffSaver();
+        saver.setInstances(instances);
+        String fileName = MODEL_PATH + System.currentTimeMillis()+ ARFF_SUFFIX;
+        try {
+            saver.setFile(new File(fileName));
+            saver.writeBatch();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return fileName;
     }
 
     /**

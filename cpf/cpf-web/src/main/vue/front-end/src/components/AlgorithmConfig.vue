@@ -7,7 +7,7 @@
     <el-breadcrumb-item>预警算法配置</el-breadcrumb-item>
     </el-breadcrumb>
     </el-row>
-    <router-view @goDetail="goDetail"></router-view> 
+    <router-view ></router-view> 
   </div>
 </template>
 <script>

@@ -67,13 +67,17 @@ public class MonitorDAO {
      * @param ruleTypeEnum
      * @return
      */
-    public QueryResult queryDatasByTime(Map<String,String> tags,List<String> meanList,Long startTime,Long endTime,RuleTypeEnum ruleTypeEnum){
+    public QueryResult queryAVGGroupByTime(Map<String,String> tags, List<String> meanList, Long startTime, Long endTime, RuleTypeEnum ruleTypeEnum){
         Query query = new Query(InfluxSQLGenerator.meanDatasSql(tags,meanList,ruleTypeEnum.getType(),startTime,endTime),template.getDatabase());
         QueryResult result = template.query(query, TimeUnit.MILLISECONDS);
         return result;
     }
 
-
+    public QueryResult queryDataByTime(String tableName,Long startTime,Long endTime,Long limit){
+        Query query = new Query(InfluxSQLGenerator.dataSQL(tableName,startTime,endTime,limit),template.getDatabase());
+        QueryResult result = template.query(query, TimeUnit.MILLISECONDS);
+        return result;
+    }
 
     public static void main(String[] args){
         CpuPO cpuPO = new CpuPO();

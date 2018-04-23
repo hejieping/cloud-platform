@@ -26,7 +26,7 @@
       <el-table-column
       align='left'
         prop="scene"
-        label="目标设备"
+        label="应用场景"
          width="300">
       </el-table-column>
       <el-table-column
@@ -62,7 +62,6 @@ export default {
   },
   methods: {
     openDialog() {
-      console.log('sad');
       this.aggreModelDialogData.title = "新增应用场景";
       this.aggreModelDialogData.data = {};
       this.$store.commit("openAMAddDialog");

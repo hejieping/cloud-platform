@@ -24,7 +24,11 @@ public enum ModelTypeEnum {
     public String getType() {
         return type;
     }
-    public static List<Map<String,String>> getEnums(){
+    /**
+     * 获取 前端展示格式的规则类型
+     * @return
+     */
+    public static List<Map<String,String>> getViewOptions(){
         List<Map<String,String>> list = Lists.newArrayList();
         for(ModelTypeEnum modelTypeEnum : ModelTypeEnum.values()){
             Map<String,String> map = Maps.newHashMap();

@@ -1,6 +1,7 @@
 package com.cpf.controller;
 
 import com.cpf.constants.ModelTypeEnum;
+import com.cpf.constants.RuleTypeEnum;
 import com.cpf.mysql.manager.AggreModelManager;
 import com.cpf.mysql.manager.DO.AggreModelDO;
 import com.cpf.mysql.manager.DO.ModelDO;
@@ -32,9 +33,16 @@ public class ModelController {
      */
     @RequestMapping(value = "/modelType", method = RequestMethod.GET)
     ResponseEntity<Object> modelType(){
-        return  new ResponseEntity<Object>(new CallbackResult<List<Map<String,String>>>(ModelTypeEnum.getEnums(),true),HttpStatus.OK);
+        return  new ResponseEntity<Object>(new CallbackResult<List<Map<String,String>>>(ModelTypeEnum.getViewOptions(),true),HttpStatus.OK);
     }
-
+    /**
+     * 获取应用场景的类型
+     * @return
+     */
+    @RequestMapping(value = "/scenes", method = RequestMethod.GET)
+    ResponseEntity<Object> scenes(){
+        return  new ResponseEntity<Object>(new CallbackResult<List<Map<String,String>>>(RuleTypeEnum.getViewOptions(),true),HttpStatus.OK);
+    }
     /**
      * 获取模型类
      * @param name 模型名称

@@ -29,58 +29,53 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { saveAggreModel} from "@/api/getData";
+import { saveAggreModel, getScenes } from "@/api/getData";
 export default {
   name: "AlgorithmAddDialog",
   data() {
     return {
       formLabelWidth: "80px",
-      scenes:[{
-          value:'computer',
-          label:'电脑'
-      },{
-          value:'print',
-          label:'打印机'
-      },{
-          value:'projector',
-          label:'投影仪'
-      }],
-      rules:{
-        scene:[
-            { required: true, message: '请选择应用场景', trigger: 'blur' }
-          ],
-        name:[
-              { required: true, message: '请输入名称', trigger: 'blur' }
-          ]
+      scenes: [],
+      rules: {
+        scene: [{ required: true, message: "请选择应用场景", trigger: "blur" }],
+        name: [{ required: true, message: "请输入名称", trigger: "blur" }]
       }
     };
-
   },
   methods: {
     closeDialog() {
       this.$store.commit("closeAMAddDialog");
     },
-    async submit(form){
-      let result =  this.$refs['aggremodel'].validate((valid,obj) => {
-          if (valid) {
-          }else{
-            return false;
-          }
-          });
+    async submit(form) {
+      let result = this.$refs["aggremodel"].validate((valid, obj) => {
+        if (valid) {
+        } else {
+          return false;
+        }
+      });
       console.log(result);
-      const  response = await saveAggreModel(form);
-      if(response.success){
-        this.$emit('saveAggreModel',response.result);
-        this.$message('新建模型成功');
+      const response = await saveAggreModel(form);
+      if (response.success) {
+        this.$emit("saveAggreModel", response.result);
+        this.$message("新建模型成功");
         this.closeDialog();
-      }else{
-        this.$message('新建模型失败');
+      } else {
+        this.$message("新建模型失败");
+      }
+    },
+    async initScenes() {
+      const response = await getScenes();
+      if (response.success) {
+        this.scenes = response.result;
+      } else {
+        this.$message("获取应用场景类型失败");
       }
     }
   },
-    props:{
-    aggremodel:{},
-    title:""
+
+  props: {
+    aggremodel: {},
+    title: ""
   },
   computed: {
     AggreModelAddDialogState: {
@@ -94,6 +89,7 @@ export default {
     }
   },
   created() {
+    this.initScenes();
   }
 };
 </script>

@@ -61,14 +61,22 @@ public class MonitorManager extends ServiceTemplate {
             throw new BusinessException(CpfDumpConstants.QUERY_AVG_DATA_FAILED);
         }
     }
+
+    /**
+     * 查询指定机器的平均性能数据
+     * @param hostName 机器名称
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return
+     */
     public CallbackResult<List<MonitorDO>> queryAllAVGByTime(String hostName, Date startTime, Date endTime){
         Object result = execute(logger, "queryAllAVGByTime", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
-                 if(startTime == null || endTime == null || hostName == null){
-                     return CallbackResult.failure();
+                 if(ValidationUtil.isNotNull(hostName,startTime,endTime)){
+                     return CallbackResult.success();
                  }
-                 return CallbackResult.success();
+                 return CallbackResult.failure();
             }
 
             @Override
@@ -87,6 +95,30 @@ public class MonitorManager extends ServiceTemplate {
         return ( CallbackResult<List<MonitorDO>>)result;
     }
 
+    public CallbackResult<List<MonitorDO>> queryDataByTime(String tableName,Date startTime,Date endTime,Long limit){
+        Object result = execute(logger, "queryDataByTime", new ServiceExecuteTemplate() {
+            @Override
+            public CallbackResult<Object> checkParams() {
+                //limit参数为空为默认全选，在此不做校验
+                if(ValidationUtil.isNotNull(tableName,startTime,endTime)){
+                    return CallbackResult.success();
+                }
+                return CallbackResult.failure();
+            }
+
+            @Override
+            public CallbackResult<Object> executeAction() {
+                QueryResult result = monitorDAO.queryDataByTime(tableName,startTime.getTime(),endTime.getTime(),limit);
+                Map<String,List<MonitorDO>> resultMap =  parseQueryResult(result);
+                List<MonitorDO> resultList = Lists.newLinkedList();
+                for(List<MonitorDO> monitorDOList : resultMap.values()){
+                    resultList.addAll(monitorDOList);
+                }
+                return new CallbackResult<>(resultList,true);
+            }
+        });
+        return ( CallbackResult<List<MonitorDO>>)result;
+    }
     /**
      * 查询绘制图表所需数据
      */
@@ -108,7 +140,7 @@ public class MonitorManager extends ServiceTemplate {
                 List<String> meanList  = Lists.newArrayList(col);
                 Map<String,String> tagMap = Maps.newHashMap();
                 tagMap.put("host",hostName);
-                QueryResult result = monitorDAO.queryDatasByTime(tagMap,meanList,startTime.getTime(),endTime.getTime(),RuleTypeEnum.typeOf(tableName));
+                QueryResult result = monitorDAO.queryAVGGroupByTime(tagMap,meanList,startTime.getTime(),endTime.getTime(),RuleTypeEnum.typeOf(tableName));
                 Map<String,List<MonitorDO>> resultMap =  parseQueryResult(result);
                 List<String> timeList = Lists.newLinkedList();
                 List<String> colList = Lists.newLinkedList();

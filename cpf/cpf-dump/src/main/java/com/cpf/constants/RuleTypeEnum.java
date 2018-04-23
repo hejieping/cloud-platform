@@ -1,9 +1,11 @@
 package com.cpf.constants;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 监控数据类型（对应influx的表名称）
@@ -43,6 +45,20 @@ public enum  RuleTypeEnum {
         return tagList;
     }
 
+    /**
+     * 获取 前端展示格式的规则类型
+     * @return
+     */
+    public static List<Map<String,String>> getViewOptions(){
+        List<Map<String,String>> list = Lists.newArrayList();
+        for(RuleTypeEnum ruleTypeEnum : RuleTypeEnum.values()){
+            Map<String,String> map = Maps.newHashMap();
+            map.put("value",ruleTypeEnum.getType());
+            map.put("label",ruleTypeEnum.getType());
+            list.add(map);
+        }
+        return list;
+    }
     public static RuleTypeEnum typeOf(String type){
         for(RuleTypeEnum ruleTypeEnum : RuleTypeEnum.values()){
             if(ruleTypeEnum.getType().equals(type)){

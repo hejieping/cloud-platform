@@ -9,6 +9,7 @@ export const deleteRuleByid = data => fetch('/config/rule',data,'DELETE');
 export const saveRule = data => fetch('/config/rule',data,'POST');
 
 export const getModelTypes = () =>fetch('/config/modelType');
+export const getScenes = () =>fetch('/config/scenes');
 export const getAllModel = () => fetch('/config/models');
 export const getModel = data => fetch('/config/model',data);
 export const deleteModelByid = data => fetch('/config/model',data,'DELETE');
