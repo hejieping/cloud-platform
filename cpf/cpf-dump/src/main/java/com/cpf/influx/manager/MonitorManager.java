@@ -112,9 +112,11 @@ public class MonitorManager extends ServiceTemplate {
                 Map<String,List<MonitorDO>> resultMap =  parseQueryResult(result);
                 List<String> timeList = Lists.newLinkedList();
                 List<String> colList = Lists.newLinkedList();
-                for(MonitorDO monitorDO : resultMap.get(tableName)){
-                    timeList.add(TimeStampUtil.influxTime2Java(monitorDO.getData().get("time")));
-                    colList.add(monitorDO.getData().get(col));
+                if(resultMap.size() != 0 && resultMap.get(tableName) != null){
+                    for(MonitorDO monitorDO : resultMap.get(tableName)){
+                        timeList.add(TimeStampUtil.influxTime2Java(monitorDO.getData().get("time")));
+                        colList.add(monitorDO.getData().get(col));
+                    }
                 }
                 return new CallbackResult<>(Lists.newArrayList(timeList,colList),true);
             }

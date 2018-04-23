@@ -29,6 +29,26 @@
          </el-form-item>
        </el-form>
      </el-row>
+     <el-row :gutter="20">
+       <el-col :span="12">
+         <ChartCard :id="chartId1" table='win_cpu'
+          :host="this.$route.params.hostname"
+           col='Percent_Interrupt_Time'
+           text='cpu利用率'
+          :startTime='start'
+          ref='cpuChart'
+          :endTime='end'></ChartCard>
+       </el-col>
+       <el-col :span="12">
+         <ChartCard :id="chartId1" table='win_mem'
+          :host="this.$route.params.hostname"
+           col='Available_Bytes'
+           text='内存利用率'
+          :startTime='start'
+          ref='memChart'
+          :endTime='end'></ChartCard>
+       </el-col>       
+     </el-row>
      <el-row :gutter="20" v-for="(datas,index) in AVGData" :key="index"> 
       <el-col :span="8" v-for="(data) in datas" :key="data.type">
         <AVGChard :content="data"></AVGChard>
@@ -38,24 +58,20 @@
    </div> 
   </template> 
 <script>
-import { getAVGData } from "@/api/getData";
+import { getAVGData, getChartData } from "@/api/getData";
 import AVGChard from "@/components/monitorComp/AVGChard.vue";
 import ChartCard from "@/components/monitorComp/ChartCard.vue";
 import search from "@/components/monitorComp/search.vue";
+import { formatDate } from "@/utils/date";
 export default {
   name: "monitorChart",
   data() {
     return {
-      chartData: [
-        { name: "2014", value: 1342 },
-        { name: "2015", value: 2123 },
-        { name: "2016", value: 1654 },
-        { name: "2017", value: 1795 }
-      ],
       chartId1: "sad",
       chartId2: "gad",
       AVGData: [],
-      time: ""
+      time:  [],
+      cpuChartData: []
     };
   },
   methods: {
@@ -65,7 +81,7 @@ export default {
         startTime: start,
         endTime: end
       };
-      let response = await getAVGData(params);
+      var response = await getAVGData(params);
       if (response.success) {
         //将数组切分，每份三个数据
         this.AVGData = [];
@@ -87,7 +103,10 @@ export default {
     },
     search() {
       if (this.time != "") {
-        this.initData(this.time[0], this.time[1]);
+        this.initData(this.start, this.end);
+        this.$refs.cpuChart.initChart();
+        this.$refs.memChart.initChart();
+
       }
     }
   },
@@ -96,8 +115,27 @@ export default {
     search: search,
     AVGChard: AVGChard
   },
+  computed: {
+    start() {
+      if (this.time != "") {
+        return this.time[0];
+      }
+    },
+    end() {
+      if (this.time != "") {
+        return this.time[1];
+      }
+    }
+  },
   created() {
-    this.initData("2017-10-11 10:00:00", "2017-10-12 15:00:00");
+    var hour = 60*60*1000;
+    this.time = [];
+    var endTime = new Date();
+    var startTime = new Date(endTime.getTime()-hour);
+    endTime = formatDate(endTime);
+    startTime = formatDate(startTime);
+    this.time.push(startTime,endTime);
+    this.initData(startTime,startTime);
   }
 };
 </script>
