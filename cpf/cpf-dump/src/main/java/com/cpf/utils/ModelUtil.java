@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -28,9 +29,9 @@ import java.util.stream.Collectors;
  * Created by jieping on 2018-04-08
  */
 public class ModelUtil  {
-    public static String MODEL_PATH =  "cpf-dump/src/main/resources/";
-    public static String MODEL_SUFFIX = ".model";
-    public static String ARFF_SUFFIX = ".arff";
+    public static final String MODEL_PATH =  "cpf-dump/src/main/resources/";
+    public static final String MODEL_SUFFIX = ".model";
+    public static final String ARFF_SUFFIX = ".arff";
 
     /**
      * 将训练模型持久化
@@ -80,17 +81,16 @@ public class ModelUtil  {
         serialization(modelDO.getId(),optionHandler);
     }
 
-    /**
-     * 将监控数据转换为arff文件
-     * @param monitorDOList
-     * @return 文件路径+文件名称
-     */
-    public static String MonitorDOS2arff(List<MonitorDO> monitorDOList){
+    public static Instances monitorDOS2Instances(List<MonitorDO> monitorDOList){
         if(CollectionUtils.isEmpty(monitorDOList)){
             return null;
         }
         Map<String,List<String>> monitorMap = Maps.newHashMap();
+        monitorMap.put("danger",Lists.newArrayList());
+        Random random = new Random();
+        //获取monitordo的所有值，map的key为属性名，
         for(MonitorDO monitorDO : monitorDOList){
+            monitorDO.getData().put("danger",String.valueOf(random.nextBoolean()));
             for(Map.Entry<String,String> entry : monitorDO.getData().entrySet()) {
                 List<String> list = monitorMap.get(entry.getKey());
                 if(list == null){
@@ -100,8 +100,8 @@ public class ModelUtil  {
                 list.add(entry.getValue());
             }
         }
-
-        List<String> tagList = RuleTypeEnum.CPU.getTagList();
+        List<String> tagList = Lists.newArrayList(RuleTypeEnum.CPU.getTagList());
+        tagList.add("danger");
         ArrayList<Attribute> attributeArrayList = Lists.newArrayList();
         for(String key : monitorMap.keySet()){
             Attribute attribute = null;
@@ -120,10 +120,24 @@ public class ModelUtil  {
         for(MonitorDO monitorDO : monitorDOList){
             Instance instance = new DenseInstance(attributeArrayList.size());
             for(Map.Entry<String,String> entry : monitorDO.getData().entrySet()){
-                instance.setValue(attributeMap.get(entry.getKey()),entry.getValue());
+                if(tagList.contains(entry.getKey())){
+                    instance.setValue(attributeMap.get(entry.getKey()),entry.getValue());
+                }else {
+                    instance.setValue(attributeMap.get(entry.getKey()),new Double(entry.getValue()));
+
+                }
             }
             instances.add(instance);
         }
+        return instances;
+    }
+    /**
+     * 将监控数据转换为arff文件
+     * @param monitorDOList
+     * @return 文件路径+文件名称
+     */
+    public static String monitorDOS2Arff(List<MonitorDO> monitorDOList){
+        Instances instances = monitorDOS2Instances(monitorDOList);
         ArffSaver saver = new ArffSaver();
         saver.setInstances(instances);
         String fileName = MODEL_PATH + System.currentTimeMillis()+ ARFF_SUFFIX;
@@ -159,6 +173,8 @@ public class ModelUtil  {
         Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
         return pattern.matcher(str).matches();
     }
-
+    public static void main(String[] args){
+        File file = new File(ModelUtil.MODEL_PATH+System.currentTimeMillis()+ModelUtil.ARFF_SUFFIX);
+    }
 
 }

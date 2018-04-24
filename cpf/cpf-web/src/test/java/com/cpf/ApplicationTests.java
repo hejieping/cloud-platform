@@ -2,14 +2,21 @@ package com.cpf;
 
 import com.cpf.influx.dao.CpuDAO;
 import com.cpf.influx.manager.DO.MonitorDO;
+import com.cpf.influx.manager.MonitorManager;
 import com.cpf.monitor.MonitorEngine;
+import com.cpf.utils.ModelUtil;
 import com.google.common.collect.Maps;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import weka.core.Instances;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @RunWith(SpringRunner.class)
@@ -17,6 +24,8 @@ import java.util.Map;
 public class ApplicationTests {
 	@Autowired
 	private MonitorEngine monitorEngine;
+	@Autowired
+	private MonitorManager monitorManager;
 	@Autowired
 	private CpuDAO cpuDAO;
 	@Test
@@ -39,6 +48,23 @@ public class ApplicationTests {
 	@Test
 	public void testSelect(){
 		cpuDAO.all();
+	}
+	@Test
+	public void test2File() throws Exception {
+		Date date1 = new Date(1507653987000L);
+		Date date2 = new Date(1507740387000L);
+		List<MonitorDO> monitorList = monitorManager.queryDataByTime("win_cpu",date1,date2,30L).getResult();
+		Instances instances =  ModelUtil.monitorDOS2Instances(monitorList);
+		BufferedWriter writer = new BufferedWriter(new FileWriter("src/main/resources/data.arff"));
+		writer.write(instances.toString());
+		writer.flush();
+		writer.close();//		NaiveBayes nb = new NaiveBayes();
+//		nb.buildClassifier(instances);
+//		Evaluation evaluation = new Evaluation(instances);
+//		evaluation.crossValidateModel(nb,instances,10,new Random(1));
+//		System.out.println(evaluation.toSummaryString());
+
+
 	}
 
 }
