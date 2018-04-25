@@ -2,11 +2,12 @@ package com.cpf.influx.dao;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.cpf.influx.dao.PO.CpuPO;
 import com.cpf.constants.RuleTypeEnum;
+import com.cpf.influx.dao.PO.CpuPO;
 import com.cpf.utils.InfluxSQLGenerator;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.influxdb.dto.Point;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,10 +74,26 @@ public class MonitorDAO {
         return result;
     }
 
-    public QueryResult queryDataByTime(String tableName,Long startTime,Long endTime,Long limit){
-        Query query = new Query(InfluxSQLGenerator.dataSQL(tableName,startTime,endTime,limit),template.getDatabase());
+    /**
+     * select * from tableNanem where time > startTime and time < endTime limit
+     * @param tableName
+     * @param startTime
+     * @param endTime
+     * @param limit
+     * @return
+     */
+    public QueryResult queryDataByTime(String tableName,Map<String,String> tagMap,Long startTime,Long endTime,Long limit){
+        Query query = new Query(InfluxSQLGenerator.dataSQL(tableName,tagMap,startTime,endTime,limit),template.getDatabase());
         QueryResult result = template.query(query, TimeUnit.MILLISECONDS);
         return result;
+    }
+
+    /**
+     * 插入数据
+     * @param point
+     */
+    public void insert(Point point){
+        template.write(point);
     }
 
     public static void main(String[] args){
@@ -97,13 +114,6 @@ public class MonitorDAO {
         System.out.println(1524218182184861300L);
 
 
-        Map<String,String> tagMap = Maps.newHashMap();
-        tagMap.put("instance","0");
-        tagMap.put("objectname","PC-44");
-        tagMap.put("host","intel");
-        List<String> meanList = Lists.newArrayList("dile_time");
-        System.out.println(InfluxSQLGenerator.meanDataSQL(tagMap,"win_cpu",12000000L,20000000L));
-        System.out.println(InfluxSQLGenerator.meanDatasSql(tagMap,meanList,"win_cpu",12000000L,20000000L));
 
     }
 }

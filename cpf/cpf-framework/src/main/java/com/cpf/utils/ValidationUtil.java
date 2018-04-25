@@ -20,4 +20,17 @@ public class ValidationUtil {
         }
         return result;
     }
+    public static Boolean isNull(Object ...objects){
+        return !isNotNull(objects);
+    }
+    public static Boolean isAllNull(Object ...objects){
+        boolean result = true;
+        for(Object object : objects){
+            if(object != null){
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
 }

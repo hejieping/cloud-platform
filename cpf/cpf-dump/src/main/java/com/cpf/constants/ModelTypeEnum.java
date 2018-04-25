@@ -1,6 +1,5 @@
 package com.cpf.constants;
 
-import com.cpf.mysql.manager.DO.ModelOptionDO;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -27,7 +26,6 @@ public enum ModelTypeEnum {
     ONE_R("1-R分类"),
     PART("PART决策"),
     TEST("测试");
-    private List<ModelOptionDO> options;
     private String desc;
     private ModelTypeEnum(String desc){
         this.desc = desc;
@@ -51,7 +49,4 @@ public enum ModelTypeEnum {
         return desc;
     }
 
-    public List<ModelOptionDO> getOptions() {
-        return options;
-    }
 }

@@ -14,6 +14,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.influxdb.dto.Point;
 import org.influxdb.dto.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +74,7 @@ public class MonitorManager extends ServiceTemplate {
         Object result = execute(logger, "queryAllAVGByTime", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
-                 if(ValidationUtil.isNotNull(hostName,startTime,endTime)){
+                 if(ValidationUtil.isNotNull(hostName)){
                      return CallbackResult.success();
                  }
                  return CallbackResult.failure();
@@ -83,7 +84,9 @@ public class MonitorManager extends ServiceTemplate {
             public CallbackResult<Object> executeAction() {
                 Map<String,String> tagMap = Maps.newHashMap();
                 tagMap.put("host",hostName);
-                QueryResult result = monitorDAO.queryAllAVGByTime(tagMap,startTime.getTime(),endTime.getTime());
+                Long start = startTime == null? null : startTime.getTime();
+                Long end = endTime == null? null : endTime.getTime();
+                QueryResult result = monitorDAO.queryAllAVGByTime(tagMap,start,end);
                 Map<String,List<MonitorDO>> resultMap =  parseQueryResult(result);
                 List<MonitorDO> resultList = Lists.newLinkedList();
                 for(List<MonitorDO> monitorDOList : resultMap.values()){
@@ -95,12 +98,12 @@ public class MonitorManager extends ServiceTemplate {
         return ( CallbackResult<List<MonitorDO>>)result;
     }
 
-    public CallbackResult<List<MonitorDO>> queryDataByTime(String tableName,Date startTime,Date endTime,Long limit){
+    public CallbackResult<List<MonitorDO>> queryDataByTime(String tableName,Map<String,String> tagMap,Date startTime,Date endTime,Long limit){
         Object result = execute(logger, "queryDataByTime", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
                 //limit参数为空为默认全选，在此不做校验
-                if(ValidationUtil.isNotNull(tableName,startTime,endTime)){
+                if(ValidationUtil.isNotNull(tableName)){
                     return CallbackResult.success();
                 }
                 return CallbackResult.failure();
@@ -108,7 +111,7 @@ public class MonitorManager extends ServiceTemplate {
 
             @Override
             public CallbackResult<Object> executeAction() {
-                QueryResult result = monitorDAO.queryDataByTime(tableName,startTime.getTime(),endTime.getTime(),limit);
+                QueryResult result = monitorDAO.queryDataByTime(tableName,tagMap,startTime.getTime(),endTime.getTime(),limit);
                 Map<String,List<MonitorDO>> resultMap =  parseQueryResult(result);
                 List<MonitorDO> resultList = Lists.newLinkedList();
                 for(List<MonitorDO> monitorDOList : resultMap.values()){
@@ -155,6 +158,41 @@ public class MonitorManager extends ServiceTemplate {
         });
         return (CallbackResult<List<List<String>>>)result;
     }
+
+    /**
+     * 插入监控数据
+     * @param monitorDO
+     * @return
+     */
+    public CallbackResult<Object> insertMonitor(MonitorDO monitorDO){
+        Object result = execute(logger, "insertMonitor", new ServiceExecuteTemplate() {
+            @Override
+            public CallbackResult<Object> checkParams() {
+                if(ValidationUtil.isNotNull(monitorDO)){
+                    return CallbackResult.success();
+                }
+                return CallbackResult.failure();
+            }
+
+            @Override
+            public CallbackResult<Object> executeAction() {
+                Map<String,Object> fieldMap = Maps.newHashMap();
+                Map<String,String> tagMap = Maps.newHashMap();
+                List<String> tagList = RuleTypeEnum.typeOf(monitorDO.getType()).getTagList();
+                for(Map.Entry<String,String> entry : monitorDO.getData().entrySet()){
+                    if(tagList.contains(entry.getKey())){
+                        tagMap.put(entry.getKey(),entry.getValue());
+                    }else {
+                        fieldMap.put(entry.getKey(),new Double(entry.getValue()));
+                    }
+                }
+                monitorDAO.insert(Point.measurement(monitorDO.getType()).tag(tagMap).fields(fieldMap).build());
+                return CallbackResult.success();
+            }
+        });
+        return (CallbackResult<Object>)result;
+    }
+
     /**
      * 将查询结果转换为MonitorDO
      * @param result

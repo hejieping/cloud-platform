@@ -3,6 +3,8 @@ package com.cpf.utils;
 import com.cpf.constants.TimeIntervalEnum;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.apache.commons.collections.MapUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -12,16 +14,16 @@ import java.util.Map;
  * Created by jieping on 2018-04-21
  */
 public class InfluxSQLGenerator {
-    private static String FROM = " from ";
-    private static String SELECT = " select ";
-    private static String WHERE = " where ";
-    private static String GROUP_BY = " group by ";
-    private static String AND = " and ";
-    private static String FINISH = " ; ";
-    private static String FILL = "  fill(0)" + FINISH;
-    private static String LIMIT = " limit ";
-    private static String COMMA = " , ";
-    private static String ALL  = " * ";
+    private static final String FROM = " from ";
+    private static final String SELECT = " select ";
+    private static final String WHERE = " where ";
+    private static final String GROUP_BY = " group by ";
+    private static final String AND = " and ";
+    private static final String FINISH = " ; ";
+    private static final String FILL = "  fill(0)" + FINISH;
+    private static final String LIMIT = " limit ";
+    private static final String COMMA = " , ";
+    private static final String ALL  = " * ";
 
 
     /**
@@ -58,14 +60,9 @@ public class InfluxSQLGenerator {
      * @param limit
      * @return
      */
-    public static String dataSQL(String tableName,Long startTime,Long endTime,Long limit){
+    public static String dataSQL(String tableName,Map<String,String> tagMap,Long startTime,Long endTime,Long limit){
         StringBuffer sql = new StringBuffer();
-        sql.append(SELECT + ALL + FROM + tableName + WHERE);
-        startTime = TimeStampUtil.javaTime2Influx(startTime);
-        endTime = TimeStampUtil.javaTime2Influx(endTime);
-        String startTimeCondition = "time >" + startTime;
-        String endTimeCondition = "time < " + endTime;
-        sql.append(Joiner.on(AND).join(startTimeCondition,endTimeCondition));
+        sql.append(SELECT + ALL + FROM + tableName + condition(tagMap,startTime,endTime));
         if(limit != null){
             sql.append(LIMIT + limit);
         }
@@ -73,17 +70,7 @@ public class InfluxSQLGenerator {
         return sql.toString();
     }
     private static String meanSql(Map<String,String> tags, List<String> meanList, String tableName, Long startTime, Long endTime){
-        String sql = SELECT + mean(meanList) + FROM + tableName + WHERE;
-        //组装tag条件
-        String conditionStr = condition(tags);
-        //组装监控规则的时间段，转换为influx时间戳
-        startTime = TimeStampUtil.javaTime2Influx(startTime);
-        endTime = TimeStampUtil.javaTime2Influx(endTime);
-        String startTimeCondition = "time >" + startTime;
-        String endTimeCondition = "time < " + endTime;
-        conditionStr = Joiner.on(AND).join(Lists.newArrayList(conditionStr,startTimeCondition,endTimeCondition));
-        sql  = sql + conditionStr;
-        return sql;
+        return SELECT + mean(meanList) + FROM + tableName + condition(tags,startTime,endTime);
     }
 
     /**
@@ -109,19 +96,39 @@ public class InfluxSQLGenerator {
      * @param conditionMap
      * @return
      */
-    private static String condition(Map<String,String> conditionMap){
-        List<String> conditionList = Lists.newArrayList();
-        for(Map.Entry<String,String> tag : conditionMap.entrySet()){
-            StringBuffer condition = new StringBuffer();
-            condition.append(tag.getKey());
-            condition.append("='");
-            condition.append(tag.getValue());
-            condition.append("'");
-            conditionList.add(condition.toString());
+    private static String condition(Map<String,String> conditionMap,Long startTime,Long endTime){
+        if(ValidationUtil.isAllNull(conditionMap,startTime,endTime)){
+            return "";
         }
-        return Joiner.on(AND).join(conditionList);
+        List<String> conditionList = Lists.newArrayList();
+        if(MapUtils.isNotEmpty(conditionMap)){
+            for(Map.Entry<String,String> tag : conditionMap.entrySet()){
+                StringBuffer condition = new StringBuffer();
+                condition.append(tag.getKey());
+                condition.append("='");
+                condition.append(tag.getValue());
+                condition.append("'");
+                conditionList.add(condition.toString());
+            }
+        }
+        if(startTime != null){
+            conditionList.add(" time > " +  TimeStampUtil.javaTime2Influx(startTime));
+        }
+        if(endTime != null){
+            conditionList.add(" time < " +  TimeStampUtil.javaTime2Influx(endTime));
+        }
+        return WHERE + Joiner.on(AND).join(conditionList);
     }
     public static void main(String[] args){
-        System.out.println(InfluxSQLGenerator.dataSQL("win_cpu",12L,32L,5L));
+
+        Map<String,String> tagMap = Maps.newHashMap();
+        tagMap.put("instance","0");
+        tagMap.put("objectname","PC-44");
+        tagMap.put("host","intel");
+        List<String> meanList = Lists.newArrayList("dile_time");
+        System.out.println(InfluxSQLGenerator.meanDataSQL(tagMap,"win_cpu",12000000L,20000000L));
+        System.out.println(InfluxSQLGenerator.meanDatasSql(tagMap,meanList,"win_cpu",12000000L,20000000L));
+        System.out.println(InfluxSQLGenerator.dataSQL("win_cpu",null,12L,32L,5L));
+        System.out.println(InfluxSQLGenerator.dataSQL("win_cpu",null,null,32L,5L));
     }
 }

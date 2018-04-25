@@ -13,10 +13,10 @@ public enum TimeIntervalEnum {
     /**
      * 分钟，小时，天数和星期的毫秒数
      */
-    private static Long M = 60*1000L;
-    private static Long H = M*60;
-    private static Long D = H*24;
-    private static Long W = D*7;
+    private static final Long M = 60*1000L;
+    private static final Long H = M*60;
+    private static final Long D = H*24;
+    private static final Long W = D*7;
     private TimeIntervalEnum(String unit){
         this.unit = unit;
     }

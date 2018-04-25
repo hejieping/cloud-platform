@@ -7,8 +7,8 @@ import com.google.common.base.Joiner;
  * Created by jieping on 2018-04-02.
  */
 public class LoggerFormat {
-    public static String FIRST_SPLIT = "|";
-    public static String SECOND_SPLIT = ",";
+    public static final String FIRST_SPLIT = "|";
+    public static final String SECOND_SPLIT = ",";
     public static String format(String business,String[] params,String result,String desc){
         if(params == null){
             params = new String[]{"null"};

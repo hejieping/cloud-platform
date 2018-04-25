@@ -1,6 +1,7 @@
 package com.cpf.utils;
 
 import com.cpf.constants.CpfDumpConstants;
+import com.cpf.constants.ErrorConstants;
 import com.cpf.constants.OptionTypeEnum;
 import com.cpf.constants.RuleTypeEnum;
 import com.cpf.exception.BusinessException;
@@ -12,15 +13,13 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import weka.classifiers.Classifier;
 import weka.core.*;
 import weka.core.converters.ArffSaver;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -32,6 +31,22 @@ public class ModelUtil  {
     public static final String MODEL_PATH =  "cpf-dump/src/main/resources/";
     public static final String MODEL_SUFFIX = ".model";
     public static final String ARFF_SUFFIX = ".arff";
+    public static void train(ModelDO modelDO,List<MonitorDO> monitorDOList){
+
+        if(!ValidationUtil.isNotNull(modelDO,monitorDOList) || !ValidationUtil.isNotNull( modelDO.getId())){
+            throw new BusinessException(ErrorConstants.PARAMS_INVALID);
+        }
+        //读取模型
+        Classifier classifier = (Classifier)deSerialization(modelDO.getId());
+        try {
+            //训练数据
+            classifier.buildClassifier(ModelUtil.monitorDOS2Instances(monitorDOList));
+            //训练后的模型持久化
+            serialization(modelDO.getId(),classifier);
+        } catch (Exception e) {
+            throw new BusinessException(CpfDumpConstants.TRAIN_MODEL_ERROR);
+        }
+    }
 
     /**
      * 将训练模型持久化
@@ -81,7 +96,7 @@ public class ModelUtil  {
         serialization(modelDO.getId(),optionHandler);
     }
 
-    public static Instances monitorDOS2Instances(List<MonitorDO> monitorDOList){
+    private static Instances monitorDOS2Instances(List<MonitorDO> monitorDOList){
         if(CollectionUtils.isEmpty(monitorDOList)){
             return null;
         }

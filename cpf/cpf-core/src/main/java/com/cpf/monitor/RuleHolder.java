@@ -33,15 +33,14 @@ public class RuleHolder {
     public  void refresh(){
         CallbackResult<List<RuleDO>> result = ruleManager.all();
         if(result.getSuccess()){
-            //加锁，防止多个线程同时修改
-            synchronized (ruleMap){
-                for(RuleDO ruleDO : result.getResult()){
-                    if(ruleMap.get(ruleDO.getType()) == null){
-                        ruleMap.put(ruleDO.getType(),Lists.newArrayList());
-                    }
-                    ruleMap.get(ruleDO.getType()).add(ruleDO);
+            Map<String,List<RuleDO>> tempMap = Maps.newHashMap();
+            for(RuleDO ruleDO : result.getResult()){
+                if(tempMap.get(ruleDO.getType()) == null){
+                    tempMap.put(ruleDO.getType(),Lists.newArrayList());
                 }
+                tempMap.get(ruleDO.getType()).add(ruleDO);
             }
+            ruleMap = tempMap;
             BusinessLogger.infoLog("RuleHolder.refresh",new String[]{JSON.toJSONString(ruleMap)},"success","监控规则刷新成功",logger);
         }else {
             BusinessLogger.errorLog("RuleHolder.refresh",new String[]{JSON.toJSONString(result)},"RULES_REFRESH_FAILED","监控规则刷新失败",logger);
