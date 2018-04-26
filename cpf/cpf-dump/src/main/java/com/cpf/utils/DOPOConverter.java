@@ -128,8 +128,6 @@ public class DOPOConverter {
     public static void main(String[] args){
         ModelOptionsDO modelOptionsDO = new ModelOptionsDO();
         modelOptionsDO.setId(1L);
-        modelOptionsDO.setModelType(ModelTypeEnum.TEST);
-        modelOptionsDO.setModelType(ModelTypeEnum.TEST);
         ModelOptionDO modelOptionDO = new ModelOptionDO();
         //modelOptionDO.setExtension(Lists.newArrayList(new String[]{"asd","avasd"}));
         modelOptionDO.setValue("asd");

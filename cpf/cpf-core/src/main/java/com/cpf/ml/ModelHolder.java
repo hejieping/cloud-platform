@@ -48,7 +48,7 @@ public class ModelHolder {
                 tempMap.put(aggreModelDO.getScene(),classifierList);
             }
             classifiesMap = tempMap;
-            BusinessLogger.infoLog("ModelHolder.refresh",new String[]{JSON.toJSONString(result)},"success","监控规则刷新成功",logger);
+            BusinessLogger.infoLog("ModelHolder.refresh",new String[]{JSON.toJSONString(result)},"success","算法模型刷新成功",logger);
 
         }else {
             BusinessLogger.errorLog("ModelHolder.refresh",new String[]{JSON.toJSONString(result)},"MODELS_REFRESH_FAILED","获取聚合模型失败",logger);

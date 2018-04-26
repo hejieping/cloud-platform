@@ -22,7 +22,6 @@ public class ModelFactory {
     private static Map<String,List<ModelOptionDO>> optionsMap = Maps.newHashMap();
     static {
         //初始化模型的参数
-        optionsMap.put(ModelTypeEnum.TEST.toString(),Collections.unmodifiableList(getTestList()));
         optionsMap.put(ModelTypeEnum.IBk.toString(),Collections.unmodifiableList(getIBk()));
         optionsMap.put(ModelTypeEnum.J48.toString(),Collections.unmodifiableList(getJ48()));
         optionsMap.put(ModelTypeEnum.LMT.toString(),Collections.unmodifiableList(getLMT()));
@@ -57,35 +56,6 @@ public class ModelFactory {
         return modelDO;
     }
 
-    /**
-     * 根据模型类型获取模型参数
-     * @param modeltype
-     * @return
-     */
-    public static ModelOptionsDO getModelOptions(String modeltype){
-        ModelTypeEnum modelTypeEnum = ModelTypeEnum.valueOf(modeltype);
-        if(modelTypeEnum != null){
-            ModelOptionsDO modelOptionsDO = new ModelOptionsDO();
-            modelOptionsDO.setModelType(modelTypeEnum);
-            modelOptionsDO.setOptions(getOptionList(modelTypeEnum));
-            return modelOptionsDO;
-        }
-        return null;
-    }
-
-    /**
-     * 根据模型类型获取模型参数
-     * @param modelTypeEnum
-     * @return
-     */
-    private static List<ModelOptionDO> getOptionList(ModelTypeEnum modelTypeEnum){
-        List<ModelOptionDO> list = Lists.newArrayList();
-        //TODO 修改为完整的模型类型
-        switch (modelTypeEnum){
-            case TEST:list = getTestList();break;
-        }
-        return list;
-    }
     private static List<ModelOptionDO> getTestList(){
         List<ModelOptionDO> testOptions = Lists.newArrayList();
         ModelOptionDO modelOptionDO1 = new ModelOptionDO();

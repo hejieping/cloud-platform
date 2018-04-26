@@ -9,6 +9,7 @@ import com.cpf.service.CallbackResult;
 import com.cpf.service.ServiceExecuteTemplate;
 import com.cpf.service.ServiceTemplate;
 import com.cpf.utils.DOPOConverter;
+import com.cpf.utils.ModelUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class ModelManager extends ServiceTemplate {
             }
             @Override
             public CallbackResult<Object> executeAction() {
+                //模型参数持久化
+                ModelUtil.serialization(modelDO);
                 ModelPO modelPO = modelDAO.save(DOPOConverter.modelDO2PO(modelDO));
                 return new CallbackResult<Object>(DOPOConverter.modelPO2DO(modelPO),true);
             }
@@ -69,6 +72,8 @@ public class ModelManager extends ServiceTemplate {
 
             @Override
             public CallbackResult<Object> executeAction() {
+                //更改持久化的分类器的参数
+                ModelUtil.setOptions(modelDO);
                 ModelPO modelPO = modelDAO.save(DOPOConverter.modelDO2PO(modelDO));
                 return new CallbackResult<Object>(DOPOConverter.modelPO2DO(modelPO),true);
             }

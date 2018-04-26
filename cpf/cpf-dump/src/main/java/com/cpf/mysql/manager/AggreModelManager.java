@@ -56,6 +56,7 @@ public class AggreModelManager extends ServiceTemplate {
                 AggreModelPO aggreModelPO = DOPOConverter.aggreModelDO2PO(aggreModelDO);
                 aggreModelPO.getModels().add(modelPO);
                 aggreModelDAO.save(aggreModelPO);
+
                 return new CallbackResult<Object>(DOPOConverter.modelPO2DO(modelPO),true);
             }
         });
