@@ -51,24 +51,7 @@ public class DOPOConverter {
         }
         return list;
     }
-    public static ModelOptionPO modelOptionDO2PO(ModelOptionDO modelOptionDO){
-        ModelOptionPO modelOptionPO = new ModelOptionPO();
-        modelOptionPO.setDesc(modelOptionDO.getDesc());
-        modelOptionPO.setKey(modelOptionDO.getKey());
-        modelOptionPO.setValue(modelOptionDO.getValue().toString());
-        modelOptionPO.setValueType(modelOptionDO.getValueType().toString());
-        modelOptionPO.setExtension(modelOptionDO.getExtension());
-        return modelOptionPO;
-    }
-    public static ModelOptionDO modelOptionPO2DO(ModelOptionPO modelOptionPO){
-        ModelOptionDO modelOptionDO = new ModelOptionDO();
-        modelOptionDO.setDesc(modelOptionPO.getDesc());
-        modelOptionDO.setKey(modelOptionPO.getKey());
-        modelOptionDO.setValue(modelOptionPO.getValue());
-        modelOptionDO.setValueType(OptionTypeEnum.valueOf(modelOptionPO.getValueType()));
-        modelOptionDO.setExtension(modelOptionPO.getExtension());
-        return modelOptionDO;
-    }
+
     public static ModelOptionsDO modelOptionsPO2DO(ModelOptionsPO modelOptionsPO){
         ModelOptionsDO modelOptionsDO = new ModelOptionsDO();
         modelOptionsDO.setId(modelOptionsPO.getId());
@@ -148,7 +131,7 @@ public class DOPOConverter {
         modelOptionsDO.setModelType(ModelTypeEnum.TEST);
         modelOptionsDO.setModelType(ModelTypeEnum.TEST);
         ModelOptionDO modelOptionDO = new ModelOptionDO();
-        modelOptionDO.setExtension(Lists.newArrayList(new String[]{"asd","avasd"}));
+        //modelOptionDO.setExtension(Lists.newArrayList(new String[]{"asd","avasd"}));
         modelOptionDO.setValue("asd");
         modelOptionDO.setKey("key");
         modelOptionDO.setValueType(OptionTypeEnum.BOOLEAN);

@@ -51,6 +51,8 @@ public class TrainTask extends ServiceTemplate  {
      * 定时训练所有配置的算法，并保存算法模型
      * @return
      */
+    //TODO 正式环境记得开启
+    //@Scheduled(fixedRate = 1000)
    public CallbackResult<Object> train(){
         Object result = execute(logger, "train", new ServiceExecuteTemplate() {
             @Override

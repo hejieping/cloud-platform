@@ -39,7 +39,11 @@ public class ModelHolder {
             for(AggreModelDO aggreModelDO : result.getResult()){
                 List<Classifier> classifierList = Lists.newArrayList();
                 for(ModelDO modelDO : aggreModelDO.getModels()){
-                    classifierList.add((Classifier)ModelUtil.deSerialization(modelDO.getId()));
+                    try {
+                        classifierList.add((Classifier)ModelUtil.deSerialization(modelDO.getId()));
+                    } catch (Exception e) {
+                        BusinessLogger.errorLog("ModelHolder.refresh",new String[]{JSON.toJSONString(modelDO),JSON.toJSONString(e)},"MODELS_DESERIALIZATION","算法模型反序列化失败",logger);
+                    }
                 }
                 tempMap.put(aggreModelDO.getScene(),classifierList);
             }
@@ -47,7 +51,7 @@ public class ModelHolder {
             BusinessLogger.infoLog("ModelHolder.refresh",new String[]{JSON.toJSONString(result)},"success","监控规则刷新成功",logger);
 
         }else {
-            BusinessLogger.errorLog("ModelHolder.refresh",new String[]{JSON.toJSONString(result)},"MODELS_REFRESH_FAILED","算法模型刷新失败",logger);
+            BusinessLogger.errorLog("ModelHolder.refresh",new String[]{JSON.toJSONString(result)},"MODELS_REFRESH_FAILED","获取聚合模型失败",logger);
 
         }
 

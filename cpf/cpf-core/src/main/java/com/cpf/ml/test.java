@@ -1,7 +1,7 @@
 package com.cpf.ml;
 
 import weka.classifiers.evaluation.Evaluation;
-import weka.classifiers.lazy.IBk;
+import weka.classifiers.trees.DecisionStump;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
 
@@ -25,7 +25,8 @@ public class test {
         //set class index to the last attribute
         dataset.setClassIndex(dataset.numAttributes()-1);
         //create and build the classifier!
-        IBk svm = new IBk();
+        DecisionStump svm = new DecisionStump();
+        svm.setOptions(null);
         svm.buildClassifier(dataset);
         double predict = svm.classifyInstance(dataset.get(1));
         System.out.println(dataset.classAttribute().value((int)predict));

@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public enum ModelTypeEnum {
     IBk("k最近邻分类"),
-    LBR("贝叶斯"),
+    NAIVE_BAYES("朴素贝叶斯"),
     J48("C4.5决策树"),
     LMT("逻辑模型树"),
     DECISION_STUMP("单层决策树"),
