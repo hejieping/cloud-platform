@@ -6,5 +6,5 @@ package com.cpf.service;
  */
 public interface ServiceExecuteTemplate<T> {
     CallbackResult<Object> checkParams();
-    CallbackResult<Object> executeAction();
+    CallbackResult<Object> executeAction() throws Exception;
 }

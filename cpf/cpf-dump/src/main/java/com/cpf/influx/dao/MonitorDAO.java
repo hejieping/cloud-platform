@@ -6,7 +6,6 @@ import com.cpf.constants.RuleTypeEnum;
 import com.cpf.influx.dao.PO.CpuPO;
 import com.cpf.utils.InfluxSQLGenerator;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;

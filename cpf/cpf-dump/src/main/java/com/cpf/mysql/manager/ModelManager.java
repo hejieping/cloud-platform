@@ -8,6 +8,7 @@ import com.cpf.mysql.manager.DO.ModelDO;
 import com.cpf.service.CallbackResult;
 import com.cpf.service.ServiceExecuteTemplate;
 import com.cpf.service.ServiceTemplate;
+import com.cpf.task.TrainTask;
 import com.cpf.utils.DOPOConverter;
 import com.cpf.utils.ModelUtil;
 import org.slf4j.Logger;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by jieping on 2018-04-05
@@ -24,6 +27,9 @@ import java.util.List;
 public class ModelManager extends ServiceTemplate {
     @Autowired
     private ModelDAO modelDAO;
+    @Autowired
+    private TrainTask trainTask;
+    private ExecutorService executorService = Executors.newFixedThreadPool(5);
     private static Logger logger = LoggerFactory.getLogger(ModelManager.class);
     public CallbackResult<ModelDO> addModel(ModelDO modelDO){
         Object  result = execute(logger, "addModel", new ServiceExecuteTemplate() {
@@ -72,9 +78,9 @@ public class ModelManager extends ServiceTemplate {
 
             @Override
             public CallbackResult<Object> executeAction() {
-                //更改持久化的分类器的参数
-                ModelUtil.setOptions(modelDO);
                 ModelPO modelPO = modelDAO.save(DOPOConverter.modelDO2PO(modelDO));
+                //异步进行模型训练
+                executorService.submit(()->trainTask.train(modelDO));
                 return new CallbackResult<Object>(DOPOConverter.modelPO2DO(modelPO),true);
             }
         });

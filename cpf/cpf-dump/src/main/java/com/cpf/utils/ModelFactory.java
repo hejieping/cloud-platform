@@ -44,7 +44,7 @@ public class ModelFactory {
      */
     public static ModelDO getModel(String name,String modelType){
         ModelDO modelDO = new ModelDO();
-        modelDO.setWeight(0L);
+        modelDO.setWeight(0D);
         modelDO.setName(name);
         ModelTypeEnum modelTypeEnum = ModelTypeEnum.valueOf(modelType);
         if(modelTypeEnum != null){

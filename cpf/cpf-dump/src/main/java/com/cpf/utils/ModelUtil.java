@@ -37,13 +37,16 @@ public class ModelUtil  {
     public static final String MODEL_PATH =  "cpf-dump/src/main/resources/";
     public static final String MODEL_SUFFIX = ".model";
     public static final String ARFF_SUFFIX = ".arff";
-    public static void train(ModelDO modelDO,List<MonitorDO> monitorDOList){
+    public static void train(ModelDO modelDO,List<MonitorDO> monitorDOList) throws Exception {
 
         if(!ValidationUtil.isNotNull(modelDO,monitorDOList) || !ValidationUtil.isNotNull( modelDO.getId())){
             throw new BusinessException(ErrorConstants.PARAMS_INVALID);
         }
         //读取模型
         Classifier classifier = (Classifier)deSerialization(modelDO.getId());
+        OptionHandler optionHandler = (OptionHandler) classifier;
+        //设置模型参数
+        optionHandler.setOptions(getOptions(modelDO));
         try {
             //训练数据
             classifier.buildClassifier(ModelUtil.monitorDOS2Instances(monitorDOList));
@@ -130,19 +133,24 @@ public class ModelUtil  {
     private static String[] getOptions(ModelDO modelDO){
         List<String> optionList = Lists.newArrayList();
         for(ModelOptionDO option : modelDO.getConfig().getOptions()){
-            optionList.add(option.getKey());
-            if(option.getValueType() != OptionTypeEnum.BOOLEAN){
-                optionList.add((String)option.getValue());
+            if(ValidationUtil.isNotNull(option.getValue())){
+                if(option.getValueType() != OptionTypeEnum.BOOLEAN){
+                    optionList.add(option.getKey());
+                    optionList.add((String)option.getValue());
+                }else {
+                    if(option.getValue().toString().equals("true") ){
+                        optionList.add(option.getKey());
+                    }
+                }
             }
         }
         return optionList.toArray(new String[optionList.size()]);
     }
-    private static Instances monitorDOS2Instances(List<MonitorDO> monitorDOList){
+    public static Instances monitorDOS2Instances(List<MonitorDO> monitorDOList){
         if(CollectionUtils.isEmpty(monitorDOList)){
             return null;
         }
         Map<String,List<String>> monitorMap = Maps.newHashMap();
-        monitorMap.put("danger",Lists.newArrayList());
         Random random = new Random();
         //获取monitordo的所有值，map的key为属性名，
         for(MonitorDO monitorDO : monitorDOList){
@@ -157,7 +165,6 @@ public class ModelUtil  {
             }
         }
         List<String> tagList = Lists.newArrayList(RuleTypeEnum.CPU.getTagList());
-        tagList.add("danger");
         ArrayList<Attribute> attributeArrayList = Lists.newArrayList();
         for(String key : monitorMap.keySet()){
             Attribute attribute = null;
@@ -186,6 +193,14 @@ public class ModelUtil  {
             instances.add(instance);
         }
         return instances;
+    }
+
+    public static Instance monitorDO2Instance(MonitorDO monitorDO){
+        if(monitorDO == null){
+            return null;
+        }
+        Instances instances = monitorDOS2Instances(Lists.newArrayList(monitorDO));
+        return instances.get(0);
     }
     /**
      * 将监控数据转换为arff文件
@@ -230,7 +245,7 @@ public class ModelUtil  {
         return pattern.matcher(str).matches();
     }
     public static void main(String[] args){
-        File file = new File(ModelUtil.MODEL_PATH+System.currentTimeMillis()+ModelUtil.ARFF_SUFFIX);
+        ModelUtil.deSerialization(144L);
     }
 
 }

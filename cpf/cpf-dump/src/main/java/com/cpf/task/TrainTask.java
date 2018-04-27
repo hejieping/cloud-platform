@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.influx.manager.MonitorManager;
 import com.cpf.logger.BusinessLogger;
-import com.cpf.ml.ModelHolder;
+import com.cpf.influx.holder.ModelHolder;
 import com.cpf.mysql.manager.AggreModelManager;
 import com.cpf.mysql.manager.DO.AggreModelDO;
 import com.cpf.mysql.manager.DO.ModelDO;
@@ -12,6 +12,7 @@ import com.cpf.service.CallbackResult;
 import com.cpf.service.ServiceExecuteTemplate;
 import com.cpf.service.ServiceTemplate;
 import com.cpf.utils.ModelUtil;
+import com.cpf.utils.ValidationUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
@@ -53,7 +54,7 @@ public class TrainTask extends ServiceTemplate  {
      */
     //TODO 正式环境记得开启
     //@Scheduled(fixedRate = 1000)
-   public CallbackResult<Object> train(){
+   public void train(){
         Object result = execute(logger, "train", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
@@ -61,23 +62,10 @@ public class TrainTask extends ServiceTemplate  {
             }
 
             @Override
-            public CallbackResult<Object> executeAction() {
+            public CallbackResult<Object> executeAction() throws Exception {
                 List<AggreModelDO> aggreModelDOList = aggreModelManager.all().getResult();
-                Map<String,String> tagMap = Maps.newHashMap();
                 for(AggreModelDO aggreModelDO : aggreModelDOList){
-                    //查询有故障的监控数据
-                    tagMap.put("danger","true");
-                    List<MonitorDO> dangerMonitorDOList = monitorManager.queryDataByTime(aggreModelDO.getScene(),tagMap,null,null,null).getResult();
-                    if(CollectionUtils.isEmpty(dangerMonitorDOList)){
-                        BusinessLogger.errorLog("TrainTask.train",new String[]{JSON.toJSONString(aggreModelDO)},"HAVE_NOT_ERROR_SAMPLE","没有错误样本可以训练",logger);
-                    }
-                    //查询正常的监控数据
-                    tagMap.put("danger","false");
-                    Long limit = Math.round(dangerMonitorDOList.size()/DANGER_PROPORITION);
-                    List<MonitorDO> safeMonitorDOList = monitorManager.queryDataByTime(aggreModelDO.getScene(),tagMap,null,null,null).getResult();
-                    List<MonitorDO> trainMOnitorDOList = Lists.newArrayList();
-                    trainMOnitorDOList.addAll(dangerMonitorDOList);
-                    trainMOnitorDOList.addAll(safeMonitorDOList);
+                    List<MonitorDO> trainMOnitorDOList = getTrainSamples(aggreModelDO.getScene());
                     for(ModelDO modelDO : aggreModelDO.getModels()){
                         ModelUtil.train(modelDO,trainMOnitorDOList);
                     }
@@ -87,7 +75,47 @@ public class TrainTask extends ServiceTemplate  {
                 return CallbackResult.success();
             }
         });
-        return (CallbackResult<Object>)result;
+    }
+
+    //指定算法模型进行训练
+    public void train(ModelDO modelDO){
+       execute(logger, "train", new ServiceExecuteTemplate() {
+           @Override
+           public CallbackResult<Object> checkParams() {
+               if(ValidationUtil.isNotNull(modelDO)){
+                   return CallbackResult.success();
+               }
+               return CallbackResult.failure();
+           }
+
+           @Override
+           public CallbackResult<Object> executeAction() throws Exception {
+               AggreModelDO aggreModelDO = aggreModelManager.getByModel(modelDO).getResult();
+               List<MonitorDO> trainList = getTrainSamples(aggreModelDO.getScene());
+               ModelUtil.train(modelDO,trainList);
+               modelHolder.refresh(aggreModelDO);
+               return CallbackResult.success();
+           }
+       });
+
+
+    }
+    private List<MonitorDO> getTrainSamples(String scene){
+        Map<String,String> tagMap = Maps.newHashMap();
+        //查询有故障的监控数据
+        tagMap.put("danger","true");
+        List<MonitorDO> dangerMonitorDOList = monitorManager.queryDataByTime(scene,tagMap,null,null,null).getResult();
+        if(CollectionUtils.isEmpty(dangerMonitorDOList)){
+            BusinessLogger.errorLog("TrainTask.train",new String[]{JSON.toJSONString(scene)},"HAVE_NOT_ERROR_SAMPLE","没有错误样本可以训练",logger);
+        }
+        //查询正常的监控数据
+        tagMap.put("danger","false");
+        Long limit = Math.round(dangerMonitorDOList.size()/DANGER_PROPORITION);
+        List<MonitorDO> safeMonitorDOList = monitorManager.queryDataByTime(scene,tagMap,null,null,null).getResult();
+        List<MonitorDO> trainMOnitorDOList = Lists.newArrayList();
+        trainMOnitorDOList.addAll(dangerMonitorDOList);
+        trainMOnitorDOList.addAll(safeMonitorDOList);
+        return trainMOnitorDOList;
     }
     public static void main(String[] args){
        Double a = 0.6D;

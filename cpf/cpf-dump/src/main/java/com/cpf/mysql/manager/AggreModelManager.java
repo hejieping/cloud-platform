@@ -2,13 +2,14 @@ package com.cpf.mysql.manager;
 
 import com.cpf.mysql.dao.AggreModelDAO;
 import com.cpf.mysql.dao.PO.AggreModelPO;
-import com.cpf.mysql.dao.PO.ModelPO;
 import com.cpf.mysql.manager.DO.AggreModelDO;
 import com.cpf.mysql.manager.DO.ModelDO;
 import com.cpf.service.CallbackResult;
 import com.cpf.service.ServiceExecuteTemplate;
 import com.cpf.service.ServiceTemplate;
 import com.cpf.utils.DOPOConverter;
+import com.cpf.utils.ModelUtil;
+import com.cpf.utils.ValidationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,12 +53,11 @@ public class AggreModelManager extends ServiceTemplate {
             }
             @Override
             public CallbackResult<Object> executeAction() {
-                ModelPO modelPO = DOPOConverter.modelDO2PO(modelDO);
-                AggreModelPO aggreModelPO = DOPOConverter.aggreModelDO2PO(aggreModelDO);
-                aggreModelPO.getModels().add(modelPO);
-                aggreModelDAO.save(aggreModelPO);
-
-                return new CallbackResult<Object>(DOPOConverter.modelPO2DO(modelPO),true);
+                aggreModelDO.getModels().add(modelDO);
+                AggreModelDO saveResult = DOPOConverter.aggreModelPO2DO(aggreModelDAO.save(DOPOConverter.aggreModelDO2PO(aggreModelDO)));
+                ModelDO returnResult =  saveResult.getModels().stream().filter(model -> model.getName().equals(modelDO.getName())).findFirst().orElse(null);
+                ModelUtil.serialization(returnResult);
+                return new CallbackResult<Object>(returnResult,true);
             }
         });
         return (CallbackResult<ModelDO>)result;
@@ -105,6 +105,23 @@ public class AggreModelManager extends ServiceTemplate {
             @Override
             public CallbackResult<Object> executeAction() {
                 return new CallbackResult<Object>(DOPOConverter.aggreModelPO2DO(aggreModelDAO.getById(id)),true);
+            }
+        });
+        return (CallbackResult<AggreModelDO>)result;
+    }
+    public CallbackResult<AggreModelDO> getByModel(ModelDO modelDO){
+        Object result = execute(logger, "getByModel", new ServiceExecuteTemplate() {
+            @Override
+            public CallbackResult<Object> checkParams() {
+                if(ValidationUtil.isNotNull(modelDO)){
+                    return CallbackResult.success();
+                }
+                return CallbackResult.failure();
+            }
+
+            @Override
+            public CallbackResult<Object> executeAction() throws Exception {
+                return new CallbackResult<>(DOPOConverter.aggreModelPO2DO(aggreModelDAO.findByModelsIsContaining(DOPOConverter.modelDO2PO(modelDO))),true);
             }
         });
         return (CallbackResult<AggreModelDO>)result;

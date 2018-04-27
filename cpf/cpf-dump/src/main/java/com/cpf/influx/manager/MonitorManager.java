@@ -111,7 +111,9 @@ public class MonitorManager extends ServiceTemplate {
 
             @Override
             public CallbackResult<Object> executeAction() {
-                QueryResult result = monitorDAO.queryDataByTime(tableName,tagMap,startTime.getTime(),endTime.getTime(),limit);
+                Long start = startTime==null ? null : startTime.getTime();
+                Long end = endTime==null ? null : endTime.getTime();
+                QueryResult result = monitorDAO.queryDataByTime(tableName,tagMap,start,end,limit);
                 Map<String,List<MonitorDO>> resultMap =  parseQueryResult(result);
                 List<MonitorDO> resultList = Lists.newLinkedList();
                 for(List<MonitorDO> monitorDOList : resultMap.values()){
@@ -176,21 +178,27 @@ public class MonitorManager extends ServiceTemplate {
 
             @Override
             public CallbackResult<Object> executeAction() {
-                Map<String,Object> fieldMap = Maps.newHashMap();
-                Map<String,String> tagMap = Maps.newHashMap();
-                List<String> tagList = RuleTypeEnum.typeOf(monitorDO.getType()).getTagList();
-                for(Map.Entry<String,String> entry : monitorDO.getData().entrySet()){
-                    if(tagList.contains(entry.getKey())){
-                        tagMap.put(entry.getKey(),entry.getValue());
-                    }else {
-                        fieldMap.put(entry.getKey(),new Double(entry.getValue()));
-                    }
-                }
-                monitorDAO.insert(Point.measurement(monitorDO.getType()).tag(tagMap).fields(fieldMap).build());
+
+                monitorDAO.insert(convert2Point(monitorDO));
                 return CallbackResult.success();
             }
         });
         return (CallbackResult<Object>)result;
+    }
+
+
+    public Point convert2Point(MonitorDO monitorDO){
+        Map<String,Object> fieldMap = Maps.newHashMap();
+        Map<String,String> tagMap = Maps.newHashMap();
+        List<String> tagList = RuleTypeEnum.typeOf(monitorDO.getType()).getTagList();
+        for(Map.Entry<String,String> entry : monitorDO.getData().entrySet()){
+            if(tagList.contains(entry.getKey())){
+                tagMap.put(entry.getKey(),entry.getValue());
+            }else {
+                fieldMap.put(entry.getKey(),new Double(entry.getValue()));
+            }
+        }
+        return  Point.measurement(monitorDO.getType()).tag(tagMap).fields(fieldMap).build();
     }
 
     /**
@@ -198,7 +206,7 @@ public class MonitorManager extends ServiceTemplate {
      * @param result
      * @return
      */
-    private Map<String,List<MonitorDO>> parseQueryResult(QueryResult result){
+    public Map<String,List<MonitorDO>> parseQueryResult(QueryResult result){
         Map<String,List<MonitorDO>> resultMap = Maps.newHashMap();
         //一个Result代表一个表的查询结果
         for(QueryResult.Result r : result.getResults()){
@@ -215,7 +223,11 @@ public class MonitorManager extends ServiceTemplate {
                 monitorDO.setType(series.getName());
                 Map<String,String> data = Maps.newHashMap();
                 for(int i = 0; i < values.size();i++){
-                    data.put(keys.get(i),values.get(i).toString());
+                    if(ValidationUtil.isNotNull(values.get(i))){
+                        data.put(keys.get(i),values.get(i).toString());
+                    }else {
+                        data.put(keys.get(i),"0.0");
+                    }
                 }
                 monitorDO.setData(data);
                 list.add(monitorDO);

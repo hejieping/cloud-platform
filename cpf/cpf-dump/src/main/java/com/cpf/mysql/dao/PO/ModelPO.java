@@ -17,7 +17,7 @@ public class ModelPO {
     /**
      * 模型占决策的比重
      */
-    private Long weight = 0L;
+    private Double weight = 0D;
     /**
      * 模型参数配置
      */

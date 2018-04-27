@@ -13,15 +13,15 @@ import java.util.Map;
  */
 public enum  RuleTypeEnum {
 
-    CPU("win_cpu",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname"}))),
-    DISK("win_disk",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname"}))),
-    DISKIO("win_diskio",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname"}))),
-    MEM("win_mem",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","objectname"}))),
-    NET("win_net",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname"}))),
-    PERF("win_perf_counters",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname"}))),
-    SWAP("win_swap",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname"}))),
-    SYSTEM("win_system",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","objectname"}))),
-    SYSTEM_DAYS("win_system_days",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host"})))
+    CPU("win_cpu",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname","danger"}))),
+    DISK("win_disk",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname","danger"}))),
+    DISKIO("win_diskio",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname","danger"}))),
+    MEM("win_mem",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","objectname","danger"}))),
+    NET("win_net",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname","danger"}))),
+    PERF("win_perf_counters",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname","danger"}))),
+    SWAP("win_swap",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname","danger"}))),
+    SYSTEM("win_system",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","objectname","danger"}))),
+    SYSTEM_DAYS("win_system_days",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","danger"})))
     ;
     /**
      * 监控规则类型，等于数据库表名
