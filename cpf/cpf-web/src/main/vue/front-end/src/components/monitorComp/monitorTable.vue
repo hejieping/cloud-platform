@@ -2,15 +2,9 @@
  <div>
    <el-row type="flex">
              <el-breadcrumb separator="/"> 
-       <el-breadcrumb-item>
-        云平台
-       </el-breadcrumb-item> 
-       <el-breadcrumb-item>
-        监控
-       </el-breadcrumb-item> 
-       <el-breadcrumb-item>
-        设备监控
-       </el-breadcrumb-item> 
+       <el-breadcrumb-item>云平台</el-breadcrumb-item> 
+       <el-breadcrumb-item>监控</el-breadcrumb-item> 
+       <el-breadcrumb-item>设备监控</el-breadcrumb-item> 
       </el-breadcrumb> 
    </el-row>
    <el-row type="flex">

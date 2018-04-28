@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/components/Layout'
-import ProcessMonitor from '@/components/ProcessMonitor'
 import Monitor from '@/components/Monitor'
 import SmartWarn from '@/components/SmartWarn'
 import WarnRule from '@/components/WarnRule'
@@ -21,9 +20,6 @@ export default new Router({
       name: 'Layout',
       component: Layout,
       children:[{
-        path: '/ProcessMonitor',
-        component: ProcessMonitor,
-      },{
         path: '/Monitor',
         component: Monitor,
         children:[{

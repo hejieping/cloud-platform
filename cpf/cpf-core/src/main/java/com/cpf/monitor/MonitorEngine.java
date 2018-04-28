@@ -1,8 +1,11 @@
 package com.cpf.monitor;
 
 import com.alibaba.fastjson.JSON;
+import com.cpf.constants.AlarmTypeEnum;
 import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.influx.manager.MonitorManager;
+import com.cpf.mysql.manager.AlarmManager;
+import com.cpf.mysql.manager.DO.AlarmDO;
 import com.cpf.mysql.manager.DO.RuleDO;
 import com.cpf.logger.BusinessLogger;
 import com.cpf.service.CallbackResult;
@@ -27,13 +30,16 @@ public class MonitorEngine extends ServiceTemplate{
     private RuleHolder ruleHolder;
     @Autowired
     private MonitorManager monitorManager;
+    @Autowired
+    private AlarmManager alarmManager;
+    private static final String CLASS_TAG = "danger";
 
     /**
      * 实时监控，先判断该时刻数据是否满足监控规则，满足则判断监控规则规定的时间段内 监控数据平均值是否满足监控规则，满足则报警
      * @param monitorDO 实时监控的数据
      */
-    public void monitor(MonitorDO monitorDO){
-        execute(logger, "monitor", new ServiceExecuteTemplate() {
+    public boolean monitor(MonitorDO monitorDO){
+        Object tempResult =  execute(logger, "monitor", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
                 if(monitorDO == null){
@@ -45,6 +51,7 @@ public class MonitorEngine extends ServiceTemplate{
 
             @Override
             public CallbackResult<Object> executeAction() {
+                CallbackResult<Object> result = new CallbackResult<Object>(true,true);
                 List<RuleDO> ruleDOList = ruleHolder.getRules(monitorDO.getType());
                 for(RuleDO ruleDO : ruleDOList){
                     //判断该时刻是否满足监控规则
@@ -52,13 +59,20 @@ public class MonitorEngine extends ServiceTemplate{
                         //判断一定时间内的平均值是否满足监控规则
                         MonitorDO meanMonitor = monitorManager.queryAVGByTime(monitorDO,ruleDO.getTime());
                         if(verify(meanMonitor,ruleDO)){
+                            monitorDO.getData().put(CLASS_TAG,"true");
+                            result.setResult(false);
                             warn(meanMonitor,ruleDO);
+                        }else {
+                            monitorDO.getData().put(CLASS_TAG,"false");
                         }
+                        monitorManager.insertMonitor(monitorDO);
                     }
                 }
-                return CallbackResult.success();
+                return result;
             }
         });
+        CallbackResult<Boolean> result = (CallbackResult<Boolean>)tempResult;
+        return result.getResult();
     }
 
     /**
@@ -91,9 +105,14 @@ public class MonitorEngine extends ServiceTemplate{
      * @param ruleDO
      */
     private void warn(MonitorDO monitorDO,RuleDO ruleDO){
-        //TODO 添加报警措施
+        AlarmDO alarmDO = new AlarmDO();
+        alarmDO.setType(AlarmTypeEnum.MONITOR);
+        alarmDO.setMonitorDO(monitorDO);
+        alarmDO.setRuleDO(ruleDO);
+        alarmManager.save(alarmDO);
         BusinessLogger.errorLog("MonitorEngine.monitor",
                 new String[]{JSON.toJSONString(monitorDO),JSON.toJSONString(ruleDO)},
                 "MONITOR_DANGER","监控报警",logger);
+
     }
 }

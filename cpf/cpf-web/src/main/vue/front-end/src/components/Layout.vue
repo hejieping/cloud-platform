@@ -13,29 +13,12 @@
        <el-row > 
         <el-col> 
          <el-menu default-active="2" class="el-menu-vertical" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" > 
-          <el-submenu index='1'> 
-           <template slot="title"> 
-            <i class="el-icon-location"></i> 
-            <span>监控</span> 
-           </template> 
-           <el-menu-item-group> 
             <el-menu-item index="SmartWarn" @click="$router.push('/SmartWarn')">
-             智能预警
+             报警信息
             </el-menu-item> 
             <el-menu-item index="Monitor" @click="$router.push('/Monitor')">
-             CPU
+             性能监控
             </el-menu-item> 
-            <el-menu-item  index="ProcessMonitor" @click="$router.push('/ProcessMonitor')">
-             进程
-            </el-menu-item> 
-           </el-menu-item-group> 
-          </el-submenu> 
-          <el-submenu index='2'>
-           <template slot="title"> 
-            <i class="el-icon-location"></i> 
-            <span>配置</span> 
-           </template> 
-            <el-menu-item-group> 
             <el-menu-item index="WarnRule" @click="$router.push('/WarnRule')">
              报警规则
             </el-menu-item>
@@ -45,8 +28,6 @@
             <el-menu-item index="SolutionConfig" @click="$router.push('/SolutionConfig')">
              解决方案
             </el-menu-item>
-           </el-menu-item-group>  
-          </el-submenu>
          </el-menu> 
         </el-col> 
       </el-row> 

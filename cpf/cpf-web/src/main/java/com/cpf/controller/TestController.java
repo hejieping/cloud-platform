@@ -39,7 +39,7 @@ public class TestController {
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ResponseEntity<Object> test() throws Exception {
         List<MonitorDO> monitorDOList = monitorManager.queryDataByTime("win_cpu",null,null,null,2L).getResult();
-        boolean predict = mlEngine.predict(monitorDOList.get(0));
+        mlEngine.predict(monitorDOList.get(0));
 //        List<AggreModelPO> aggreModelPOS = aggreModelDAO.findAll();
 //        AggreModelPO aggreModelPO = aggreModelDAO.findByModelsIsContaining(aggreModelPOS.get(0).getModels().get(0));
         return new ResponseEntity<>("test",HttpStatus.OK);

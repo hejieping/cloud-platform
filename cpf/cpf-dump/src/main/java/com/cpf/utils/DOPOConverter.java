@@ -2,8 +2,10 @@ package com.cpf.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.cpf.constants.AlarmTypeEnum;
 import com.cpf.constants.ModelTypeEnum;
 import com.cpf.constants.OptionTypeEnum;
+import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.mysql.dao.PO.*;
 import com.cpf.mysql.manager.DO.*;
 import com.cpf.utils.mapper.AssetMapper;
@@ -124,6 +126,33 @@ public class DOPOConverter {
     }
     public static List<AssetDO> assetPOS2DOS(List<AssetPO> assetPOList){
         return AssetMapper.INSTANCE.assetPOS2DOS(assetPOList);
+    }
+    public static AlarmPO alarmDO2PO(AlarmDO alarmDO){
+        AlarmPO alarmPO = new AlarmPO();
+        alarmPO.setId(alarmDO.getId());
+        alarmPO.setType(alarmDO.getType().toString());
+        alarmPO.setData(JSON.toJSONString(alarmDO.getMonitorDO()));
+        alarmPO.setRule(JSON.toJSONString(alarmDO.getRuleDO()));
+        alarmPO.setTime(alarmDO.getTime());
+        return alarmPO;
+    }
+    public static AlarmDO alarmPO2DO(AlarmPO alarmPO){
+        AlarmDO alarmDO = new AlarmDO();
+        alarmDO.setId(alarmPO.getId());
+        alarmDO.setType(AlarmTypeEnum.valueOf(alarmPO.getType()));
+        alarmDO.setTime(alarmPO.getTime());
+        alarmDO.setMonitorDO(JSON.parseObject(alarmPO.getData(),new TypeReference<MonitorDO>(){}));
+        alarmDO.setRuleDO(JSON.parseObject(alarmPO.getData(),new TypeReference<RuleDO>(){}));
+        return alarmDO;
+    }
+    public static List<AlarmDO> alarmPOS2DOS(List<AlarmPO> alarmPOList){
+        List<AlarmDO> list = Lists.newArrayList();
+        if(CollectionUtils.isNotEmpty(alarmPOList)){
+            for(AlarmPO alarmPO : alarmPOList){
+                list.add(alarmPO2DO(alarmPO));
+            }
+        }
+        return list;
     }
     public static void main(String[] args){
         ModelOptionsDO modelOptionsDO = new ModelOptionsDO();
