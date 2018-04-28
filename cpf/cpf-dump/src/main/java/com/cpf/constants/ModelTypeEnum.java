@@ -23,11 +23,11 @@ import weka.classifiers.trees.LMT;
 
 import java.util.List;
 import java.util.Map;
-
 /**
- * 算法模型类型
- * Created by jieping on 2018-04-09
- */
+ * @author jieping
+ * @create 2018-04-09
+ * @desc 算法模型类型
+ **/
 public enum ModelTypeEnum {
     IBk("k最近邻分类"),
     NAIVE_BAYES("朴素贝叶斯"),
@@ -48,6 +48,12 @@ public enum ModelTypeEnum {
     private ModelTypeEnum(String desc){
         this.desc = desc;
     }
+
+    /**
+     * 根据算法类型获取初始状态的算法模型
+     * @param modelTypeEnum
+     * @return
+     */
     public static Classifier getClasifier(ModelTypeEnum modelTypeEnum){
         Classifier classifier = null;
         switch (modelTypeEnum){

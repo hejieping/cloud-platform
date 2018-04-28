@@ -31,6 +31,10 @@ public class ModelHolder {
     private static Logger logger = LoggerFactory.getLogger(ModelHolder.class);
 
     private Map<String,List<CpfClassifier>> classifiesMap = Maps.newConcurrentMap();
+
+    /**
+     * 将持久化的算法模型读取到内存中
+     */
     @PostConstruct
     public void refresh(){
         CallbackResult<List<AggreModelDO>> result = aggreModelManager.all();
@@ -47,6 +51,10 @@ public class ModelHolder {
 
     }
 
+    /**
+     * 读取指定场景的算法模型，替换掉现有的模型
+     * @param aggreModelDO
+     */
     public void refresh(AggreModelDO aggreModelDO){
         List<CpfClassifier> classifierList = Lists.newArrayList();
         for(ModelDO modelDO : aggreModelDO.getModels()){

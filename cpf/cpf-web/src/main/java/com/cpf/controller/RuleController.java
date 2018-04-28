@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
+
 /**
- * Created by jieping on 2018-04-11
- */
+ * @author jieping
+ * @create 2018-04-11
+ **/
 @RestController
 @RequestMapping("/config")
 public class RuleController {

@@ -1,12 +1,25 @@
 package com.cpf.constants;
-
 /**
- * 时间间隔
- */
+ * @author jieping
+ * @create 2018-04-25 19:56
+ * @desc 时间间隔
+ **/
 public enum TimeIntervalEnum {
+    /**
+     * 分钟
+     */
     MINUTE("m"),
+    /**
+     * 小时
+     */
     HOUT("h"),
+    /**
+     * 天
+     */
     DAY("d"),
+    /**
+     * 星期
+     */
     WEEK("w")
     ;
     private String unit;

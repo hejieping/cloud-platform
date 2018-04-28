@@ -8,9 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 监控数据类型（对应influx的表名称）
- * Created by jieping on 2018-04-19
- */
+ * @author jieping
+ * @create 2018-04-19
+ * @desc 监控数据类型（对应influx的表名称）
+ **/
 public enum  RuleTypeEnum {
 
     CPU("win_cpu",Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname","danger"}))),

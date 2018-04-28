@@ -1,8 +1,9 @@
 package com.cpf.constants;
-
 /**
- * Created by jieping on 2018-04-08
- */
+ * @author jieping
+ * @create jieping on 2018-04-08
+ * @desc dump层常量
+ **/
 public class CpfDumpConstants {
 
     public static final ErrorDesc SERIALIZATION_ERROR = new ErrorDesc("SERIALIZATION_ERROR","序列化模型异常");

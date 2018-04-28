@@ -8,9 +8,12 @@ import com.cpf.exception.SystemException;
 import com.cpf.logger.BusinessLogger;
 import org.slf4j.Logger;
 
+
 /**
- * 业务service执行模板
- */
+ * @author jieping
+ * @create 2018-04-25 19:56
+ * @desc 业务service执行模板
+ **/
 public class ServiceTemplate {
     public CallbackResult<Object> execute( Logger logger,String methodName,ServiceExecuteTemplate executeTemplate){
         methodName = this.getClass().toString()+ "."+methodName;

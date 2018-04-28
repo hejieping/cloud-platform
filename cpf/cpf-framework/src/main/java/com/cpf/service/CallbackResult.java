@@ -4,10 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.cpf.constants.ErrorDesc;
 import lombok.Data;
 
+
 /**
- * 业务service执行模板返回结果
+ * @author jieping
+ * @create 2018-04-25 19:56
+ * @desc 业务service执行模板返回结果
  * @param <T>
- */
+ **/
+
 @Data
 public class CallbackResult<T> {
     private Boolean success;

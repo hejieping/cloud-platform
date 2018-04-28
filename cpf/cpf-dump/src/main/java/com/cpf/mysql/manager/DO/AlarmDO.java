@@ -14,8 +14,20 @@ import java.util.Date;
 @Data
 public class AlarmDO {
     private Long id;
+    /**
+     * 报警类型
+     */
     private AlarmTypeEnum type;
+    /**
+     * 报警针对的数据
+     */
     private MonitorDO monitorDO;
+    /**
+     * 报警触发的监控规则
+     */
     private RuleDO ruleDO;
+    /**
+     * 报警时间
+     */
     private Date time;
 }

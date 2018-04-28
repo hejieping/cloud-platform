@@ -11,10 +11,11 @@ import com.google.common.collect.Maps;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-/**模型工厂，产生指定模型的类
- * Created by jieping on 2018-04-08
- */
+/**
+ * @author jieping
+ * @create 2018-04-08
+ * @desc 模型工厂，产生指定模型的类
+ **/
 public class ModelFactory {
     /**
      * 算法模型的可选参数

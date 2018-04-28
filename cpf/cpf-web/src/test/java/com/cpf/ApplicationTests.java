@@ -84,7 +84,7 @@ public class ApplicationTests {
 	@Test
 	public void testInsert(){
 		MonitorDO monitorDO = monitorManager.queryDataByTime(RuleTypeEnum.CPU.getType(),null,new Date(1507653987000L),new Date(1507740387000L),1L).getResult().get(0);
-		monitorManager.insertMonitor(monitorDO);
+		monitorManager.addMonitor(monitorDO);
 	}
 	@Test
 	public void moveData(){

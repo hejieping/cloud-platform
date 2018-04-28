@@ -1,17 +1,25 @@
 package com.cpf.mysql.manager.DO;
 
-import com.google.common.collect.Lists;
 import lombok.Data;
 
 import java.util.List;
-
 /**
- * Created by jieping on 2018-04-12
- */
+ * @author jieping
+ * @create 2018-04-12
+ **/
 @Data
 public class AggreModelDO {
     private Long id;
+    /**
+     * 名称
+     */
     private String name;
+    /**
+     * 使用场景
+     */
     private String scene;
-    private List<ModelDO> models = Lists.newArrayList();
+    /**
+     * 模型集合
+     */
+    private List<ModelDO> models;
 }

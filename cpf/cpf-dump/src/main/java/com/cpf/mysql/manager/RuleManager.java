@@ -13,15 +13,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
 /**
- * Created by jieping on 2018-04-05
- */
+ * @author jieping
+ * @create 2018-04-05
+ * @desc 定时训练任务
+ **/
 @Component
 public class RuleManager extends ServiceTemplate {
     @Autowired
     private RuleDAO ruleDAO;
     private static Logger logger = LoggerFactory.getLogger(RuleManager.class);
+
+    /**
+     * 保存监控规则
+     * @param ruleDO
+     * @return
+     */
     public CallbackResult<RuleDO> save(RuleDO ruleDO){
         Object result = execute(logger, "save", new ServiceExecuteTemplate() {
             @Override
@@ -39,6 +46,11 @@ public class RuleManager extends ServiceTemplate {
         });
         return (CallbackResult<RuleDO>)result;
     }
+
+    /**
+     * 获取所有监控规则
+     * @return
+     */
     public CallbackResult<List<RuleDO>> all(){
         Object result = execute(logger, "all", new ServiceExecuteTemplate() {
             @Override
@@ -53,6 +65,12 @@ public class RuleManager extends ServiceTemplate {
         });
         return (CallbackResult<List<RuleDO>>)result;
     }
+
+    /**
+     * 删除监控规则
+     * @param id 监控规则id
+     * @return
+     */
     public CallbackResult<Object> delete(Long id){
         Object result = execute(logger, "delete", new ServiceExecuteTemplate() {
             @Override

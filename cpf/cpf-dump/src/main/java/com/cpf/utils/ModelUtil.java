@@ -28,15 +28,26 @@ import java.util.Random;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 /**
- * Created by jieping on 2018-04-08
- */
+ * @author jieping
+ * @create 2018-04-08
+ **/
 public class ModelUtil  {
     private static Logger logger = LoggerFactory.getLogger(ModelUtil.class);
     public static final String MODEL_PATH =  "cpf-dump/src/main/resources/";
     public static final String MODEL_SUFFIX = ".model";
     public static final String ARFF_SUFFIX = ".arff";
+    /**
+     * 整数的正则表达式
+     */
+    private static final Pattern PATTTERN = Pattern.compile("^[-\\+]?[\\d]*$");
+
+    /**
+     * 给定监控数据，训练指定的算法模型
+     * @param modelDO 算法模型
+     * @param monitorDOList 监控数据
+     * @throws Exception
+     */
     public static void train(ModelDO modelDO,List<MonitorDO> monitorDOList) throws Exception {
 
         if(!ValidationUtil.isNotNull(modelDO,monitorDOList) || !ValidationUtil.isNotNull( modelDO.getId())){
@@ -138,7 +149,7 @@ public class ModelUtil  {
                     optionList.add(option.getKey());
                     optionList.add((String)option.getValue());
                 }else {
-                    if(option.getValue().toString().equals("true") ){
+                    if("true".equals(option.getValue().toString()) ){
                         optionList.add(option.getKey());
                     }
                 }
@@ -146,6 +157,12 @@ public class ModelUtil  {
         }
         return optionList.toArray(new String[optionList.size()]);
     }
+
+    /**
+     * 监控数据转成weka接受的数据
+     * @param monitorDOList
+     * @return
+     */
     public static Instances monitorDOS2Instances(List<MonitorDO> monitorDOList){
         if(CollectionUtils.isEmpty(monitorDOList)){
             return null;
@@ -195,6 +212,11 @@ public class ModelUtil  {
         return instances;
     }
 
+    /**
+     * 单条监控数据转成weka的数据
+     * @param monitorDO
+     * @return
+     */
     public static Instance monitorDO2Instance(MonitorDO monitorDO){
         if(monitorDO == null){
             return null;
@@ -240,12 +262,14 @@ public class ModelUtil  {
         }
         return false;
     }
+
+    /**
+     * 判断是否为整数
+     * @param str
+     * @return
+     */
     private static boolean isInteger(String str) {
-        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
-        return pattern.matcher(str).matches();
-    }
-    public static void main(String[] args){
-        ModelUtil.deSerialization(144L);
+        return PATTTERN.matcher(str).matches();
     }
 
 }

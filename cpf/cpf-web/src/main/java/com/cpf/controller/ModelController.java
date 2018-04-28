@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by jieping on 2018-04-05
- */
 
+/**
+ * @author jieping
+ * @create 2018-04-05
+ **/
 @RestController
 @RequestMapping("/config")
 public class ModelController {
@@ -51,7 +52,7 @@ public class ModelController {
      */
     @RequestMapping(value = "/model",method = RequestMethod.GET)
     ResponseEntity<Object> model(String name, String modelType,Long aggreModelId){
-        CallbackResult<AggreModelDO> result = aggreModelManager.getById(aggreModelId);
+        CallbackResult<AggreModelDO> result = aggreModelManager.get(aggreModelId);
         if(result.getSuccess()){
             ModelDO modelDO = ModelFactory.getModel(name,modelType);
             return new ResponseEntity<Object>(aggreModelManager.addModel(result.getResult(),modelDO),HttpStatus.OK);
@@ -113,12 +114,12 @@ public class ModelController {
     }
     @RequestMapping(value = "/aggremodel",method = RequestMethod.GET)
     ResponseEntity<Object> getAggreModel( Long id){
-        return new ResponseEntity<Object>(aggreModelManager.getById(id),HttpStatus.OK);
+        return new ResponseEntity<Object>(aggreModelManager.get(id),HttpStatus.OK);
     }
 
     /**
      * 删除指定模型
-     * @param id
+     * @param id 模型id
      * @return
      */
     @RequestMapping(value = "/aggremodel",method = RequestMethod.DELETE)

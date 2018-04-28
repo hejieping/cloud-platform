@@ -5,11 +5,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.Map;
-
 /**
- * 监控数据比较器
- * Created by jieping on 2018-04-19
- */
+ * @author jieping
+ * @create 2018-04-19
+ * @desc 监控数据比较器
+ **/
 public class ComparatorMap {
     private static Map<String,MonitorComparator> map = Maps.newHashMap();
     /**
@@ -114,10 +114,5 @@ public class ComparatorMap {
     }
     public static MonitorComparator getComparator(String key){
         return map.get(key);
-    }
-    public static void main(String[] args){
-        System.out.println(StringUtils.isNotBlank("a"));
-        System.out.println(StringUtils.isNotBlank(null));
-
     }
 }

@@ -3,10 +3,10 @@ package com.cpf.mysql.manager.DO;
 import lombok.Data;
 
 import javax.persistence.OneToOne;
-
 /**
- * Created by jieping on 2018-04-09
- */
+ * @author jieping
+ * @create  2018-04-09
+ **/
 @Data
 public class ModelDO {
     private Long id;

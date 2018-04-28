@@ -26,8 +26,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by jieping on 2018-04-20
- */
+ * @author jieping
+ * @create 2018-04-20
+ **/
 @Component
 public class MonitorManager extends ServiceTemplate {
     @Autowired
@@ -98,6 +99,15 @@ public class MonitorManager extends ServiceTemplate {
         return ( CallbackResult<List<MonitorDO>>)result;
     }
 
+    /**
+     * 根据时间，查询指定表的所有数据
+     * @param tableName 表名
+     * @param tagMap 表的tag值
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param limit 限制数量
+     * @return
+     */
     public CallbackResult<List<MonitorDO>> queryDataByTime(String tableName,Map<String,String> tagMap,Date startTime,Date endTime,Long limit){
         Object result = execute(logger, "queryDataByTime", new ServiceExecuteTemplate() {
             @Override
@@ -124,8 +134,15 @@ public class MonitorManager extends ServiceTemplate {
         });
         return ( CallbackResult<List<MonitorDO>>)result;
     }
+
     /**
      * 查询绘制图表所需数据
+     * @param hostName 主机名
+     * @param tableName 表名
+     * @param col 指定列
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return
      */
     public CallbackResult<List<List<String>>> queryChartDataByTime(String hostName,String tableName,String col,Date startTime, Date endTime){
         Object result = execute(logger, "queryChartDataByTime", new ServiceExecuteTemplate() {
@@ -166,8 +183,8 @@ public class MonitorManager extends ServiceTemplate {
      * @param monitorDO
      * @return
      */
-    public CallbackResult<Object> insertMonitor(MonitorDO monitorDO){
-        Object result = execute(logger, "insertMonitor", new ServiceExecuteTemplate() {
+    public CallbackResult<Object> addMonitor(MonitorDO monitorDO){
+        Object result = execute(logger, "addMonitor", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
                 if(ValidationUtil.isNotNull(monitorDO)){
@@ -186,7 +203,13 @@ public class MonitorManager extends ServiceTemplate {
         return (CallbackResult<Object>)result;
     }
 
+    //TODO 改成private
 
+    /**
+     * 将监控对象转换成influxdb接受的对象
+     * @param monitorDO
+     * @return
+     */
     public Point convert2Point(MonitorDO monitorDO){
         Map<String,Object> fieldMap = Maps.newHashMap();
         Map<String,String> tagMap = Maps.newHashMap();
@@ -249,8 +272,5 @@ public class MonitorManager extends ServiceTemplate {
         }
         return list;
     }
-    public static void main(String[] args){
-        String s = "mean_Percent_time";
-        System.out.println(StringUtils.stripStart(s,"mean_"));
-    }
+
 }

@@ -39,7 +39,6 @@ export default {
         startTime: this.startTime,
         endTime: this.endTime
       };
-      console.log(params);
       var response = await getChartData(params);
       if (response.success) {
         for (let time of response.result[0]) {
@@ -48,7 +47,6 @@ export default {
         for(let d of response.result[1]){
           data.push(JSON.stringify(new Number(d)));
         }
-        console.log(JSON.stringify(data));
       }
       var option = {
         tooltip: {

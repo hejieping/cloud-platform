@@ -2,10 +2,12 @@ package com.cpf.logger;
 
 import com.google.common.base.Joiner;
 
+
 /**
- * 日志格式打印
- * Created by jieping on 2018-04-02.
- */
+ * @author jieping
+ * @create 2018-04-02.
+ * @desc 日志格式
+ **/
 public class LoggerFormat {
     public static final String FIRST_SPLIT = "|";
     public static final String SECOND_SPLIT = ",";

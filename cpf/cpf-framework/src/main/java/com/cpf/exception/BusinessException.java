@@ -3,8 +3,10 @@ package com.cpf.exception;
 import com.cpf.constants.ErrorDesc;
 
 /**
- * 业务异常
- */
+ * @author jieping
+ * @create 2018-04-25 19:56
+ * @desc 业务异常
+ **/
 public class BusinessException  extends RuntimeException {
     private String errorCode;
     public BusinessException(ErrorDesc errorDesc){

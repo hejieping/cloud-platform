@@ -1,10 +1,11 @@
 package com.cpf.exception;
 
 import com.cpf.constants.ErrorDesc;
-
 /**
- * 系统异常
- */
+ * @author jieping
+ * @create 2018-04-25 19:56
+ * @desc 系统异常
+ **/
 public class SystemException extends RuntimeException{
     private String errorCode;
     public SystemException(ErrorDesc errorDesc){

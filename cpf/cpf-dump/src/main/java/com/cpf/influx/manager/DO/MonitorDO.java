@@ -5,8 +5,10 @@ import lombok.Data;
 import java.util.Map;
 
 /**
- * Created by jieping on 2018-04-20
- */
+ * @author jieping
+ * @create 2018-04-20
+ **/
+
 @Data
 public class MonitorDO {
     /**

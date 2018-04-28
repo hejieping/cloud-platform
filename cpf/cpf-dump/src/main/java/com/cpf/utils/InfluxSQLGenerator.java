@@ -3,17 +3,16 @@ package com.cpf.utils;
 import com.cpf.constants.TimeIntervalEnum;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.apache.commons.collections.MapUtils;
 
 import java.util.List;
 import java.util.Map;
-
 /**
- * influx sql语句生成器
- * Created by jieping on 2018-04-21
- */
-public class InfluxSQLGenerator {
+ * @author jieping
+ * @create 2018-04-21
+ * @desc influx sql语句生成器
+ **/
+public class InfluxSqlGenerator {
     private static final String FROM = " from ";
     private static final String SELECT = " select ";
     private static final String WHERE = " where ";
@@ -69,6 +68,16 @@ public class InfluxSQLGenerator {
         sql.append(FINISH);
         return sql.toString();
     }
+
+    /**
+     * 生成 select mean(a) as a,mean(b) as b from tableName where [tag=value] and time < endTime and time > startTime
+     * @param tags
+     * @param meanList
+     * @param tableName
+     * @param startTime
+     * @param endTime
+     * @return
+     */
     private static String meanSql(Map<String,String> tags, List<String> meanList, String tableName, Long startTime, Long endTime){
         return SELECT + mean(meanList) + FROM + tableName + condition(tags,startTime,endTime);
     }
@@ -118,17 +127,5 @@ public class InfluxSQLGenerator {
             conditionList.add(" time < " +  TimeStampUtil.javaTime2Influx(endTime));
         }
         return WHERE + Joiner.on(AND).join(conditionList);
-    }
-    public static void main(String[] args){
-
-        Map<String,String> tagMap = Maps.newHashMap();
-        tagMap.put("instance","0");
-        tagMap.put("objectname","PC-44");
-        tagMap.put("host","intel");
-        List<String> meanList = Lists.newArrayList("dile_time");
-        System.out.println(InfluxSQLGenerator.meanDataSQL(tagMap,"win_cpu",12000000L,20000000L));
-        System.out.println(InfluxSQLGenerator.meanDatasSql(tagMap,meanList,"win_cpu",12000000L,20000000L));
-        System.out.println(InfluxSQLGenerator.dataSQL("win_cpu",null,12L,32L,5L));
-        System.out.println(InfluxSQLGenerator.dataSQL("win_cpu",null,null,32L,5L));
     }
 }

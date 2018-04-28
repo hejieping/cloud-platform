@@ -10,10 +10,11 @@ import weka.core.converters.ArffSaver;
 import weka.core.converters.CSVLoader;
 
 import java.io.*;
-
 /**
- * Created by jieping on 2018-04-07
- */
+ * @author jieping
+ * @create  2018-04-07
+ * @desc 文件转换
+ **/
 public class FileConverter {
     /**
      * txt文件转换为csv格式

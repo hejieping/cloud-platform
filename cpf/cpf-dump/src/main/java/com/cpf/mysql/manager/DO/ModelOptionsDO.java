@@ -4,10 +4,11 @@ import com.cpf.constants.ModelTypeEnum;
 import lombok.Data;
 
 import java.util.List;
-
 /**
- * Created by jieping on 2018-04-09
- */
+ * @author jieping
+ * @create 2018-04-09
+ * @desc 定时训练任务
+ **/
 @Data
 public class ModelOptionsDO {
     private Long id;

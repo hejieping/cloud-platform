@@ -4,7 +4,7 @@ import com.cpf.influx.dao.CpuDAO;
 import com.cpf.influx.holder.ModelHolder;
 import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.influx.manager.MonitorManager;
-import com.cpf.ml.MLEngine;
+import com.cpf.ml.MlEngine;
 import com.cpf.monitor.RuleHolder;
 import com.cpf.mysql.dao.AggreModelDAO;
 import com.cpf.task.TrainTask;
@@ -31,7 +31,7 @@ public class TestController {
     @Autowired
     private TrainTask trainTask;
     @Autowired
-    private MLEngine mlEngine;
+    private MlEngine mlEngine;
     @Autowired
     private MonitorManager monitorManager;
     @Autowired

@@ -23,12 +23,17 @@ import java.util.List;
 public class AlarmController {
     @Autowired
     private AlarmManager alarmManager;
+
+    /**
+     * 获取所有预警信息
+     * @return
+     */
     @RequestMapping(value = "/alarms", method = RequestMethod.GET)
     ResponseEntity<Object> modelType(){
         CallbackResult<List<AlarmDO>> result = alarmManager.all();
         if(result.getSuccess()){
-            CallbackResult<List<AlarmVO>> VoResult = new CallbackResult<>(VODOConverter.alarmDOS2VOS(result.getResult()),true);
-            return  new ResponseEntity<Object>(VoResult,HttpStatus.OK);
+            CallbackResult<List<AlarmVO>> voResult = new CallbackResult<>(VODOConverter.alarmDOS2VOS(result.getResult()),true);
+            return  new ResponseEntity<Object>(voResult,HttpStatus.OK);
 
         }
         return  new ResponseEntity<Object>(result,HttpStatus.OK);

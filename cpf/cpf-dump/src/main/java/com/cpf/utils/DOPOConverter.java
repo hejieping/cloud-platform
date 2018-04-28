@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.cpf.constants.AlarmTypeEnum;
 import com.cpf.constants.ModelTypeEnum;
-import com.cpf.constants.OptionTypeEnum;
 import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.mysql.dao.PO.*;
 import com.cpf.mysql.manager.DO.*;
@@ -14,10 +13,11 @@ import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
-
-/**DO PO 转换工具
- * Created by jieping on 2018-04-09
- */
+/**
+ * @author jieping
+ * @create 2018-04-09
+ * @desc DO PO 转换工具
+ **/
 public class DOPOConverter {
     public static ModelPO modelDO2PO(ModelDO modelDO){
         ModelPO modelPO = new ModelPO();
@@ -153,23 +153,5 @@ public class DOPOConverter {
             }
         }
         return list;
-    }
-    public static void main(String[] args){
-        ModelOptionsDO modelOptionsDO = new ModelOptionsDO();
-        modelOptionsDO.setId(1L);
-        ModelOptionDO modelOptionDO = new ModelOptionDO();
-        //modelOptionDO.setExtension(Lists.newArrayList(new String[]{"asd","avasd"}));
-        modelOptionDO.setValue("asd");
-        modelOptionDO.setKey("key");
-        modelOptionDO.setValueType(OptionTypeEnum.BOOLEAN);
-        List<ModelOptionDO> list = Lists.newArrayList();
-        list.add(modelOptionDO);
-        modelOptionsDO.setOptions(list);
-
-        ModelOptionsPO modelOptionsPO = DOPOConverter.modelOptionsDO2PO(modelOptionsDO);
-        System.out.println(JSON.toJSONString(DOPOConverter.modelOptionsPO2DO(modelOptionsPO)));
-
-
-
     }
 }

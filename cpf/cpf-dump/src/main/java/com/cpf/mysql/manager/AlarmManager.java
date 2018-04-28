@@ -25,6 +25,12 @@ public class AlarmManager extends ServiceTemplate {
     @Autowired
     private AlarmDAO alarmDAO;
     private static Logger logger = LoggerFactory.getLogger(AlarmManager.class);
+
+    /**
+     * 保存预警信息
+     * @param alarmDO
+     * @return
+     */
     public CallbackResult<AlarmDO> save(AlarmDO alarmDO){
         Object result = execute(logger, "save", new ServiceExecuteTemplate() {
             @Override
@@ -43,6 +49,11 @@ public class AlarmManager extends ServiceTemplate {
         });
         return (CallbackResult<AlarmDO>)result;
     }
+
+    /**
+     * 获取所有预警信息
+     * @return
+     */
     public CallbackResult<List<AlarmDO>> all(){
         Object result = execute(logger, "all", new ServiceExecuteTemplate() {
             @Override

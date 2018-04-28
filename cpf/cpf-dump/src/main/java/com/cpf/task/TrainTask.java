@@ -77,7 +77,10 @@ public class TrainTask extends ServiceTemplate  {
         });
     }
 
-    //指定算法模型进行训练
+    /**
+     * 指定算法模型进行训练
+     * @param modelDO
+     */
     public void train(ModelDO modelDO){
        execute(logger, "train", new ServiceExecuteTemplate() {
            @Override
@@ -90,7 +93,7 @@ public class TrainTask extends ServiceTemplate  {
 
            @Override
            public CallbackResult<Object> executeAction() throws Exception {
-               AggreModelDO aggreModelDO = aggreModelManager.getByModel(modelDO).getResult();
+               AggreModelDO aggreModelDO = aggreModelManager.get(modelDO).getResult();
                List<MonitorDO> trainList = getTrainSamples(aggreModelDO.getScene());
                ModelUtil.train(modelDO,trainList);
                modelHolder.refresh(aggreModelDO);
@@ -116,10 +119,5 @@ public class TrainTask extends ServiceTemplate  {
         trainMOnitorDOList.addAll(dangerMonitorDOList);
         trainMOnitorDOList.addAll(safeMonitorDOList);
         return trainMOnitorDOList;
-    }
-    public static void main(String[] args){
-       Double a = 0.6D;
-       Long b = Math.round(5/a);
-       System.out.println(b);
     }
 }

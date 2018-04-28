@@ -18,11 +18,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-
 /**
- * 实时监控引擎
- * Created by jieping on 2018-04-19
- */
+ * @author jieping
+ * @create 2018-04-19
+ * @desc 实时监控引擎
+ **/
 @Component
 public class MonitorEngine extends ServiceTemplate{
     private Logger logger = LoggerFactory.getLogger(MonitorEngine.class);
@@ -33,10 +33,13 @@ public class MonitorEngine extends ServiceTemplate{
     @Autowired
     private AlarmManager alarmManager;
     private static final String CLASS_TAG = "danger";
+    private static final Boolean DANGER = true;
+    private static final Boolean SAFE = false;
 
     /**
      * 实时监控，先判断该时刻数据是否满足监控规则，满足则判断监控规则规定的时间段内 监控数据平均值是否满足监控规则，满足则报警
      * @param monitorDO 实时监控的数据
+     * @return 危险为 true 安全为false
      */
     public boolean monitor(MonitorDO monitorDO){
         Object tempResult =  execute(logger, "monitor", new ServiceExecuteTemplate() {
@@ -51,7 +54,7 @@ public class MonitorEngine extends ServiceTemplate{
 
             @Override
             public CallbackResult<Object> executeAction() {
-                CallbackResult<Object> result = new CallbackResult<Object>(true,true);
+                CallbackResult<Object> result = new CallbackResult<Object>(SAFE,true);
                 List<RuleDO> ruleDOList = ruleHolder.getRules(monitorDO.getType());
                 for(RuleDO ruleDO : ruleDOList){
                     //判断该时刻是否满足监控规则
@@ -60,12 +63,12 @@ public class MonitorEngine extends ServiceTemplate{
                         MonitorDO meanMonitor = monitorManager.queryAVGByTime(monitorDO,ruleDO.getTime());
                         if(verify(meanMonitor,ruleDO)){
                             monitorDO.getData().put(CLASS_TAG,"true");
-                            result.setResult(false);
+                            result.setResult(DANGER);
                             warn(meanMonitor,ruleDO);
                         }else {
                             monitorDO.getData().put(CLASS_TAG,"false");
                         }
-                        monitorManager.insertMonitor(monitorDO);
+                        monitorManager.addMonitor(monitorDO);
                     }
                 }
                 return result;
@@ -82,7 +85,7 @@ public class MonitorEngine extends ServiceTemplate{
      * @return
      */
     private boolean verify(MonitorDO monitorDO,RuleDO ruleDO){
-        Boolean result = true;
+        boolean result = true;
         //遍历监控数据，判断数据是否满足监控规则
         for(Map.Entry<String,String> monitorEntry : monitorDO.getData().entrySet()){
             MonitorComparator comparator = ComparatorMap.getComparator(monitorEntry.getKey());

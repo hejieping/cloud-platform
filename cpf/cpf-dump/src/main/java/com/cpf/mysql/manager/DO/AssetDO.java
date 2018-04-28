@@ -3,10 +3,10 @@ package com.cpf.mysql.manager.DO;
 import lombok.Data;
 
 import java.util.Date;
-
 /**
- * Created by jieping on 2018-04-22
- */
+ * @author jieping
+ * @create 2018-04-22
+ **/
 @Data
 public class AssetDO {
     private String id;

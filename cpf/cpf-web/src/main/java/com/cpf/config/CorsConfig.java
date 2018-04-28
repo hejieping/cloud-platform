@@ -5,9 +5,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+
 /**
- * Created by jieping on 2018-04-09
- */
+ * @author jieping
+ * @create 2018-04-25 19:56
+ * @desc csrf关闭
+ **/
 @EnableWebSecurity
 @Configuration
 public class CorsConfig extends WebSecurityConfigurerAdapter {

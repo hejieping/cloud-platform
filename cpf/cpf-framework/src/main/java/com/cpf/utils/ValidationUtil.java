@@ -1,9 +1,11 @@
 package com.cpf.utils;
 
+
 /**
- * 校验工具
- * Created by jieping on 2018-04-22
- */
+ * @author jieping
+ * @create 2018-04-22
+ * @desc 校验工具
+ **/
 public class ValidationUtil {
     /**
      * 判断参数是否全部不为null

@@ -6,8 +6,10 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Created by jieping on 2018-04-05
- */
+ * @author jieping
+ * @create 2018-04-05
+ * @desc 监控规则
+ **/
 @Data
 @Entity(name = "rule")
 public class RulePO {

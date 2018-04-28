@@ -1,8 +1,10 @@
 package com.cpf.constants;
 
 /**
- * 错误码
- */
+ * @author jieping
+ * @create 2018-04-25 19:56
+ * @desc 错误码
+ **/
 public class ErrorConstants {
     public static final ErrorDesc SYSTEM_RRROR = new ErrorDesc("SYSTEM_RRROR","系统错误");
     public static final ErrorDesc PARAMS_INVALID = new ErrorDesc("PARAMS_INVALID","非法参数");

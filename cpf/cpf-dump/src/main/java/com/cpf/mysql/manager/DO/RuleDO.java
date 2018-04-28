@@ -4,10 +4,11 @@ import lombok.Data;
 
 import java.util.Date;
 import java.util.Map;
-
 /**
- * Created by jieping on 2018-04-18
- */
+ * @author jieping
+ * @create 2018-04-18
+ * @desc 定时训练任务
+ **/
 @Data
 public class RuleDO {
     private Long id;

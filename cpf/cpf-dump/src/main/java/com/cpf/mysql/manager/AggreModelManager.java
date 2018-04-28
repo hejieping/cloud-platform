@@ -16,15 +16,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
 /**
- * Created by jieping on 2018-04-12
- */
+ * @author jieping
+ * @create 2018-04-12
+ * @desc 定时训练任务
+ **/
 @Component
 public class AggreModelManager extends ServiceTemplate {
     @Autowired
     private AggreModelDAO aggreModelDAO;
     private static Logger logger = LoggerFactory.getLogger(AggreModelManager.class);
+
+    /**
+     * 保存聚合模型
+     * @param aggreModelDO
+     * @return
+     */
     public CallbackResult<AggreModelDO> save(AggreModelDO aggreModelDO){
         Object  result = execute(logger, "save", new ServiceExecuteTemplate() {
             @Override
@@ -42,6 +49,13 @@ public class AggreModelManager extends ServiceTemplate {
         });
         return (CallbackResult<AggreModelDO>)result;
     }
+
+    /**
+     * 添加聚合模型的算法模型
+     * @param aggreModelDO
+     * @param modelDO
+     * @return
+     */
     public CallbackResult<ModelDO> addModel(AggreModelDO aggreModelDO,ModelDO modelDO){
         Object  result = execute(logger, "addModel", new ServiceExecuteTemplate() {
             @Override
@@ -62,6 +76,11 @@ public class AggreModelManager extends ServiceTemplate {
         });
         return (CallbackResult<ModelDO>)result;
     }
+
+    /**
+     * 获取所有聚合模型
+     * @return
+     */
     public CallbackResult<List<AggreModelDO>> all(){
         Object  result = execute(logger, "all", new ServiceExecuteTemplate() {
             @Override
@@ -76,6 +95,12 @@ public class AggreModelManager extends ServiceTemplate {
         });
         return (CallbackResult<List<AggreModelDO>>)result;
     }
+
+    /**
+     * 删除聚合模型
+     * @param id 聚合模型 id
+     * @return
+     */
     public CallbackResult<Object> delete(Long id){
         Object  result = execute(logger, "delete", new ServiceExecuteTemplate() {
             @Override
@@ -93,8 +118,14 @@ public class AggreModelManager extends ServiceTemplate {
         });
         return (CallbackResult<Object>)result;
     }
-    public CallbackResult<AggreModelDO> getById(Long id){
-        Object  result = execute(logger, "getById", new ServiceExecuteTemplate() {
+
+    /**
+     * 获取聚合模型
+     * @param id 聚合模型id
+     * @return
+     */
+    public CallbackResult<AggreModelDO> get(Long id){
+        Object  result = execute(logger, "get", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
                 if(id == null){
@@ -109,8 +140,14 @@ public class AggreModelManager extends ServiceTemplate {
         });
         return (CallbackResult<AggreModelDO>)result;
     }
-    public CallbackResult<AggreModelDO> getByModel(ModelDO modelDO){
-        Object result = execute(logger, "getByModel", new ServiceExecuteTemplate() {
+
+    /**
+     * 根据算法模型获取他对应的聚合模型
+     * @param modelDO 聚合模型下的一个算法模型
+     * @return
+     */
+    public CallbackResult<AggreModelDO> get(ModelDO modelDO){
+        Object result = execute(logger, "get", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
                 if(ValidationUtil.isNotNull(modelDO)){

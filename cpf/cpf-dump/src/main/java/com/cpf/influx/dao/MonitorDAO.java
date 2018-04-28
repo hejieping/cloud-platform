@@ -1,10 +1,7 @@
 package com.cpf.influx.dao;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.cpf.constants.RuleTypeEnum;
-import com.cpf.influx.dao.PO.CpuPO;
-import com.cpf.utils.InfluxSQLGenerator;
+import com.cpf.utils.InfluxSqlGenerator;
 import com.google.common.collect.Lists;
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Query;
@@ -17,10 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+
 /**
- * influxdb 监控数据 DAO
- * Created by jieping on 2018-04-15
- */
+ * @author jieping
+ * @create  2018-04-15
+ * @desc  influxdb 监控数据 DAO
+ **/
 @Component
 public class MonitorDAO {
     @Autowired
@@ -35,7 +34,7 @@ public class MonitorDAO {
      * @return
      */
     public QueryResult queryAVGByTime(Map<String,String> tags,String tableName,Long startTime,Long endTime){
-        String SQL =  InfluxSQLGenerator.meanDataSQL(tags,tableName,startTime,endTime);
+        String SQL =  InfluxSqlGenerator.meanDataSQL(tags,tableName,startTime,endTime);
         Query query = new Query(SQL, template.getDatabase());
         QueryResult result = template.query(query, TimeUnit.MILLISECONDS);
         return result;
@@ -52,7 +51,7 @@ public class MonitorDAO {
         StringBuffer sqls = new StringBuffer();
         List<RuleTypeEnum> ruleTypeEnumList = Lists.newArrayList(RuleTypeEnum.values());
         for(RuleTypeEnum ruleTypeEnum : RuleTypeEnum.values()){
-            sqls.append(InfluxSQLGenerator.meanDataSQL(tags,ruleTypeEnum.getType(),startTime,endTime));
+            sqls.append(InfluxSqlGenerator.meanDataSQL(tags,ruleTypeEnum.getType(),startTime,endTime));
         }
         Query query = new Query(sqls.toString(), template.getDatabase());
         QueryResult result = template.query(query, TimeUnit.MILLISECONDS);
@@ -68,7 +67,7 @@ public class MonitorDAO {
      * @return
      */
     public QueryResult queryAVGGroupByTime(Map<String,String> tags, List<String> meanList, Long startTime, Long endTime, RuleTypeEnum ruleTypeEnum){
-        Query query = new Query(InfluxSQLGenerator.meanDatasSql(tags,meanList,ruleTypeEnum.getType(),startTime,endTime),template.getDatabase());
+        Query query = new Query(InfluxSqlGenerator.meanDatasSql(tags,meanList,ruleTypeEnum.getType(),startTime,endTime),template.getDatabase());
         QueryResult result = template.query(query, TimeUnit.MILLISECONDS);
         return result;
     }
@@ -82,7 +81,7 @@ public class MonitorDAO {
      * @return
      */
     public QueryResult queryDataByTime(String tableName,Map<String,String> tagMap,Long startTime,Long endTime,Long limit){
-        Query query = new Query(InfluxSQLGenerator.dataSQL(tableName,tagMap,startTime,endTime,limit),template.getDatabase());
+        Query query = new Query(InfluxSqlGenerator.dataSQL(tableName,tagMap,startTime,endTime,limit),template.getDatabase());
         QueryResult result = template.query(query, TimeUnit.MILLISECONDS);
         return result;
     }
@@ -93,26 +92,5 @@ public class MonitorDAO {
      */
     public void insert(Point point){
         template.write(point);
-    }
-
-    public static void main(String[] args){
-        CpuPO cpuPO = new CpuPO();
-        cpuPO.setHost("host");
-        cpuPO.setInstance("instance");
-        cpuPO.setObjectname("name");
-        cpuPO.setPercent_DPC_Time(11.6);
-        cpuPO.setPercent_Idle_Time(11.4);
-        cpuPO.setPercent_Interrupt_Time(5.9);
-        cpuPO.setPercent_Privileged_Time(6D);
-        cpuPO.setPercent_Processor_Time(9D);
-        cpuPO.setPercent_User_Time(9.6);
-        String jsonStr = JSON.toJSONString(cpuPO);
-        System.out.println(jsonStr);
-        Map<String,String> map = JSON.parseObject(jsonStr,new TypeReference<Map<String,String>>(){});
-        System.out.println(JSON.toJSONString(map));
-        System.out.println(1524218182184861300L);
-
-
-
     }
 }

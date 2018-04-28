@@ -3,10 +3,11 @@ package com.cpf.utils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.text.DecimalFormat;
-
 /**
- * Created by jieping on 2018-04-20
- */
+ * @author jieping
+ * @create 2018-04-25 19:56
+ * @desc java 和influx时间戳转换
+ **/
 public class TimeStampUtil {
     /**
      * java时间戳和influx时间戳相差倍数

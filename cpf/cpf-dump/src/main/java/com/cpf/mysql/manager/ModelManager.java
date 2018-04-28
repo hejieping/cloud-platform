@@ -19,10 +19,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 /**
- * Created by jieping on 2018-04-05
- */
+ * @author jieping
+ * @create 2018-04-05
+ *
+ **/
+
 @Component
 public class ModelManager extends ServiceTemplate {
     @Autowired
@@ -31,6 +33,12 @@ public class ModelManager extends ServiceTemplate {
     private TrainTask trainTask;
     private ExecutorService executorService = Executors.newFixedThreadPool(5);
     private static Logger logger = LoggerFactory.getLogger(ModelManager.class);
+
+    /**
+     * 添加模型
+     * @param modelDO
+     * @return
+     */
     public CallbackResult<ModelDO> addModel(ModelDO modelDO){
         Object  result = execute(logger, "addModel", new ServiceExecuteTemplate() {
             @Override
@@ -50,6 +58,11 @@ public class ModelManager extends ServiceTemplate {
         });
         return (CallbackResult<ModelDO>)result;
     }
+
+    /**
+     * 获取所有模型
+     * @return
+     */
     public CallbackResult<List<ModelDO>> all(){
         Object  result = execute(logger, "all", new ServiceExecuteTemplate() {
             @Override
@@ -63,6 +76,12 @@ public class ModelManager extends ServiceTemplate {
         });
         return (CallbackResult<List<ModelDO>>)result;
     }
+
+    /**
+     * 修改模型
+     * @param modelDO
+     * @return
+     */
     public CallbackResult<ModelDO> modifyModel(ModelDO modelDO){
         Object  result = execute(logger, "modifyModel", new ServiceExecuteTemplate() {
             @Override
@@ -86,6 +105,12 @@ public class ModelManager extends ServiceTemplate {
         });
         return (CallbackResult<ModelDO>)result;
     }
+
+    /**
+     * 删除模型
+     * @param id 模型id
+     * @return
+     */
     public CallbackResult<Object> delete(Long id){
         Object  result = execute(logger, "delete", new ServiceExecuteTemplate() {
             @Override

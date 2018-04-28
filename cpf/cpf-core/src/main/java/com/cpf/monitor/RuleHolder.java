@@ -15,11 +15,11 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
-
 /**
- * 监控规则 内存持有类，将监控规则从数据库拿到内存中
- * Created by jieping on 2018-04-19
- */
+ * @author jieping
+ * @create 2018-04-19
+ * @desc 监控规则 内存持有类，将监控规则从数据库拿到内存中
+ **/
 @Component
 public class RuleHolder {
     @Autowired

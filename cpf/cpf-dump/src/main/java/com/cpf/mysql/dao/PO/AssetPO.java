@@ -6,10 +6,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import java.util.Date;
-
 /**
- * Created by jieping on 2018-04-21
- */
+ * @author jieping
+ * @create 2018-04-21
+ * @desc 资产信息
+ **/
 @Data
 @Entity(name = "asset")
 public class AssetPO {

@@ -10,7 +10,12 @@ import java.util.Date;
  **/
 public class DateUtil {
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    //将时间转换成默认格式的字符串
+
+    /**
+     * 将时间转换成默认格式的字符串
+     * @param date
+     * @return
+     */
     public static String format(Date date){
         return new SimpleDateFormat(DATE_FORMAT).format(date);
     }
