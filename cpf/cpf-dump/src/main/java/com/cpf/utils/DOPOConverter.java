@@ -71,7 +71,6 @@ public class DOPOConverter {
     public static AggreModelDO aggreModelPO2DO(AggreModelPO aggreModelPO){
         AggreModelDO aggreModelDO = new AggreModelDO();
         aggreModelDO.setId(aggreModelPO.getId());
-        aggreModelDO.setName(aggreModelPO.getName());
         aggreModelDO.setScene(aggreModelPO.getScene());
         aggreModelDO.setModels(modelPOs2DOs(aggreModelPO.getModels()));
         return aggreModelDO;
@@ -80,7 +79,6 @@ public class DOPOConverter {
         AggreModelPO aggreModelPO = new AggreModelPO();
         aggreModelPO.setId(aggreModelDO.getId());
         aggreModelPO.setScene(aggreModelDO.getScene());
-        aggreModelPO.setName(aggreModelDO.getName());
         aggreModelPO.setModels(modelDOs2POs(aggreModelDO.getModels()));
         return aggreModelPO;
     }

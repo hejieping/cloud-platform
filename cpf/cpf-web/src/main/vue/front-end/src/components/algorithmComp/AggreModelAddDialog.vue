@@ -1,14 +1,7 @@
 <template>
   <div>
       <el-dialog :title="title" :visible.sync="AggreModelAddDialogState" width="400px" >
-  <el-form  align="left" :rules="rules">
-    <el-form-item :model="aggremodel" ref="aggremodel" label="名称" :label-width="formLabelWidth" prop="name">
-      <el-row>
-        <el-col :span="17">
-          <el-input v-model="aggremodel.name" placeholder="请输入名称" ></el-input>
-        </el-col>
-      </el-row>
-    </el-form-item>
+  <el-form  align="left" :rules="rules" :model="aggremodel" ref="aggremodel">
     <el-form-item label="场景" :label-width="formLabelWidth" prop="scene">
       <el-select v-model="aggremodel.scene" >
                 <el-option
@@ -37,8 +30,7 @@ export default {
       formLabelWidth: "80px",
       scenes: [],
       rules: {
-        scene: [{ required: true, message: "请选择应用场景", trigger: "blur" }],
-        name: [{ required: true, message: "请输入名称", trigger: "blur" }]
+        scene: [{ required: true, message: "请选择应用场景", trigger: "blur" }]
       }
     };
   },
@@ -47,21 +39,25 @@ export default {
       this.$store.commit("closeAMAddDialog");
     },
     async submit(form) {
-      let result = this.$refs["aggremodel"].validate((valid, obj) => {
+      let result = this.$refs["aggremodel"].validate(async (valid, obj) => {
+
         if (valid) {
+          if (this.validateScene()) {
+            const response = await saveAggreModel(form);
+            if (response.success) {
+              this.$emit("saveAggreModel", response.result);
+              this.$message("新建模型成功");
+              this.closeDialog();
+            } else {
+              this.$message("新建模型失败");
+            }
+          }else{
+               this.$message("应用场景已经存在");
+          }
         } else {
           return false;
         }
       });
-      console.log(result);
-      const response = await saveAggreModel(form);
-      if (response.success) {
-        this.$emit("saveAggreModel", response.result);
-        this.$message("新建模型成功");
-        this.closeDialog();
-      } else {
-        this.$message("新建模型失败");
-      }
     },
     async initScenes() {
       const response = await getScenes();
@@ -70,12 +66,28 @@ export default {
       } else {
         this.$message("获取应用场景类型失败");
       }
+    },
+    validateScene() {
+      //id无定义则为新增状态
+      if (this.aggremodel.id == undefined) {
+        let result = this.usedScenes.find(
+          usedScene => usedScene == this.aggremodel.scene
+        );
+        if (result == undefined) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return true;
+      }
     }
   },
 
   props: {
     aggremodel: {},
-    title: ""
+    title: "",
+    usedScenes: {}
   },
   computed: {
     AggreModelAddDialogState: {
@@ -88,7 +100,7 @@ export default {
       }
     }
   },
-  created() {
+  mounted() {
     this.initScenes();
   }
 };

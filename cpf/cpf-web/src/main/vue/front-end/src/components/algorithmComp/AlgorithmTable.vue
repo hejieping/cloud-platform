@@ -1,6 +1,9 @@
  <template>
  <div>
-   <AggreModelAddDialog :aggremodel="aggreModelDialogData.data" :title="aggreModelDialogData.title"  @saveAggreModel="saveAggreModel"></AggreModelAddDialog>
+   <AggreModelAddDialog :aggremodel="aggreModelDialogData.data"
+                         :title="aggreModelDialogData.title"
+                         :usedScenes="usedScenes"
+                           @saveAggreModel="saveAggreModel"></AggreModelAddDialog>
    <el-row type="flex">
      <el-button-group >
   <el-button type="primary" icon="el-icon-plus" @click="openDialog">新增</el-button>
@@ -16,12 +19,6 @@
         prop="id"
         label="ID"
         width="150">
-      </el-table-column>
-      <el-table-column
-      align='left'
-        prop="name"
-        label="名称"
-        width="120">
       </el-table-column>
       <el-table-column
       align='left'
@@ -57,7 +54,8 @@ export default {
       aggreModelDialogData: {
         title: "",
         data: {}
-      }
+      },
+      usedScenes:[]
     };
   },
   methods: {
@@ -74,9 +72,7 @@ export default {
     saveAggreModel(target) {
       let index = this.tableData.findIndex(rule => rule.id == target.id);
       if (index != -1) {
-         this.tableData[index].name = target.name;
          this.tableData[index].scene = target.scene;
-
       }else{
         this.tableData.push(target);
       }
@@ -92,8 +88,13 @@ export default {
     },
     async initTableData() {
       const response = await getAllAggreModel();
+    
       if (response.success) {
         this.tableData = response.result;
+        this.usedScenes = [];
+        for(let data of this.tableData){
+          this.usedScenes.push(data.scene);
+        }
       } else {
         this.$message("获取应用场景失败");
       }
