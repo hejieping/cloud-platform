@@ -24,7 +24,6 @@ import java.util.concurrent.Executors;
 /**
  * @author jieping
  * @create 2018-04-12
- * @desc 定时训练任务
  **/
 @Component
 public class AggreModelManager extends ServiceTemplate {
