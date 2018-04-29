@@ -21,6 +21,8 @@ public class ModelFactory {
      * 算法模型的可选参数
      */
     private static Map<String,List<ModelOptionDO>> optionsMap = Maps.newHashMap();
+    private static Map<String,String> classifierMap = Maps.newHashMap();
+
     static {
         //初始化模型的参数
         optionsMap.put(ModelTypeEnum.IBk.toString(),Collections.unmodifiableList(getIBk()));
@@ -36,6 +38,89 @@ public class ModelFactory {
         optionsMap.put(ModelTypeEnum.PART.toString(),Collections.unmodifiableList(getPART()));
         optionsMap.put(ModelTypeEnum.NAIVE_BAYES.toString(),Collections.unmodifiableList(getBAYES()));
         optionsMap.put(ModelTypeEnum.DECISION_STUMP.toString(),Collections.unmodifiableList(getDecisionStump()));
+        classifierMap.put("weka.classifiers.meta.AdaBoostM1","AdaBoostM1");
+        classifierMap.put("weka.classifiers.meta.AdditiveRegression","AdditiveRegression");
+        classifierMap.put("weka.classifiers.meta.AttributeSelectedClassifier","AttributeSelectedClassifier");
+        classifierMap.put("weka.classifiers.bayes.net.BIFReader","BIFReader");
+        classifierMap.put("weka.classifiers.meta.Bagging","Bagging");
+        classifierMap.put("weka.classifiers.BayesNet","BayesNet");
+        classifierMap.put("weka.classifiers.bayes.net.BayesNetGenerator","BayesNetGenerator");
+        classifierMap.put("weka.classifiers.meta.CVParameterSelection ","CVParameterSelection ");
+        classifierMap.put("weka.classifiers.meta.ClassificationViaRegression ","ClassificationViaRegression ");
+        classifierMap.put("weka.classifiers.meta.CostSensitiveClassifier","CostSensitiveClassifier");
+        classifierMap.put("weka.classifiers.trees.DecisionStump","DecisionStump");
+        classifierMap.put("weka.classifiers.rules.DecisionTable","DecisionTable");
+        classifierMap.put("weka.classifiers.bayes.net.EditableBayesNet","EditableBayesNet");
+        classifierMap.put("weka.classifiers.meta.FilteredClassifier","FilteredClassifier");
+        classifierMap.put("weka.classifiers.functions.GaussianProcesses","GaussianProcesses");
+        classifierMap.put("weka.classifiers.pmml.consumer.GeneralRegression","GeneralRegression");
+        classifierMap.put("weka.classifiers.trees.HoeffdingTree","HoeffdingTree");
+        classifierMap.put("weka.classifiers.lazy.IBk","IBk");
+        classifierMap.put("weka.classifiers.misc.InputMappedClassifier","InputMappedClassifier");
+        classifierMap.put("weka.classifiers.IteratedSingleClassifierEnhancer","IteratedSingleClassifierEnhancer");
+        classifierMap.put("weka.classifiers.meta.IterativeClassifierOptimizer","IterativeClassifierOptimizer");
+        classifierMap.put("weka.classifiers.trees.J48","J48");
+        classifierMap.put("weka.classifiers.rules.JRip","JRip");
+        classifierMap.put("weka.classifiers.lazy.KStar","KStar");
+        classifierMap.put("weka.classifiers.trees.LMT"," LMT");
+        classifierMap.put("weka.classifiers.trees.lmt.LMTNode","LMTNode");
+        classifierMap.put("weka.classifiers.lazy.LWL","LWL");
+        classifierMap.put("weka.classifiers.functions.LinearRegression","LinearRegression");
+        classifierMap.put("weka.classifiers.functions.Logistic","Logistic");
+        classifierMap.put("weka.classifiers.trees.lmt.LogisticBase","LogisticBase");
+        classifierMap.put("weka.classifiers.meta.LogitBoost","LogitBoost");
+        classifierMap.put("weka.classifiers.trees.m5.M5Base","M5Base");
+        classifierMap.put("weka.classifiers.trees.M5P","M5P");
+        classifierMap.put("weka.classifiers.rules.M5Rules","M5Rules");
+        classifierMap.put("weka.classifiers.meta.MultiClassClassifier","MultiClassClassifier");
+        classifierMap.put("weka.classifiers.meta.MultiClassClassifierUpdateable","MultiClassClassifierUpdateable");
+        classifierMap.put("weka.classifiers.meta.MultiScheme","MultiScheme");
+        classifierMap.put("weka.classifiers.functions.MultilayerPerceptron","MultilayerPerceptron");
+        classifierMap.put("weka.classifiers.MultipleClassifiersCombiner","MultipleClassifiersCombiner");
+        classifierMap.put("weka.classifiers.bayes.NaiveBayes","NaiveBayes");
+        classifierMap.put("weka.classifiers.bayes.NaiveBayesMultinomial","NaiveBayesMultinomial");
+        classifierMap.put("weka.classifiers.bayes.NaiveBayesMultinomialText","NaiveBayesMultinomialText");
+        classifierMap.put("weka.classifiers.bayes.NaiveBayesMultinomialUpdateable","NaiveBayesMultinomialUpdateable");
+        classifierMap.put("weka.classifiers.bayes.NaiveBayesUpdateable","NaiveBayesUpdateable");
+        classifierMap.put("weka.classifiers.pmml.consumer.NeuralNetwork","NeuralNetwork");
+        classifierMap.put("weka.classifiers.rules.OneR","OneR");
+        classifierMap.put("weka.classifiers.rules.PART","PART");
+        classifierMap.put("weka.classifiers.pmml.consumer.PMMLClassifier","PMMLClassifier");
+        classifierMap.put("weka.core.pmml.PMMLClassifierRunner","PMMLClassifierRunner");
+        classifierMap.put("weka.classifiers..ParallelIteratedSingleClassifierEnhancer","ParallelIteratedSingleClassifierEnhancer");
+        classifierMap.put("weka.classifiers.ParallelMultipleClassifiersCombiner","ParallelMultipleClassifiersCombiner");
+        classifierMap.put("weka.classifiers.trees.m5.PreConstructedLinearModel","PreConstructedLinearModel");
+        classifierMap.put("weka.classifiers.trees.REPTree","REPTree");
+        classifierMap.put("weka.classifiers.meta.RandomCommittee","RandomCommittee");
+        classifierMap.put("weka.classifiers.trees.RandomForest","RandomForest");
+        classifierMap.put("weka.classifiers.meta.RandomSubSpace","RandomSubSpace");
+        classifierMap.put("weka.classifiers.trees.RandomTree","RandomTree");
+        classifierMap.put("weka.classifiers.RandomizableClassifier","RandomizableClassifier");
+        classifierMap.put("weka.classifiers.meta.RandomizableFilteredClassifier","RandomizableFilteredClassifier");
+        classifierMap.put("weka.classifiers..RandomizableIteratedSingleClassifierEnhancer","RandomizableIteratedSingleClassifierEnhancer");
+        classifierMap.put("weka.classifiersRandomizableMultipleClassifiersCombiner","RandomizableMultipleClassifiersCombiner");
+        classifierMap.put("weka.classifiers..RandomizableSingleClassifierEnhancer","RandomizableSingleClassifierEnhancer");
+        classifierMap.put("weka.classifiers.RandomizableParallelMultipleClassifiersCombiner","RandomizableParallelMultipleClassifiersCombiner");
+        classifierMap.put("weka.classifiers.RandomizableSingleClassifierEnhancer","RandomizableSingleClassifierEnhancer");
+        classifierMap.put("weka.classifiers.pmml.consumer.Regression","Regression");
+        classifierMap.put("weka.classifiers.meta.RegressionByDiscretization","RegressionByDiscretization");
+        classifierMap.put("weka.classifiers.trees.m5.RuleNode","RuleNode");
+        classifierMap.put("weka.classifiers.pmml.consumer.RuleSetModel","RuleSetModel");
+        classifierMap.put("weka.classifiers.functions.SGD","SGD");
+        classifierMap.put("weka.classifiers.functions.SGDText","SGDText");
+        classifierMap.put("weka.classifiers.functions.SMO","SMO");
+        classifierMap.put("weka.classifiers.functions.SMOreg","SMOreg");
+        classifierMap.put("weka.classifiers.misc.SerializedClassifier","SerializedClassifier");
+        classifierMap.put("weka.classifiers.functions.SimpleLinearRegression","SimpleLinearRegression");
+        classifierMap.put("weka.classifiers.functions.SimpleLogistic","SimpleLogistic");
+        classifierMap.put("weka.classifiers.SingleClassifierEnhancer","SingleClassifierEnhancer");
+        classifierMap.put("weka.classifiers.meta.Stacking","Stacking");
+        classifierMap.put("weka.classifiers.pmml.consumer.SupportVectorMachineModel","SupportVectorMachineModel");
+        classifierMap.put("weka.classifiers.pmml.consumer.TreeModel","TreeModel");
+        classifierMap.put("weka.classifiers.meta.Vote","Vote");
+        classifierMap.put("weka.classifiers.functions.VotedPerceptron","VotedPerceptron");
+        classifierMap.put("weka.classifiers.meta.WeightedInstancesHandlerWrapper","WeightedInstancesHandlerWrapper");
+        classifierMap.put("weka.classifiers.rules.ZeroR","ZeroR");
     }
     /**
      * 根据模型名称和模型类型产生一个模型类，
@@ -313,15 +398,16 @@ public class ModelFactory {
         modelOptionDO45.setKey("-I");
         modelOptionDO45.setDesc("迭代次数");
         modelOptionDO45.setValueType(OptionTypeEnum.INTEGER);
-        //TODO 添加分类器enum
-//        ModelOptionDO modelOptionDO47 = new ModelOptionDO();
-//        modelOptionDO47.setKey("-W");
-//        modelOptionDO47.setDesc(" 基分类器(default: weka.classifiers.trees.DecisionStump)");
-//        modelOptionDO47.setValueType(OptionTypeEnum.ENUM);
+        ModelOptionDO modelOptionDO47 = new ModelOptionDO();
+        modelOptionDO47.setKey("-W");
+        modelOptionDO47.setDesc(" 基分类器(默认:DecisionStump)");
+        modelOptionDO47.setValueType(OptionTypeEnum.ENUM);
+        modelOptionDO47.setExtension(classifierMap);
         list.add(modelOptionDO42);
         list.add(modelOptionDO43);
         list.add(modelOptionDO44);
         list.add(modelOptionDO45);
+        list.add(modelOptionDO47);
         return list;
     }
     private static List<ModelOptionDO> getBagging(){
@@ -342,11 +428,11 @@ public class ModelFactory {
         modelOptionDO51.setKey("-I");
         modelOptionDO51.setDesc("迭代次数（默认值10）");
         modelOptionDO51.setValueType(OptionTypeEnum.INTEGER);
-        //TODO 设置分类器enum
-//        ModelOptionDO modelOptionDO53 = new ModelOptionDO();
-//        modelOptionDO53.setKey("-W");
-//        modelOptionDO53.setDesc("基本分类器 (默认:REPTree）");
-//        modelOptionDO53.setValueType(OptionTypeEnum.ENUM);
+        ModelOptionDO modelOptionDO53 = new ModelOptionDO();
+        modelOptionDO53.setKey("-W");
+        modelOptionDO53.setDesc("基本分类器 (默认:REPTree）");
+        modelOptionDO53.setValueType(OptionTypeEnum.ENUM);
+        modelOptionDO53.setExtension(classifierMap);
         ModelOptionDO modelOptionDO54 = new ModelOptionDO();
         modelOptionDO54.setKey("-M");
         modelOptionDO54.setDesc(" 设置每个叶子的最小实例数（默认值为2）");
@@ -359,10 +445,6 @@ public class ModelFactory {
         modelOptionDO56.setKey("-N");
         modelOptionDO56.setDesc("减少错误修剪的折叠数量（默认3）。");
         modelOptionDO56.setValueType(OptionTypeEnum.INTEGER);
-        ModelOptionDO modelOptionDO57 = new ModelOptionDO();
-        modelOptionDO57.setKey("-S");
-        modelOptionDO57.setDesc("随机数据混洗的种子（默认1）");
-        modelOptionDO57.setValueType(OptionTypeEnum.INTEGER);
         ModelOptionDO modelOptionDO58 = new ModelOptionDO();
         modelOptionDO58.setKey("-L");
         modelOptionDO58.setDesc("最大树深度（默认-1，无最大值）");
@@ -371,10 +453,10 @@ public class ModelFactory {
         list.add(modelOptionDO49);
         list.add(modelOptionDO50);
         list.add(modelOptionDO51);
+        list.add(modelOptionDO53);
         list.add(modelOptionDO54);
         list.add(modelOptionDO55);
         list.add(modelOptionDO56);
-        list.add(modelOptionDO57);
         list.add(modelOptionDO58);
         return list;
     }
@@ -416,11 +498,11 @@ public class ModelFactory {
         modelOptionDO68.setKey("-I");
         modelOptionDO68.setDesc("迭代次数（默认值10）");
         modelOptionDO68.setValueType(OptionTypeEnum.INTEGER);
-        //TODO 分类器名称
-//        ModelOptionDO modelOptionDO69 = new ModelOptionDO();
-//        modelOptionDO69.setKey("-W");
-//        modelOptionDO69.setDesc("Full name of base classifier.(default: weka.classifiers.trees.DecisionStump)");
-//        modelOptionDO69.setValueType(null);
+        ModelOptionDO modelOptionDO69 = new ModelOptionDO();
+        modelOptionDO69.setKey("-W");
+        modelOptionDO69.setDesc("基分类器(默认: DecisionStump)");
+        modelOptionDO69.setValueType(OptionTypeEnum.ENUM);
+        modelOptionDO69.setExtension(classifierMap);
         list.add(modelOptionDO60);
         list.add(modelOptionDO61);
         list.add(modelOptionDO62);
@@ -430,15 +512,16 @@ public class ModelFactory {
         list.add(modelOptionDO66);
         list.add(modelOptionDO67);
         list.add(modelOptionDO68);
+        list.add(modelOptionDO69);
         return list;
     }
     private static List<ModelOptionDO> getSTACKING(){
         List<ModelOptionDO> list = Lists.newArrayList();
-        // TODO 分类器 enum
-//        ModelOptionDO modelOptionDO70 = new ModelOptionDO();
-//        modelOptionDO70.setKey("-M");
-//        modelOptionDO70.setDesc(" Full name of meta classifier, followed by options.(default: \"weka.classifiers.rules.Zero\")");
-//        modelOptionDO70.setValueType(OptionTypeEnum.BOOLEAN);
+        ModelOptionDO modelOptionDO70 = new ModelOptionDO();
+        modelOptionDO70.setKey("-M");
+        modelOptionDO70.setDesc("元分类器(默认: ZeroR");
+        modelOptionDO70.setValueType(OptionTypeEnum.ENUM);
+        modelOptionDO70.setExtension(classifierMap);
         ModelOptionDO modelOptionDO71 = new ModelOptionDO();
         modelOptionDO71.setKey("-X");
         modelOptionDO71.setDesc("设置交叉验证折叠的数量");
@@ -447,13 +530,15 @@ public class ModelFactory {
         modelOptionDO72.setKey("-S");
         modelOptionDO72.setDesc("随机数种子（默认1）");
         modelOptionDO72.setValueType(OptionTypeEnum.INTEGER);
-        // TODO 分类器 enum
-//        ModelOptionDO modelOptionDO73 = new ModelOptionDO();
-//        modelOptionDO73.setKey("-B");
-//        modelOptionDO73.setDesc("Full class name of classifier to include, followed by scheme options. May be specified multiple times.(default: \"weka.classifiers.rules.ZeroR\").");
-//        modelOptionDO73.setValueType(null);
+        ModelOptionDO modelOptionDO73 = new ModelOptionDO();
+        modelOptionDO73.setKey("-B");
+        modelOptionDO73.setDesc("分类器,（默认：ZeroR）");
+        modelOptionDO73.setValueType(OptionTypeEnum.ENUM);
+        modelOptionDO73.setExtension(classifierMap);
         list.add(modelOptionDO71);
         list.add(modelOptionDO72);
+        list.add(modelOptionDO70);
+        list.add(modelOptionDO73);
         return list;
     }
     private static List<ModelOptionDO> getLOGISTIC(){
