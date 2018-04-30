@@ -650,7 +650,7 @@ public class ModelFactory {
         List<ModelOptionDO> list = Lists.newArrayList();
         ModelOptionDO modelOptionDO= new ModelOptionDO();
         modelOptionDO.setKey("-K");
-        modelOptionDO.setDesc("*使用内核密度估计器");
+        modelOptionDO.setDesc("使用内核密度估计器");
         modelOptionDO.setValueType(OptionTypeEnum.BOOLEAN);
         ModelOptionDO modelOptionDO1= new ModelOptionDO();
         modelOptionDO1.setKey("-D");
@@ -674,7 +674,7 @@ public class ModelFactory {
         ModelOptionDO modelOptionDO1= new ModelOptionDO();
         modelOptionDO1.setKey("-num-decimal-places");
         modelOptionDO1.setDesc("模型中输出数字的小数位数。");
-        modelOptionDO1.setValueType(OptionTypeEnum.BOOLEAN);
+        modelOptionDO1.setValueType(OptionTypeEnum.INTEGER);
         ModelOptionDO modelOptionDO2 = new ModelOptionDO();
         modelOptionDO2.setKey("-batch-size");
         modelOptionDO2.setDesc("批量预测所需的批量大小。");

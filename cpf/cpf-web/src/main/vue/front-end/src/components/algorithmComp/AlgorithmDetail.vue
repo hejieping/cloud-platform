@@ -1,6 +1,6 @@
 <template>
   <div>
- <algorithm-add-dialog @addModel="addModel" ></algorithm-add-dialog>
+ <algorithm-add-dialog @addModel="addModel" :usedNames="usedNames"></algorithm-add-dialog>
 
   <el-row type="flex">
       <el-button-group >
@@ -22,15 +22,16 @@ import AlgorithmEdit from "@/components/algorithmComp/AlgorithmEdit.vue";
 import AlgorithmAddDialog from "@/components/algorithmComp/AlgorithmAddDialog.vue";
 import { getAggreModel } from "@/api/getData";
 export default {
-  name: 'AlgotithmDetail',
-  data () {
+  name: "AlgotithmDetail",
+  data() {
     return {
-              aggreModel: {
+      aggreModel: {
         models: []
-      }
-    }
+      },
+      usedNames: []
+    };
   },
-    methods: {
+  methods: {
     calTitle(name, weight) {
       return name + "   权重：" + weight;
     },
@@ -45,21 +46,25 @@ export default {
       models.splice(models.findIndex(model => model.id == id), 1);
     },
     async initModels() {
-      let params = {id : this.$route.params.id};
+      let params = { id: this.$route.params.id };
       const response = await getAggreModel(params);
       if (response.success) {
         this.aggreModel = response.result;
+        this.usedNames= [];
+        for (let model of this.aggreModel.models) {
+          this.usedNames.push(model.name);
+        }
       } else {
         this.$message("获取模型失败");
       }
     }
   },
   components: {
-    'AlgorithmEdit': AlgorithmEdit,
-    'AlgorithmAddDialog': AlgorithmAddDialog
+    AlgorithmEdit: AlgorithmEdit,
+    AlgorithmAddDialog: AlgorithmAddDialog
   },
   created() {
     this.initModels();
   }
-}
+};
 </script>
