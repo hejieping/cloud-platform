@@ -27,9 +27,17 @@ export default {
     return {
       aggreModel: {
         models: []
-      },
-      usedNames: []
+      }
     };
+  },
+  computed:{
+    usedNames(){
+        var usedNames= [];
+        for (let model of this.aggreModel.models) {
+          usedNames.push(model.name);
+        }
+        return usedNames;
+    }
   },
   methods: {
     calTitle(name, weight) {
@@ -50,10 +58,7 @@ export default {
       const response = await getAggreModel(params);
       if (response.success) {
         this.aggreModel = response.result;
-        this.usedNames= [];
-        for (let model of this.aggreModel.models) {
-          this.usedNames.push(model.name);
-        }
+
       } else {
         this.$message("获取模型失败");
       }
