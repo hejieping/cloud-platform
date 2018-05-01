@@ -63,7 +63,7 @@ public class MonitorEngine extends ServiceTemplate{
                         //如果监控规则有规定持续时间
                         if(ValidationUtil.isNotNull(ruleDO.getTime())){
                             //判断一定时间内的平均值是否满足监控规则
-                            MonitorDO meanMonitor = monitorManager.queryAVGByTime(monitorDO,ruleDO.getTime());
+                            MonitorDO meanMonitor = monitorManager.queryAVGByTime(monitorDO,ruleDO.getTime()).getResult();
                             if(verify(meanMonitor,ruleDO)){
                                 monitorDO.getData().put(CLASS_TAG,"true");
                                 result.setResult(DANGER);

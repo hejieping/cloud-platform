@@ -2,6 +2,7 @@ package com.cpf.influx.manager;
 
 import com.cpf.constants.CpfDumpConstants;
 import com.cpf.constants.RuleTypeEnum;
+import com.cpf.constants.TimeIntervalEnum;
 import com.cpf.exception.BusinessException;
 import com.cpf.influx.dao.MonitorDAO;
 import com.cpf.influx.manager.DO.MonitorDO;
@@ -37,35 +38,47 @@ public class MonitorManager extends ServiceTemplate {
     private static Logger logger = LoggerFactory.getLogger(MonitorManager.class);
     /**
      * 查询过去一段时间的数据平均值
-     * monitorEngine专用，不对外，所以不用执行ServiceTemplate
      * @param monitorDO
      * @param minutes
      * @return
      */
-    public MonitorDO queryAVGByTime(MonitorDO monitorDO, Long minutes){
-        if(ValidationUtil.isNull(minutes)){
-            return monitorDO;
-        }
-        Map<String,String> tagMap = Maps.newHashMap();
-        RuleTypeEnum ruleType = RuleTypeEnum.typeOf(monitorDO.getType());
-        if(ruleType == null){
-            //找不到监控类型
-            throw new BusinessException(CpfDumpConstants.MONITOR_DATA_TYPE_ERROR);
-        }
-        //组装表的标签
-        for(String tag : ruleType.getTagList()){
-            tagMap.put(tag,monitorDO.getData().get(tag));
-        }
-        Long endTime = System.currentTimeMillis();
-        Long startTime = endTime - TimeStampUtil.minutes2Time(minutes);
-        QueryResult result = monitorDAO.queryAVGByTime(tagMap,monitorDO.getType(),startTime,endTime);
-        //查询结果解析成domain对象
-        List<MonitorDO> monitorDOList = parseQueryResult(result).get(monitorDO.getType());
-        if(CollectionUtils.isNotEmpty(monitorDOList) && monitorDOList.size() == 1){
-            return monitorDOList.get(0);
-        }else {
-            throw new BusinessException(CpfDumpConstants.QUERY_AVG_DATA_FAILED);
-        }
+    public CallbackResult<MonitorDO> queryAVGByTime(MonitorDO monitorDO, Long minutes){
+        Object result = execute(logger, "queryAVGByTime", new ServiceExecuteTemplate() {
+            @Override
+            public CallbackResult<Object> checkParams() {
+                return CallbackResult.success();
+            }
+
+            @Override
+            public CallbackResult<Object> executeAction() throws Exception {
+
+                if(ValidationUtil.isNull(minutes)){
+                    return new CallbackResult<>(monitorDO,true);
+                }
+                Map<String,String> tagMap = Maps.newHashMap();
+                RuleTypeEnum ruleType = RuleTypeEnum.typeOf(monitorDO.getType());
+                if(ruleType == null){
+                    //找不到监控类型
+                    throw new BusinessException(CpfDumpConstants.MONITOR_DATA_TYPE_ERROR);
+                }
+                //组装表的标签
+                for(String tag : ruleType.getTagList()){
+                    tagMap.put(tag,monitorDO.getData().get(tag));
+                }
+                Long endTime = System.currentTimeMillis();
+                Long startTime = endTime - TimeStampUtil.minutes2Time(minutes);
+                QueryResult result = monitorDAO.queryAVGByTime(tagMap,monitorDO.getType(),startTime,endTime);
+                //查询结果解析成domain对象
+                List<MonitorDO> monitorDOList = parseQueryResult(result).get(monitorDO.getType());
+                if(CollectionUtils.isNotEmpty(monitorDOList) && monitorDOList.size() == 1){
+                    return new CallbackResult<>(monitorDOList.get(0),true);
+                }else {
+                    throw new BusinessException(CpfDumpConstants.QUERY_AVG_DATA_FAILED);
+                }
+            }
+        });
+        return (CallbackResult<MonitorDO>)result;
+
     }
 
     /**
@@ -185,6 +198,38 @@ public class MonitorManager extends ServiceTemplate {
             }
         });
         return (CallbackResult<List<List<String>>>)result;
+    }
+    public CallbackResult<MonitorDO> getChangeRateByTime(MonitorDO monitorDO,String unit){
+        Object result = execute(logger, "getChangeRateByTime", new ServiceExecuteTemplate() {
+            @Override
+            public CallbackResult<Object> checkParams() {
+                if(ValidationUtil.isNotNull(monitorDO,unit)){
+                    return CallbackResult.success();
+                }
+                return CallbackResult.failure();
+            }
+
+            @Override
+            public CallbackResult<Object> executeAction() throws Exception {
+                Map<String,String> tagMap = Maps.newHashMap();
+                RuleTypeEnum.CPU.getTagList().forEach(key->{
+                    if(ValidationUtil.isNotNull(monitorDO.getData().get(key))){
+                        tagMap.put(key,monitorDO.getData().get(key));
+                    }
+                });
+                String unit = TimeIntervalEnum.generateInterval(TimeIntervalEnum.HOUR,1L);
+                QueryResult result = monitorDAO.queryChangeRateByTime(monitorDO.getType(),null,unit,tagMap);
+                //查询结果解析成domain对象
+                List<MonitorDO> monitorDOList = parseQueryResult(result).get(monitorDO.getType());
+                if(CollectionUtils.isNotEmpty(monitorDOList) && monitorDOList.size() == 1){
+                    monitorDO.getData().putAll(monitorDOList.get(0).getData());
+                    return new CallbackResult<>(monitorDO,true);
+                }else {
+                    throw new BusinessException(CpfDumpConstants.QUERY_AVG_DATA_FAILED);
+                }
+            }
+        });
+        return (CallbackResult<MonitorDO>)result;
     }
 
     /**

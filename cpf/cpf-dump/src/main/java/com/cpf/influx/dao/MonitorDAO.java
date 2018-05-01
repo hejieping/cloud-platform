@@ -72,6 +72,11 @@ public class MonitorDAO {
         return result;
     }
 
+    public QueryResult queryChangeRateByTime(String tableName,List<String> keys,String unit,Map<String,String> tagMap){
+        Query query = new Query(InfluxSqlGenerator.changeRateSql(tableName,null,unit,tagMap),template.getDatabase());
+        QueryResult result = template.query(query, TimeUnit.MILLISECONDS);
+        return result;
+    }
     /**
      * select * from tableNanem where time > startTime and time < endTime limit
      * @param tableName
@@ -81,7 +86,7 @@ public class MonitorDAO {
      * @return
      */
     public QueryResult queryDataByTime(String tableName,Map<String,String> tagMap,Long startTime,Long endTime,Long limit){
-        Query query = new Query(InfluxSqlGenerator.dataSQL(tableName,tagMap,startTime,endTime,limit),template.getDatabase());
+        Query query = new Query(InfluxSqlGenerator.dataSql(tableName,tagMap,startTime,endTime,limit),template.getDatabase());
         QueryResult result = template.query(query, TimeUnit.MILLISECONDS);
         return result;
     }

@@ -171,7 +171,6 @@ public class ModelUtil  {
         Random random = new Random();
         //获取monitordo的所有值，map的key为属性名，
         for(MonitorDO monitorDO : monitorDOList){
-            monitorDO.getData().put("danger",String.valueOf(random.nextBoolean()));
             for(Map.Entry<String,String> entry : monitorDO.getData().entrySet()) {
                 List<String> list = monitorMap.get(entry.getKey());
                 if(list == null){

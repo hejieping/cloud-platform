@@ -12,7 +12,7 @@ public enum TimeIntervalEnum {
     /**
      * 小时
      */
-    HOUT("h"),
+    HOUR("h"),
     /**
      * 天
      */
@@ -44,7 +44,7 @@ public enum TimeIntervalEnum {
      * @param num 时间数值
      * @return
      */
-    private static String generateInterval(TimeIntervalEnum intervalEnum, Long num){
+    public  static String generateInterval(TimeIntervalEnum intervalEnum, Long num){
         return  num+intervalEnum.getUnit();
     }
 
