@@ -4,10 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.cpf.constants.AlarmTypeEnum;
 import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.influx.manager.MonitorManager;
+import com.cpf.logger.BusinessLogger;
 import com.cpf.mysql.manager.AlarmManager;
 import com.cpf.mysql.manager.DO.AlarmDO;
 import com.cpf.mysql.manager.DO.RuleDO;
-import com.cpf.logger.BusinessLogger;
 import com.cpf.service.CallbackResult;
 import com.cpf.service.ServiceExecuteTemplate;
 import com.cpf.service.ServiceTemplate;
@@ -19,6 +19,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * @author jieping
  * @create 2018-04-19
@@ -33,9 +37,17 @@ public class MonitorEngine extends ServiceTemplate{
     private MonitorManager monitorManager;
     @Autowired
     private AlarmManager alarmManager;
+    private ExecutorService executorService = Executors.newFixedThreadPool(10);
     private static final String CLASS_TAG = "danger";
     private static final Boolean DANGER = true;
     private static final Boolean SAFE = false;
+    private static final Integer DANGER_SAMPLE_WEIGHT = 1;
+    private static final Integer SAFE_SAMPLE_WEIGHT = 1;
+    /**
+     * 样本计数器，用该计数器决定正负训练样本写入数据库比例
+     */
+    private static AtomicLong sampleCount = new AtomicLong(0L);
+
 
     /**
      * 实时监控，先判断该时刻数据是否满足监控规则，满足则判断监控规则规定的时间段内 监控数据平均值是否满足监控规则，满足则报警
@@ -65,12 +77,13 @@ public class MonitorEngine extends ServiceTemplate{
                             //判断一定时间内的平均值是否满足监控规则
                             MonitorDO meanMonitor = monitorManager.queryAVGByTime(monitorDO,ruleDO.getTime()).getResult();
                             if(verify(meanMonitor,ruleDO)){
-                                monitorDO.getData().put(CLASS_TAG,"true");
+                                monitorDO.getData().put(CLASS_TAG,DANGER.toString());
                                 result.setResult(DANGER);
                                 warn(meanMonitor,ruleDO);
                             }else {
-                                monitorDO.getData().put(CLASS_TAG,"false");
+                                monitorDO.getData().put(CLASS_TAG,SAFE.toString());
                             }
+                            saveSample(monitorDO);
                         }
                         monitorManager.addMonitor(monitorDO);
                     }
@@ -121,5 +134,21 @@ public class MonitorEngine extends ServiceTemplate{
                 new String[]{JSON.toJSONString(monitorDO),JSON.toJSONString(ruleDO)},
                 "MONITOR_DANGER","监控报警",logger);
 
+    }
+
+    /**
+     * 按照正负样本比例保存训练样本
+     * @param monitorDO
+     * @param danger
+     */
+    private void saveSample(MonitorDO monitorDO){
+        boolean danger = Boolean.valueOf(monitorDO.getData().get(CLASS_TAG));
+        //计数器求余
+        long index = sampleCount.longValue()%(DANGER_SAMPLE_WEIGHT+SAFE_SAMPLE_WEIGHT);
+        //当 index 处于[0，DANGER_SAMPLE_WEIGHT）范围时，表示此时只能保存有故障的设备数据，否则只能保存没有故障的设备数据
+        if((index < DANGER_SAMPLE_WEIGHT && danger==true)||(index >= DANGER_SAMPLE_WEIGHT && danger==false)){
+            sampleCount.incrementAndGet();
+            executorService.submit(()->monitorManager.addTrainSample(monitorDO));
+        }
     }
 }

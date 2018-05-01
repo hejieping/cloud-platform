@@ -1,5 +1,6 @@
 package com.cpf.controller;
 
+import com.cpf.constants.TimeIntervalEnum;
 import com.cpf.influx.dao.CpuDAO;
 import com.cpf.influx.holder.ModelHolder;
 import com.cpf.influx.manager.DO.MonitorDO;
@@ -47,7 +48,8 @@ public class TestController {
 //        AggreModelPO aggreModelPO = aggreModelDAO.findByModelsIsContaining(aggreModelPOS.get(0).getModels().get(0));
 
         List<MonitorDO> monitorDOList = monitorManager.queryDataByTime("win_cpu",null,null,null,1L).getResult();
-        monitorEngine.monitor(monitorDOList.get(0));
-        return new ResponseEntity<>(monitorDOList.get(0),HttpStatus.OK);
+        String unit = TimeIntervalEnum.generateInterval(TimeIntervalEnum.HOUR,1L);
+        MonitorDO monitorDO = monitorManager.queryChangeRateByTime(monitorDOList.get(0),unit).getResult();
+        return new ResponseEntity<>(monitorDO,HttpStatus.OK);
     }
 }

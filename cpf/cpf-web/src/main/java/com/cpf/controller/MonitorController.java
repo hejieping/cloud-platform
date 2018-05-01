@@ -42,14 +42,7 @@ public class MonitorController {
     @RequestMapping(method = RequestMethod.GET)
     ResponseEntity<Object> monitor(MonitorDO monitorDO){
         //异步执行
-        executorService.submit(()->{
-            //判断是否命中监控规则
-            Boolean monitorResult = monitorEngine.monitor(monitorDO);
-            //没有命中监控规则，则预测是否存在潜在危险，命中则已经危险，无需预测
-            if(!monitorResult){
-                mlEngine.predict(monitorDO);
-            }
-        });
+        executorService.submit(()->monitorEngine.monitor(monitorDO));
         return new ResponseEntity<>(true,HttpStatus.OK);
     }
 

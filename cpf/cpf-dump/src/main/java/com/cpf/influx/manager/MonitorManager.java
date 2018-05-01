@@ -1,5 +1,7 @@
 package com.cpf.influx.manager;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.cpf.constants.CpfDumpConstants;
 import com.cpf.constants.RuleTypeEnum;
 import com.cpf.constants.TimeIntervalEnum;
@@ -36,6 +38,15 @@ public class MonitorManager extends ServiceTemplate {
     @Autowired
     private MonitorDAO monitorDAO;
     private static Logger logger = LoggerFactory.getLogger(MonitorManager.class);
+    /**
+     * 训练数据表名的后缀
+     */
+    private static final String TRAIN_SUFFIX ="_train";
+    /**
+     * 监控数据变化率的时间间隔
+     */
+    private static final String unit = TimeIntervalEnum.generateInterval(TimeIntervalEnum.HOUR,1L);
+
     /**
      * 查询过去一段时间的数据平均值
      * @param monitorDO
@@ -199,8 +210,15 @@ public class MonitorManager extends ServiceTemplate {
         });
         return (CallbackResult<List<List<String>>>)result;
     }
-    public CallbackResult<MonitorDO> getChangeRateByTime(MonitorDO monitorDO,String unit){
-        Object result = execute(logger, "getChangeRateByTime", new ServiceExecuteTemplate() {
+
+    /**
+     * 查询数据的变化率
+     * @param monitorDO
+     * @param unit 在原有数据monitorDO 的datamap上增加各个key的变化率
+     * @return
+     */
+    public CallbackResult<MonitorDO> queryChangeRateByTime(MonitorDO monitorDO, String unit){
+        Object result = execute(logger, "queryChangeRateByTime", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
                 if(ValidationUtil.isNotNull(monitorDO,unit)){
@@ -222,14 +240,45 @@ public class MonitorManager extends ServiceTemplate {
                 //查询结果解析成domain对象
                 List<MonitorDO> monitorDOList = parseQueryResult(result).get(monitorDO.getType());
                 if(CollectionUtils.isNotEmpty(monitorDOList) && monitorDOList.size() == 1){
-                    monitorDO.getData().putAll(monitorDOList.get(0).getData());
-                    return new CallbackResult<>(monitorDO,true);
+                    //深复制对象
+                    MonitorDO changeRateData = JSON.parseObject(JSON.toJSONString(monitorDO),new TypeReference<MonitorDO>(){});
+                    changeRateData.getData().putAll(monitorDOList.get(0).getData());
+                    return new CallbackResult<>(changeRateData,true);
                 }else {
                     throw new BusinessException(CpfDumpConstants.QUERY_AVG_DATA_FAILED);
                 }
             }
         });
         return (CallbackResult<MonitorDO>)result;
+    }
+
+    /**
+     * 添加训练样本
+     * @param monitorDO
+     */
+    public void addTrainSample(MonitorDO monitorDO){
+        execute(logger, "addTrainSample", new ServiceExecuteTemplate() {
+            @Override
+            public CallbackResult<Object> checkParams() {
+                if(ValidationUtil.isNotNull(monitorDO)){
+                    return CallbackResult.success();
+                }
+                return CallbackResult.failure();
+            }
+
+            @Override
+            public CallbackResult<Object> executeAction() throws Exception {
+                CallbackResult<MonitorDO> queryResult = queryChangeRateByTime(monitorDO,unit);
+                if(queryResult.getSuccess()){
+                    MonitorDO sample = queryResult.getResult();
+                    //将数据类型改成训练数据类型
+                    sample.setType(sample.getType()+TRAIN_SUFFIX);
+                    //将训练数据存入数据库
+                    addMonitor(sample);
+                }
+                return CallbackResult.success();
+            }
+        });
     }
 
     /**
@@ -325,6 +374,20 @@ public class MonitorManager extends ServiceTemplate {
             list.add(StringUtils.stripStart(key,"mean_"));
         }
         return list;
+    }
+
+    public static void main(String[] args){
+        Long time = System.currentTimeMillis();
+        for(int i = 0; i < 100;i++){
+            MonitorDO monitorDO = new MonitorDO();
+            monitorDO.setType("a");
+            Map<String,String> dataMap = Maps.newHashMap();
+            dataMap.put("idle_ime","2565");
+            dataMap.put("PCS_TIME","2565");
+            dataMap.put("Isad","2565");
+            monitorDO.setData(dataMap);
+        }
+        System.out.println(System.currentTimeMillis()-time);
     }
 
 }
