@@ -41,7 +41,7 @@ public class MonitorEngine extends ServiceTemplate{
     private static final String CLASS_TAG = "danger";
     private static final Boolean DANGER = true;
     private static final Boolean SAFE = false;
-    private static final Integer DANGER_SAMPLE_WEIGHT = 1;
+    private static final Integer DANGER_SAMPLE_WEIGHT = 10;
     private static final Integer SAFE_SAMPLE_WEIGHT = 1;
     /**
      * 样本计数器，用该计数器决定正负训练样本写入数据库比例
@@ -83,10 +83,12 @@ public class MonitorEngine extends ServiceTemplate{
                             }else {
                                 monitorDO.getData().put(CLASS_TAG,SAFE.toString());
                             }
-                            saveSample(monitorDO);
+                        }else {
+                            monitorDO.getData().put(CLASS_TAG,DANGER.toString());
+                            result.setResult(DANGER);
                         }
-                        monitorManager.addMonitor(monitorDO);
                     }
+                    saveSample(monitorDO);
                 }
                 return result;
             }

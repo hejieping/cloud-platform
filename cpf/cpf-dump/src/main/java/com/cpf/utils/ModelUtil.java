@@ -180,7 +180,7 @@ public class ModelUtil  {
                 list.add(entry.getValue());
             }
         }
-        List<String> tagList = Lists.newArrayList(RuleTypeEnum.CPU.getTagList());
+        List<String> tagList = Lists.newArrayList(RuleTypeEnum.getTagList(true));
         ArrayList<Attribute> attributeArrayList = Lists.newArrayList();
         for(String key : monitorMap.keySet()){
             Attribute attribute = null;

@@ -1,10 +1,10 @@
 package com.cpf.task;
 
 import com.alibaba.fastjson.JSON;
+import com.cpf.influx.holder.ModelHolder;
 import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.influx.manager.MonitorManager;
 import com.cpf.logger.BusinessLogger;
-import com.cpf.influx.holder.ModelHolder;
 import com.cpf.mysql.manager.AggreModelManager;
 import com.cpf.mysql.manager.DO.AggreModelDO;
 import com.cpf.mysql.manager.DO.ModelDO;
@@ -13,8 +13,6 @@ import com.cpf.service.ServiceExecuteTemplate;
 import com.cpf.service.ServiceTemplate;
 import com.cpf.utils.ModelUtil;
 import com.cpf.utils.ValidationUtil;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author jieping
@@ -104,20 +101,11 @@ public class TrainTask extends ServiceTemplate  {
 
     }
     private List<MonitorDO> getTrainSamples(String scene){
-        Map<String,String> tagMap = Maps.newHashMap();
-        //查询有故障的监控数据
-        tagMap.put("danger","true");
-        List<MonitorDO> dangerMonitorDOList = monitorManager.queryDataByTime(scene,tagMap,null,null,null).getResult();
-        if(CollectionUtils.isEmpty(dangerMonitorDOList)){
+
+        List<MonitorDO> monitorDOList = monitorManager.queryTrainSample(scene,null,null,null,null).getResult();
+        if(CollectionUtils.isEmpty(monitorDOList)){
             BusinessLogger.errorLog("TrainTask.train",new String[]{JSON.toJSONString(scene)},"HAVE_NOT_ERROR_SAMPLE","没有错误样本可以训练",logger);
         }
-        //查询正常的监控数据
-        tagMap.put("danger","false");
-        Long limit = Math.round(dangerMonitorDOList.size()/DANGER_PROPORITION);
-        List<MonitorDO> safeMonitorDOList = monitorManager.queryDataByTime(scene,tagMap,null,null,null).getResult();
-        List<MonitorDO> trainMOnitorDOList = Lists.newArrayList();
-        trainMOnitorDOList.addAll(dangerMonitorDOList);
-        trainMOnitorDOList.addAll(safeMonitorDOList);
-        return trainMOnitorDOList;
+        return monitorDOList;
     }
 }

@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author jieping
@@ -73,7 +74,7 @@ public class MonitorManager extends ServiceTemplate {
                     throw new BusinessException(CpfDumpConstants.MONITOR_DATA_TYPE_ERROR);
                 }
                 //组装表的标签
-                for(String tag : ruleType.getTagList()){
+                for(String tag : RuleTypeEnum.getTagList(false)){
                     tagMap.put(tag,monitorDO.getData().get(tag));
                 }
                 Long endTime = System.currentTimeMillis();
@@ -164,6 +165,18 @@ public class MonitorManager extends ServiceTemplate {
     }
 
     /**
+     * 查询训练数据表
+     * @param tableName
+     * @param tagMap
+     * @param startTime
+     * @param endTime
+     * @param limit
+     * @return
+     */
+    public CallbackResult<List<MonitorDO>> queryTrainSample(String tableName,Map<String,String> tagMap,Date startTime,Date endTime,Long limit){
+        return queryDataByTime(tableName+TRAIN_SUFFIX,tagMap,startTime,endTime,limit);
+    }
+    /**
      * 查询绘制图表所需数据
      * @param hostName 主机名
      * @param tableName 表名
@@ -230,7 +243,7 @@ public class MonitorManager extends ServiceTemplate {
             @Override
             public CallbackResult<Object> executeAction() throws Exception {
                 Map<String,String> tagMap = Maps.newHashMap();
-                RuleTypeEnum.CPU.getTagList().forEach(key->{
+                RuleTypeEnum.getTagList(false).forEach(key->{
                     if(ValidationUtil.isNotNull(monitorDO.getData().get(key))){
                         tagMap.put(key,monitorDO.getData().get(key));
                     }
@@ -306,17 +319,17 @@ public class MonitorManager extends ServiceTemplate {
         return (CallbackResult<Object>)result;
     }
 
-    //TODO 改成private
 
     /**
      * 将监控对象转换成influxdb接受的对象
      * @param monitorDO
      * @return
      */
+    //TODO 改成private
     public Point convert2Point(MonitorDO monitorDO){
         Map<String,Object> fieldMap = Maps.newHashMap();
         Map<String,String> tagMap = Maps.newHashMap();
-        List<String> tagList = RuleTypeEnum.typeOf(monitorDO.getType()).getTagList();
+        List<String> tagList = RuleTypeEnum.getTagList(true);
         for(Map.Entry<String,String> entry : monitorDO.getData().entrySet()){
             if(tagList.contains(entry.getKey())){
                 tagMap.put(entry.getKey(),entry.getValue());
@@ -324,7 +337,7 @@ public class MonitorManager extends ServiceTemplate {
                 fieldMap.put(entry.getKey(),new Double(entry.getValue()));
             }
         }
-        return  Point.measurement(monitorDO.getType()).tag(tagMap).fields(fieldMap).build();
+        return  Point.measurement(monitorDO.getType()).tag(tagMap).fields(fieldMap).time(System.currentTimeMillis(),TimeUnit.MILLISECONDS).build();
     }
 
     /**
