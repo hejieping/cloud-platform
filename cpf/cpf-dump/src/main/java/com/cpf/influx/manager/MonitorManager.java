@@ -109,7 +109,6 @@ public class MonitorManager extends ServiceTemplate {
                  }
                  return CallbackResult.failure();
             }
-
             @Override
             public CallbackResult<Object> executeAction() {
                 Map<String,String> tagMap = Maps.newHashMap();
@@ -128,6 +127,30 @@ public class MonitorManager extends ServiceTemplate {
         return ( CallbackResult<List<MonitorDO>>)result;
     }
 
+    public CallbackResult<List<MonitorDO>> queryRecentAllData(String hostName){
+        Object result = execute(logger, "queryRecentAllData", new ServiceExecuteTemplate() {
+            @Override
+            public CallbackResult<Object> checkParams() {
+                if(ValidationUtil.isNotNull(hostName)){
+                    return CallbackResult.success();
+                }
+                return CallbackResult.failure();
+            }
+            @Override
+            public CallbackResult<Object> executeAction() {
+                Map<String,String> tagMap = Maps.newHashMap();
+                tagMap.put("host",hostName);
+                QueryResult result = monitorDAO.queryRecentAllData(tagMap);
+                Map<String,List<MonitorDO>> resultMap =  parseQueryResult(result);
+                List<MonitorDO> resultList = Lists.newLinkedList();
+                for(List<MonitorDO> monitorDOList : resultMap.values()){
+                    resultList.addAll(monitorDOList);
+                }
+                return new CallbackResult<>(resultList,true);
+            }
+        });
+        return ( CallbackResult<List<MonitorDO>>)result;
+    }
     /**
      * 根据时间，查询指定表的所有数据
      * @param tableName 表名
@@ -227,8 +250,8 @@ public class MonitorManager extends ServiceTemplate {
     /**
      * 查询数据的变化率
      * @param monitorDO
-     * @param unit 在原有数据monitorDO 的datamap上增加各个key的变化率
-     * @return
+     * @param unit 时间间隔
+     * @return 在原有数据monitorDO 的datamap上增加各个key的变化率
      */
     public CallbackResult<MonitorDO> queryChangeRateByTime(MonitorDO monitorDO, String unit){
         Object result = execute(logger, "queryChangeRateByTime", new ServiceExecuteTemplate() {

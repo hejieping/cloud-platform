@@ -59,6 +59,22 @@ public class MonitorDAO {
     }
 
     /**
+     * 查询指定条件的所有数据表最新一条数据
+     * @param tags
+     * @return
+     */
+    public QueryResult queryRecentAllData(Map<String,String> tags){
+        StringBuffer sqls = new StringBuffer();
+        List<RuleTypeEnum> ruleTypeEnumList = Lists.newArrayList(RuleTypeEnum.values());
+        for(RuleTypeEnum ruleTypeEnum : RuleTypeEnum.values()){
+            sqls.append(InfluxSqlGenerator.recentDataSql(ruleTypeEnum.getType(),tags));
+        }
+        Query query = new Query(sqls.toString(), template.getDatabase());
+        QueryResult result = template.query(query, TimeUnit.MILLISECONDS);
+        return result;
+    }
+
+    /**
      * 查询指定时间内的连续性能数据
      * @param tags
      * @param startTime

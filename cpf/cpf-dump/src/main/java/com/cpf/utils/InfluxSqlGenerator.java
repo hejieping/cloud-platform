@@ -54,7 +54,7 @@ public class InfluxSqlGenerator {
     }
 
     /**
-     *  生成 select * from tableName where  and time > startTime and time < endTime ;
+     *  生成 select * from tableName where [and tag=value] and time > startTime and time < endTime ;
      * @param tableName
      * @param startTime
      * @param endTime
@@ -67,6 +67,20 @@ public class InfluxSqlGenerator {
         if(limit != null){
             sql.append(LIMIT + limit);
         }
+        sql.append(FINISH);
+        return sql.toString();
+    }
+
+    /**
+     * 查询最新数据
+     * select * from tableName where [and tag=value] order by time desc limit 1
+     * @param tableName
+     * @param tagMap
+     * @return
+     */
+    public static String recentDataSql(String tableName,Map<String,String> tagMap){
+        StringBuffer sql = new StringBuffer();
+        sql.append(SELECT + ALL + FROM + tableName + condition(tagMap,null,null) + " order by time desc limit 1");
         sql.append(FINISH);
         return sql.toString();
     }
@@ -160,6 +174,7 @@ public class InfluxSqlGenerator {
         tagMap.put("instance","0");
         tagMap.put("host","windows");
         System.out.println(changeRateSql("win_cpu",keys,"1h",tagMap));
+        System.out.println(recentDataSql("win_cpu",tagMap));
     }
 
 }
