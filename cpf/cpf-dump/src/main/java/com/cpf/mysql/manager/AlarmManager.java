@@ -50,6 +50,41 @@ public class AlarmManager extends ServiceTemplate {
         return (CallbackResult<AlarmDO>)result;
     }
 
+    public CallbackResult<AlarmDO> get(Long id){
+        Object result = execute(logger, "get", new ServiceExecuteTemplate() {
+            @Override
+            public CallbackResult<Object> checkParams() {
+                if(ValidationUtil.isNotNull(id)){
+                    return CallbackResult.success();
+                }
+                return CallbackResult.failure();
+            }
+
+            @Override
+            public CallbackResult<Object> executeAction() throws Exception {
+                AlarmPO alarmPO = alarmDAO.getById(id);
+                return new CallbackResult<>(DOPOConverter.alarmPO2DO(alarmPO),true);
+            }
+        });
+        return (CallbackResult<AlarmDO>)result;
+    }
+    public CallbackResult<List<AlarmDO>> get(boolean expire){
+        Object result = execute(logger, "get", new ServiceExecuteTemplate() {
+            @Override
+            public CallbackResult<Object> checkParams() {
+                return CallbackResult.success();
+            }
+
+            @Override
+            public CallbackResult<Object> executeAction() throws Exception {
+                List<AlarmPO> alarmPOList = alarmDAO.getByExpire(expire);
+                return new CallbackResult<>(DOPOConverter.alarmPOS2DOS(alarmPOList),true);
+            }
+        });
+        return (CallbackResult<List<AlarmDO>>)result;
+    }
+
+
     /**
      * 获取所有预警信息
      * @return

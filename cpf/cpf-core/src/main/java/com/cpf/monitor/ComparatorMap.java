@@ -56,7 +56,16 @@ public class ComparatorMap {
             return NumberUtils.toLong(monitorValue) <= NumberUtils.toLong(ruleValue);
         }
     };
+    private static MonitorComparator EQUAL_STRING = ( monitorValue, ruleValue)->{
+        //为空代表条件不限制
+        if(StringUtils.isBlank(ruleValue) || StringUtils.isBlank(monitorValue)){
+            return true;
+        }else {
+            return monitorValue.equals(ruleValue);
+        }
+    };
     static{
+        map.put("host",EQUAL_STRING);
         //win_cpu rule params comparator
         map.put("Percent_DPC_Time",MAX_DOUBLE);
         map.put("Percent_Idle_Time",MAX_DOUBLE);

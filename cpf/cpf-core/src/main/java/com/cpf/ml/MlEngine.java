@@ -1,5 +1,6 @@
 package com.cpf.ml;
 
+import com.cpf.alarm.AlarmTimer;
 import com.cpf.constants.AlarmTypeEnum;
 import com.cpf.constants.ErrorDesc;
 import com.cpf.constants.TimeIntervalEnum;
@@ -42,6 +43,8 @@ public class MlEngine extends ServiceTemplate {
     private AssetManager assetManager;
     @Autowired
     private MonitorManager monitorManager;
+    @Autowired
+    private AlarmTimer alarmTimer;
     private static final String unit = TimeIntervalEnum.generateInterval(TimeIntervalEnum.HOUR,1L);
     private static Logger logger = LoggerFactory.getLogger(MlEngine.class);
 
@@ -87,6 +90,10 @@ public class MlEngine extends ServiceTemplate {
         if(ValidationUtil.isNull(monitorDO)){
             return;
         }
+        //如果已经报警过，且未过时，则无需再预测
+        if(alarmed(monitorDO)){
+            return;
+        }
         List<CpfClassifier> cpfClassifierList = modelHolder.getClassifiers(monitorDO.getType());
         Instance instance = ModelUtil.monitorDO2Instance(monitorDO);
         //计算权重
@@ -107,5 +114,11 @@ public class MlEngine extends ServiceTemplate {
             alarmDO.setTime(new Date());
             alarmManager.save(alarmDO);
         }
+    }
+    private boolean alarmed(MonitorDO monitor){
+        AlarmDO alarmDO = new AlarmDO();
+        alarmDO.setMonitorDO(monitor);
+        alarmDO.setType(AlarmTypeEnum.PREDICT);
+        return alarmTimer.exist(alarmDO);
     }
 }

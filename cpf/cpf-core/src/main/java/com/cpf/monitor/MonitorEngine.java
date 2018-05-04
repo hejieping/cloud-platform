@@ -1,7 +1,9 @@
 package com.cpf.monitor;
 
 import com.alibaba.fastjson.JSON;
+import com.cpf.alarm.AlarmTimer;
 import com.cpf.constants.AlarmTypeEnum;
+import com.cpf.constants.RuleTypeEnum;
 import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.influx.manager.MonitorManager;
 import com.cpf.logger.BusinessLogger;
@@ -17,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -37,6 +40,8 @@ public class MonitorEngine extends ServiceTemplate{
     private MonitorManager monitorManager;
     @Autowired
     private AlarmManager alarmManager;
+    @Autowired
+    private AlarmTimer alarmTimer;
     private ExecutorService executorService = Executors.newFixedThreadPool(10);
     private static final String CLASS_TAG = "danger";
     private static final Boolean DANGER = true;
@@ -70,6 +75,10 @@ public class MonitorEngine extends ServiceTemplate{
                 CallbackResult<Object> result = new CallbackResult<Object>(SAFE,true);
                 List<RuleDO> ruleDOList = ruleHolder.getRules(monitorDO.getType());
                 for(RuleDO ruleDO : ruleDOList){
+                    //如果该监控数据已经被规则报警过且未过时，则无需再判断是否命中该规则
+                    if(alarmed(ruleDO,monitorDO)){
+                        continue;
+                    }
                     //判断该时刻是否满足监控规则
                     if(verify(monitorDO,ruleDO)){
                         //如果监控规则有规定持续时间
@@ -86,6 +95,7 @@ public class MonitorEngine extends ServiceTemplate{
                         }else {
                             monitorDO.getData().put(CLASS_TAG,DANGER.toString());
                             result.setResult(DANGER);
+                            warn(monitorDO,ruleDO);
                         }
                     }
                     saveSample(monitorDO);
@@ -130,8 +140,13 @@ public class MonitorEngine extends ServiceTemplate{
         AlarmDO alarmDO = new AlarmDO();
         alarmDO.setType(AlarmTypeEnum.MONITOR);
         alarmDO.setMonitorDO(monitorDO);
+        alarmDO.setTime(new Date());
         alarmDO.setRuleDO(ruleDO);
-        alarmManager.save(alarmDO);
+        alarmDO.setExpire(false);
+
+        alarmDO = alarmManager.save(alarmDO).getResult();
+        //存放报警计时器
+        alarmTimer.put(alarmDO);
         BusinessLogger.errorLog("MonitorEngine.monitor",
                 new String[]{JSON.toJSONString(monitorDO),JSON.toJSONString(ruleDO)},
                 "MONITOR_DANGER","监控报警",logger);
@@ -152,5 +167,12 @@ public class MonitorEngine extends ServiceTemplate{
             sampleCount.incrementAndGet();
             executorService.submit(()->monitorManager.addTrainSample(monitorDO));
         }
+    }
+    private boolean alarmed(RuleDO rule,MonitorDO monitor){
+        AlarmDO alarmDO = new AlarmDO();
+        alarmDO.setRuleDO(rule);
+        alarmDO.setMonitorDO(monitor);
+        alarmDO.setType(AlarmTypeEnum.MONITOR);
+        return alarmTimer.exist(alarmDO);
     }
 }

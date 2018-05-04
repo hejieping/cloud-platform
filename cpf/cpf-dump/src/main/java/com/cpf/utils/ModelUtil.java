@@ -15,6 +15,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import weka.classifiers.Classifier;
+import weka.classifiers.Evaluation;
 import weka.core.*;
 import weka.core.converters.ArffSaver;
 
@@ -58,9 +59,18 @@ public class ModelUtil  {
         OptionHandler optionHandler = (OptionHandler) classifier;
         //设置模型参数
         optionHandler.setOptions(getOptions(modelDO));
+        //将模型数据转换成instances格式
+        Instances instances = ModelUtil.monitorDOS2Instances(monitorDOList);
+        //数据预处理
+        instances = InstancesBuilder.construct(instances).standardize().replaceMissingValues().build();
         try {
             //训练数据
-            classifier.buildClassifier(ModelUtil.monitorDOS2Instances(monitorDOList));
+            classifier.buildClassifier(instances);
+            //评估数据
+            instances = InstancesBuilder.construct(instances).resample(10D).build();
+            Evaluation evaluation = new Evaluation(instances);
+            evaluation.crossValidateModel(classifier,instances,10,new Random(1));
+            modelDO.setCorrectRate(evaluation.pctCorrect());
             //训练后的模型持久化
             serialization(modelDO.getId(),classifier);
         } catch (Exception e) {
@@ -274,6 +284,8 @@ public class ModelUtil  {
             modelDOList.forEach((modelDO -> deleteModel(modelDO)));
         }
     }
+
+
 
     /**
      * 根据模型id产生模型的全路径名

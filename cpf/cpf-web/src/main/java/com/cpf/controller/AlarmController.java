@@ -30,7 +30,9 @@ public class AlarmController {
      */
     @RequestMapping(value = "/alarms", method = RequestMethod.GET)
     ResponseEntity<Object> modelType(){
-        CallbackResult<List<AlarmDO>> result = alarmManager.all();
+        //获取所有未过期的报警数据
+        boolean expire = false;
+        CallbackResult<List<AlarmDO>> result = alarmManager.get(expire);
         if(result.getSuccess()){
             CallbackResult<List<AlarmVO>> voResult = new CallbackResult<>(VODOConverter.alarmDOS2VOS(result.getResult()),true);
             return  new ResponseEntity<Object>(voResult,HttpStatus.OK);

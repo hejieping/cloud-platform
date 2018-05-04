@@ -2,6 +2,7 @@ package com.cpf.controller;
 
 import com.cpf.influx.dao.CpuDAO;
 import com.cpf.influx.holder.ModelHolder;
+import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.influx.manager.MonitorManager;
 import com.cpf.ml.MlEngine;
 import com.cpf.monitor.MonitorEngine;
@@ -15,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Created by jieping on 2018-04-19
@@ -71,7 +74,9 @@ public class TestController {
 //        MonitorDO monitorDO = monitorDOList.get(0);
 //        monitorDO.setType("win_cpu");
 //        mlEngine.predict(monitorDO);
-        trainTask.train();
-        return new ResponseEntity<>(true,HttpStatus.OK);
+//        trainTask.train();
+        List<MonitorDO> samples = monitorManager.queryDataByTime("win_cpu",null,null,null,1L).getResult();
+        monitorEngine.monitor(samples.get(0));
+        return new ResponseEntity<>(samples,HttpStatus.OK);
     }
 }

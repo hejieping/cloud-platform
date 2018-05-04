@@ -7,9 +7,9 @@
        <el-breadcrumb-item>设备监控</el-breadcrumb-item> 
       </el-breadcrumb> 
    </el-row>
-   <el-row type="flex">
+   <!-- <el-row type="flex">
     <search></search>
-   </el-row>
+   </el-row> -->
    <el-row>
             <el-table
       :data="tableData"
