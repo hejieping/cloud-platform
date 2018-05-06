@@ -24,7 +24,7 @@ import java.util.List;
 public class AlarmManager extends ServiceTemplate {
     @Autowired
     private AlarmDAO alarmDAO;
-    private static Logger logger = LoggerFactory.getLogger(AlarmManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(AlarmManager.class);
 
     /**
      * 保存预警信息
@@ -42,7 +42,7 @@ public class AlarmManager extends ServiceTemplate {
             }
 
             @Override
-            public CallbackResult<Object> executeAction() throws Exception {
+            public CallbackResult<Object> executeAction() {
                 AlarmPO alarmPO = alarmDAO.save(DOPOConverter.alarmDO2PO(alarmDO));
                 return new CallbackResult<>(DOPOConverter.alarmPO2DO(alarmPO),true);
             }
@@ -61,7 +61,7 @@ public class AlarmManager extends ServiceTemplate {
             }
 
             @Override
-            public CallbackResult<Object> executeAction() throws Exception {
+            public CallbackResult<Object> executeAction() {
                 AlarmPO alarmPO = alarmDAO.getById(id);
                 return new CallbackResult<>(DOPOConverter.alarmPO2DO(alarmPO),true);
             }
@@ -76,7 +76,7 @@ public class AlarmManager extends ServiceTemplate {
             }
 
             @Override
-            public CallbackResult<Object> executeAction() throws Exception {
+            public CallbackResult<Object> executeAction() {
                 List<AlarmPO> alarmPOList = alarmDAO.getByExpire(expire);
                 return new CallbackResult<>(DOPOConverter.alarmPOS2DOS(alarmPOList),true);
             }

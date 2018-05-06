@@ -30,7 +30,7 @@ public enum TimeIntervalEnum {
     private static final Long H = M*60;
     private static final Long D = H*24;
     private static final Long W = D*7;
-    private TimeIntervalEnum(String unit){
+    TimeIntervalEnum(String unit){
         this.unit = unit;
     }
 

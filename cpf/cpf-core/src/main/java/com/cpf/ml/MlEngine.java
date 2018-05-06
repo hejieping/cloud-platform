@@ -46,7 +46,7 @@ public class MlEngine extends ServiceTemplate {
     @Autowired
     private AlarmTimer alarmTimer;
     private static final String UNIT = TimeIntervalEnum.generateInterval(TimeIntervalEnum.HOUR,1L);
-    private static Logger logger = LoggerFactory.getLogger(MlEngine.class);
+    private static final Logger logger = LoggerFactory.getLogger(MlEngine.class);
 
 
     public void predict(){
@@ -86,7 +86,7 @@ public class MlEngine extends ServiceTemplate {
      * 根据监控数据预测是否存在危险
      * @param monitorDO 监控数据
      */
-    public void predict(MonitorDO monitorDO) throws Exception {
+    private void predict(MonitorDO monitorDO) throws Exception {
         if(ValidationUtil.isNull(monitorDO)){
             return;
         }

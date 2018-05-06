@@ -18,7 +18,7 @@ import java.util.List;
  **/
 @Component
 public class AssetManager extends ServiceTemplate {
-    Logger logger = LoggerFactory.getLogger(AssetManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(AssetManager.class);
     @Autowired
     private AssetDAO assetDAO;
 

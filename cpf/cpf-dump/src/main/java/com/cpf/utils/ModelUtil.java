@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 /**
  * @author jieping
@@ -36,14 +35,10 @@ import java.util.stream.Collectors;
  **/
 @Component
 public class ModelUtil  {
-    private static Logger logger = LoggerFactory.getLogger(ModelUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(ModelUtil.class);
     private static  String MODEL_PATH;
     private static final String MODEL_SUFFIX = ".model";
     private static final String ARFF_SUFFIX = ".arff";
-    /**
-     * 整数的正则表达式
-     */
-    private static final Pattern PATTTERN = Pattern.compile("^[-\\+]?[\\d]*$");
 
     /**
      * 给定监控数据，训练指定的算法模型
@@ -117,7 +112,7 @@ public class ModelUtil  {
                     "CLASSIFIER_SET_OPTION_ERROR",
                     "算法模型设置参数异常",
                     logger);
-            return;        }
+        }
     }
 
     /**
@@ -126,7 +121,7 @@ public class ModelUtil  {
      * @return
      */
     public static Object deSerialization(Long id){
-        Object classifier = null;
+        Object classifier;
         try {
             classifier  =  SerializationHelper.read(generateModelFileName(id));
         } catch (Exception e) {
@@ -184,11 +179,7 @@ public class ModelUtil  {
         //获取monitordo的所有值，map的key为属性名，
         for(MonitorDO monitorDO : monitorDOList){
             for(Map.Entry<String,String> entry : monitorDO.getData().entrySet()) {
-                List<String> list = monitorMap.get(entry.getKey());
-                if(list == null){
-                    list = Lists.newArrayList();
-                    monitorMap.put(entry.getKey(),list);
-                }
+                List<String> list = monitorMap.computeIfAbsent(entry.getKey(), k -> Lists.newArrayList());
                 list.add(entry.getValue());
             }
         }
@@ -283,7 +274,7 @@ public class ModelUtil  {
      */
     public static void deleteModels(List<ModelDO> modelDOList){
         if(CollectionUtils.isNotEmpty(modelDOList)){
-            modelDOList.forEach((modelDO -> deleteModel(modelDO)));
+            modelDOList.forEach((ModelUtil::deleteModel));
         }
     }
 
@@ -307,15 +298,6 @@ public class ModelUtil  {
 
     }
 
-
-    /**
-     * 判断是否为整数
-     * @param str
-     * @return
-     */
-    private static boolean isInteger(String str) {
-        return PATTTERN.matcher(str).matches();
-    }
 
     @Value("${model.path}")
     public  void setModelPath(String modelPath) {

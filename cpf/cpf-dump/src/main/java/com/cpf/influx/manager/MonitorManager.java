@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 public class MonitorManager extends ServiceTemplate {
     @Autowired
     private MonitorDAO monitorDAO;
-    private static Logger logger = LoggerFactory.getLogger(MonitorManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(MonitorManager.class);
     /**
      * 训练数据表名的后缀
      */
@@ -62,7 +62,7 @@ public class MonitorManager extends ServiceTemplate {
             }
 
             @Override
-            public CallbackResult<Object> executeAction() throws Exception {
+            public CallbackResult<Object> executeAction() {
 
                 if(ValidationUtil.isNull(minutes)){
                     return new CallbackResult<>(monitorDO,true);
@@ -264,7 +264,7 @@ public class MonitorManager extends ServiceTemplate {
             }
 
             @Override
-            public CallbackResult<Object> executeAction() throws Exception {
+            public CallbackResult<Object> executeAction() {
                 Map<String,String> tagMap = Maps.newHashMap();
                 RuleTypeEnum.getTagList(false).forEach(key->{
                     if(ValidationUtil.isNotNull(monitorDO.getData().get(key))){
@@ -303,7 +303,7 @@ public class MonitorManager extends ServiceTemplate {
             }
 
             @Override
-            public CallbackResult<Object> executeAction() throws Exception {
+            public CallbackResult<Object> executeAction() {
                 CallbackResult<MonitorDO> queryResult = queryChangeRateByTime(monitorDO, UNIT);
                 if(queryResult.getSuccess()){
                     MonitorDO sample = queryResult.getResult();
@@ -322,7 +322,7 @@ public class MonitorManager extends ServiceTemplate {
      * @param monitorDO
      * @return
      */
-    public CallbackResult<Object> addMonitor(MonitorDO monitorDO){
+    public void addMonitor(MonitorDO monitorDO){
         Object result = execute(logger, "addMonitor", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
@@ -339,7 +339,6 @@ public class MonitorManager extends ServiceTemplate {
                 return CallbackResult.success();
             }
         });
-        return (CallbackResult<Object>)result;
     }
 
 

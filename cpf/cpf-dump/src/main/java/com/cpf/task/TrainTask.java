@@ -29,7 +29,7 @@ import java.util.List;
  **/
 @Component
 public class TrainTask extends ServiceTemplate  {
-    private Logger logger = LoggerFactory.getLogger(TrainTask.class);
+    private final Logger logger = LoggerFactory.getLogger(TrainTask.class);
     /**
      * 定时训练间隔时间 一星期训练一次
      */

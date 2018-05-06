@@ -3,7 +3,6 @@ package com.cpf.monitor;
 import com.alibaba.fastjson.JSON;
 import com.cpf.alarm.AlarmTimer;
 import com.cpf.constants.AlarmTypeEnum;
-import com.cpf.constants.RuleTypeEnum;
 import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.influx.manager.MonitorManager;
 import com.cpf.logger.BusinessLogger;
@@ -33,7 +32,7 @@ import java.util.concurrent.atomic.AtomicLong;
  **/
 @Component
 public class MonitorEngine extends ServiceTemplate{
-    private Logger logger = LoggerFactory.getLogger(MonitorEngine.class);
+    private final Logger logger = LoggerFactory.getLogger(MonitorEngine.class);
     @Autowired
     private RuleHolder ruleHolder;
     @Autowired
@@ -72,7 +71,7 @@ public class MonitorEngine extends ServiceTemplate{
 
             @Override
             public CallbackResult<Object> executeAction() {
-                CallbackResult<Object> result = new CallbackResult<Object>(SAFE,true);
+                CallbackResult<Object> result = new CallbackResult<>(SAFE, true);
                 List<RuleDO> ruleDOList = ruleHolder.getRules(monitorDO.getType());
                 for(RuleDO ruleDO : ruleDOList){
                     //如果该监控数据已经被规则报警过且未过时，则无需再判断是否命中该规则
@@ -156,14 +155,13 @@ public class MonitorEngine extends ServiceTemplate{
     /**
      * 按照正负样本比例保存训练样本
      * @param monitorDO
-     * @param danger
      */
     private void saveSample(MonitorDO monitorDO){
         boolean danger = Boolean.valueOf(monitorDO.getData().get(CLASS_TAG));
         //计数器求余
         long index = sampleCount.longValue()%(DANGER_SAMPLE_WEIGHT+SAFE_SAMPLE_WEIGHT);
         //当 index 处于[0，DANGER_SAMPLE_WEIGHT）范围时，表示此时只能保存有故障的设备数据，否则只能保存没有故障的设备数据
-        if((index < DANGER_SAMPLE_WEIGHT && danger==true)||(index >= DANGER_SAMPLE_WEIGHT && danger==false)){
+        if((index < DANGER_SAMPLE_WEIGHT && danger)||(index >= DANGER_SAMPLE_WEIGHT && !danger)){
             sampleCount.incrementAndGet();
             executorService.submit(()->monitorManager.addTrainSample(monitorDO));
         }

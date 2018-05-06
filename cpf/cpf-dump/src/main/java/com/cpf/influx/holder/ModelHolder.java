@@ -37,7 +37,7 @@ public class ModelHolder {
      */
     @Autowired
     private ModelUtil modelUtil;
-    private static Logger logger = LoggerFactory.getLogger(ModelHolder.class);
+    private static final Logger logger = LoggerFactory.getLogger(ModelHolder.class);
 
     private Map<String,List<CpfClassifier>> classifiesMap = Maps.newConcurrentMap();
 
@@ -64,7 +64,7 @@ public class ModelHolder {
      * 读取指定场景的算法模型，替换掉现有的模型
      * @param aggreModelDO
      */
-    public void refresh(AggreModelDO aggreModelDO){
+    private void refresh(AggreModelDO aggreModelDO){
         List<CpfClassifier> classifierList = Lists.newArrayList();
         for(ModelDO modelDO : aggreModelDO.getModels()){
             try {
@@ -133,9 +133,7 @@ public class ModelHolder {
         }
     }
     public List<CpfClassifier> getClassifiers(String scene){
-        if(classifiesMap.get(scene) == null){
-            classifiesMap.put(scene,Lists.newArrayList());
-        }
+        classifiesMap.computeIfAbsent(scene, k -> Lists.newArrayList());
         return classifiesMap.get(scene);
     }
 }

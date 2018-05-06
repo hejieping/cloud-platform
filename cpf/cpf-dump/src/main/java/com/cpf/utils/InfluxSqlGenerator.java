@@ -62,8 +62,8 @@ public class InfluxSqlGenerator {
      * @return
      */
     public static String dataSql(String tableName, Map<String,String> tagMap, Long startTime, Long endTime, Long limit){
-        StringBuffer sql = new StringBuffer();
-        sql.append(SELECT + ALL + FROM + tableName + condition(tagMap,startTime,endTime));
+        StringBuilder sql = new StringBuilder();
+        sql.append(SELECT + ALL + FROM).append(tableName).append(condition(tagMap, startTime, endTime));
         if(limit != null){
             sql.append(LIMIT + limit);
         }
@@ -79,10 +79,8 @@ public class InfluxSqlGenerator {
      * @return
      */
     public static String recentDataSql(String tableName,Map<String,String> tagMap){
-        StringBuffer sql = new StringBuffer();
-        sql.append(SELECT + ALL + FROM + tableName + condition(tagMap,null,null) + " order by time desc limit 1");
-        sql.append(FINISH);
-        return sql.toString();
+        return (SELECT + ALL + FROM + tableName + condition(tagMap, null, null) + " order by time desc limit 1") +
+                FINISH;
     }
 
     /**
@@ -94,10 +92,8 @@ public class InfluxSqlGenerator {
      * @return
      */
     public static String changeRateSql(String tableName,List<String> keys,String unit,Map<String,String> tagMap){
-        StringBuffer sql = new StringBuffer();
-        sql.append(SELECT + derivative(keys,unit) + FROM + tableName + condition(tagMap,null,null)
-        + " order by time desc limit 1");
-        return sql.toString();
+        return (SELECT + derivative(keys, unit) + FROM + tableName + condition(tagMap, null, null)
+                + " order by time desc limit 1");
     }
 
     /**
@@ -143,12 +139,11 @@ public class InfluxSqlGenerator {
         List<String> conditionList = Lists.newArrayList();
         if(MapUtils.isNotEmpty(conditionMap)){
             for(Map.Entry<String,String> tag : conditionMap.entrySet()){
-                StringBuffer condition = new StringBuffer();
-                condition.append(tag.getKey());
-                condition.append("='");
-                condition.append(tag.getValue());
-                condition.append("'");
-                conditionList.add(condition.toString());
+                String condition = tag.getKey() +
+                        "='" +
+                        tag.getValue() +
+                        "'";
+                conditionList.add(condition);
             }
         }
         if(startTime != null){

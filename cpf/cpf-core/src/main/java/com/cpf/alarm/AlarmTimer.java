@@ -28,7 +28,7 @@ import java.util.Map;
 public class AlarmTimer {
     private static final String SPLIT = "#";
     private static final Long EXPIRE_TIME = 60*60*1000L;
-    private static Logger logger = LoggerFactory.getLogger(AlarmTimer.class);
+    private static final Logger logger = LoggerFactory.getLogger(AlarmTimer.class);
     @Autowired
     private AlarmManager alarmManager;
     /**

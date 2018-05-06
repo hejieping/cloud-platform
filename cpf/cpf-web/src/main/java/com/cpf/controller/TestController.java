@@ -40,7 +40,7 @@ public class TestController {
     @Autowired
     private DefaultInfluxDBTemplate template;
     @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public ResponseEntity<Object> test() throws Exception {
+    public ResponseEntity<Object> test() {
 ////        List<MonitorDO> monitorDOList = monitorManager.queryDataByTime("win_cpu",null,null,null,2L).getResult();
 ////        mlEngine.predict(monitorDOList.get(0));
 ////        List<AggreModelPO> aggreModelPOS = aggreModelDAO.findAll();

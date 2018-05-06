@@ -35,7 +35,7 @@ public class ModelManager extends ServiceTemplate {
     @Autowired
     private ModelHolder modelHolder;
     private ExecutorService executorService = Executors.newFixedThreadPool(5);
-    private static Logger logger = LoggerFactory.getLogger(ModelManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(ModelManager.class);
 
 
     /**
@@ -50,7 +50,7 @@ public class ModelManager extends ServiceTemplate {
             }
             @Override
             public CallbackResult<Object> executeAction() {
-                return new CallbackResult<Object>(DOPOConverter.modelPOs2DOs(modelDAO.findAll()),true);
+                return new CallbackResult<>(DOPOConverter.modelPOs2DOs(modelDAO.findAll()), true);
             }
         });
         return (CallbackResult<List<ModelDO>>)result;
@@ -80,7 +80,7 @@ public class ModelManager extends ServiceTemplate {
                 ModelUtil.setOptions(modelDO);
                 //异步进行模型训练
                 executorService.submit(()->trainTask.train(modelDO));
-                return new CallbackResult<Object>(DOPOConverter.modelPO2DO(modelPO),true);
+                return new CallbackResult<>(DOPOConverter.modelPO2DO(modelPO), true);
             }
         });
         return (CallbackResult<ModelDO>)result;

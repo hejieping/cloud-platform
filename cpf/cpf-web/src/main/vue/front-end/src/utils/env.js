@@ -11,8 +11,8 @@ let routerMode = 'history';
 let baseImgPath;
 
 if (process.env.NODE_ENV == 'development') {
-	  baseUrl = 'http://119.23.77.132:8080';
-    baseImgPath = 'http://localhost:8080';
+	  baseUrl = 'http://localhost:8000';
+    baseImgPath = 'http://localhost:8000';
 }else{
 	  baseUrl = 'http://119.23.77.132:8080';
     baseImgPath = 'http://cangdu.org:8001/img/';

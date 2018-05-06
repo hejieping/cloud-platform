@@ -35,9 +35,9 @@ public class AlarmController {
         CallbackResult<List<AlarmDO>> result = alarmManager.get(expire);
         if(result.getSuccess()){
             CallbackResult<List<AlarmVO>> voResult = new CallbackResult<>(VODOConverter.alarmDOS2VOS(result.getResult()),true);
-            return  new ResponseEntity<Object>(voResult,HttpStatus.OK);
+            return new ResponseEntity<>(voResult, HttpStatus.OK);
 
         }
-        return  new ResponseEntity<Object>(result,HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

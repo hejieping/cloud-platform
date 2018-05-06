@@ -18,7 +18,7 @@ public class ServiceTemplate {
     public CallbackResult<Object> execute( Logger logger,String methodName,ServiceExecuteTemplate executeTemplate){
         methodName = this.getClass().toString()+ "."+methodName;
         Long time = System.currentTimeMillis();
-        CallbackResult<Object> checkResult = null;
+        CallbackResult<Object> checkResult;
         CallbackResult<Object> executeResult = null;
         //参数校验
         try {

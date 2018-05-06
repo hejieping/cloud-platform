@@ -114,44 +114,13 @@ public class ModelFactory {
         modelDO.setWeight(0D);
         modelDO.setName(name);
         ModelTypeEnum modelTypeEnum = ModelTypeEnum.valueOf(modelType);
-        if(modelTypeEnum != null){
-            ModelOptionsDO modelOptionsDO = new ModelOptionsDO();
-            modelOptionsDO.setModelType(modelTypeEnum);
-            modelOptionsDO.setOptions(optionsMap.get(modelTypeEnum.toString()));
-            modelDO.setConfig(modelOptionsDO);
-        }
+        ModelOptionsDO modelOptionsDO = new ModelOptionsDO();
+        modelOptionsDO.setModelType(modelTypeEnum);
+        modelOptionsDO.setOptions(optionsMap.get(modelTypeEnum.toString()));
+        modelDO.setConfig(modelOptionsDO);
         return modelDO;
     }
 
-    private static List<ModelOptionDO> getTestList(){
-        List<ModelOptionDO> testOptions = Lists.newArrayList();
-        ModelOptionDO modelOptionDO1 = new ModelOptionDO();
-        modelOptionDO1.setKey("-k");
-        modelOptionDO1.setDesc("测试参数1");
-        modelOptionDO1.setValueType(OptionTypeEnum.BOOLEAN);
-        ModelOptionDO modelOptionDO2 = new ModelOptionDO();
-        modelOptionDO2.setKey("-p");
-        modelOptionDO2.setDesc("测试参数2");
-        modelOptionDO2.setValueType(OptionTypeEnum.DOUBLE);
-        ModelOptionDO modelOptionDO3 = new ModelOptionDO();
-        modelOptionDO3.setKey("-c");
-        modelOptionDO3.setDesc("测试参数3");
-        modelOptionDO3.setValueType(OptionTypeEnum.INTEGER);
-        ModelOptionDO modelOptionDO4 = new ModelOptionDO();
-        modelOptionDO4.setKey("-m");
-        modelOptionDO4.setDesc("测试参数4");
-        modelOptionDO4.setValueType(OptionTypeEnum.ENUM);
-        Map<String,String> extensionMap = Maps.newHashMap();
-        extensionMap.put("a","a");
-        extensionMap.put("b","b");
-        extensionMap.put("c","c");
-        modelOptionDO4.setExtension(extensionMap);
-        testOptions.add(modelOptionDO1);
-        testOptions.add(modelOptionDO2);
-        testOptions.add(modelOptionDO3);
-        testOptions.add(modelOptionDO4);
-        return testOptions;
-    }
     private static List<ModelOptionDO> getIBk(){
         List<ModelOptionDO> list = Lists.newArrayList();
         ModelOptionDO modelOptionDO = new ModelOptionDO();
