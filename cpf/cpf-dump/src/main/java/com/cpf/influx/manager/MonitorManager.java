@@ -46,7 +46,7 @@ public class MonitorManager extends ServiceTemplate {
     /**
      * 监控数据变化率的时间间隔
      */
-    private static final String unit = TimeIntervalEnum.generateInterval(TimeIntervalEnum.HOUR,1L);
+    private static final String UNIT = TimeIntervalEnum.generateInterval(TimeIntervalEnum.HOUR,1L);
 
     /**
      * 查询过去一段时间的数据平均值
@@ -304,7 +304,7 @@ public class MonitorManager extends ServiceTemplate {
 
             @Override
             public CallbackResult<Object> executeAction() throws Exception {
-                CallbackResult<MonitorDO> queryResult = queryChangeRateByTime(monitorDO,unit);
+                CallbackResult<MonitorDO> queryResult = queryChangeRateByTime(monitorDO, UNIT);
                 if(queryResult.getSuccess()){
                     MonitorDO sample = queryResult.getResult();
                     //将数据类型改成训练数据类型
@@ -411,19 +411,4 @@ public class MonitorManager extends ServiceTemplate {
         }
         return list;
     }
-
-    public static void main(String[] args){
-        Long time = System.currentTimeMillis();
-        for(int i = 0; i < 100;i++){
-            MonitorDO monitorDO = new MonitorDO();
-            monitorDO.setType("a");
-            Map<String,String> dataMap = Maps.newHashMap();
-            dataMap.put("idle_ime","2565");
-            dataMap.put("PCS_TIME","2565");
-            dataMap.put("Isad","2565");
-            monitorDO.setData(dataMap);
-        }
-        System.out.println(System.currentTimeMillis()-time);
-    }
-
 }

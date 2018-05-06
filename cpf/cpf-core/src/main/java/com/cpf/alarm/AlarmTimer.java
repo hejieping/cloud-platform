@@ -27,7 +27,7 @@ import java.util.Map;
 @Component
 public class AlarmTimer {
     private static final String SPLIT = "#";
-    private static final Long EXPIRE_TIME = 60*1000L;
+    private static final Long EXPIRE_TIME = 60*60*1000L;
     private static Logger logger = LoggerFactory.getLogger(AlarmTimer.class);
     @Autowired
     private AlarmManager alarmManager;
@@ -63,8 +63,7 @@ public class AlarmTimer {
     /**
      * 定期清除报警计时器已经过期的报警
      */
-    //TODO 记得修改参数
-    @Scheduled(fixedDelay = 6*1000L)
+    @Scheduled(fixedDelay = 60*1000L)
     private void remove(){
         Long currentTime = System.currentTimeMillis();
         for(Iterator<Map.Entry<String,Long>> it = expireMap.entrySet().iterator();it.hasNext();){

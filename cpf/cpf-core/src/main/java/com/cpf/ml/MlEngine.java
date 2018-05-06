@@ -45,7 +45,7 @@ public class MlEngine extends ServiceTemplate {
     private MonitorManager monitorManager;
     @Autowired
     private AlarmTimer alarmTimer;
-    private static final String unit = TimeIntervalEnum.generateInterval(TimeIntervalEnum.HOUR,1L);
+    private static final String UNIT = TimeIntervalEnum.generateInterval(TimeIntervalEnum.HOUR,1L);
     private static Logger logger = LoggerFactory.getLogger(MlEngine.class);
 
 
@@ -66,7 +66,7 @@ public class MlEngine extends ServiceTemplate {
                     if (recentAllData.getSuccess()) {
                         for (MonitorDO monitorDO : recentAllData.getResult()) {
                             //查询监控数据变化率
-                            CallbackResult<MonitorDO> changeRateData = monitorManager.queryChangeRateByTime(monitorDO, unit);
+                            CallbackResult<MonitorDO> changeRateData = monitorManager.queryChangeRateByTime(monitorDO, UNIT);
                             if (changeRateData.getSuccess()) {
                                 //预测系统是否出现问题
                                 predict(changeRateData.getResult());

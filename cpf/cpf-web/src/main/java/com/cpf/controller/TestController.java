@@ -1,6 +1,5 @@
 package com.cpf.controller;
 
-import com.cpf.influx.dao.CpuDAO;
 import com.cpf.influx.holder.ModelHolder;
 import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.influx.manager.MonitorManager;
@@ -26,8 +25,6 @@ import java.util.List;
 public class TestController {
     @Autowired
     private RuleHolder ruleHolder;
-    @Autowired
-    private CpuDAO cpuDAO;
     @Autowired
     private ModelHolder modelHolder;
     @Autowired

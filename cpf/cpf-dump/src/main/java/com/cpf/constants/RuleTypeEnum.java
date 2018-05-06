@@ -31,8 +31,8 @@ public enum  RuleTypeEnum {
     /**
      * 数据库表的tags
      */
-    private static final List<String> monitorDataTagList = Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname"}));
-    private static final List<String> trainDataTagList = Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname","danger"}));
+    private static final List<String> MONITOR_DATA_TAG_LIST = Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname"}));
+    private static final List<String> TRAIN_DATA_TAG_LIST = Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname","danger"}));
     private RuleTypeEnum(String type){
         this.type = type;
     }
@@ -43,9 +43,9 @@ public enum  RuleTypeEnum {
 
     public static List<String> getTagList(Boolean withDanger) {
         if(withDanger){
-            return trainDataTagList;
+            return TRAIN_DATA_TAG_LIST;
         }else {
-            return monitorDataTagList;
+            return MONITOR_DATA_TAG_LIST;
         }
     }
 
