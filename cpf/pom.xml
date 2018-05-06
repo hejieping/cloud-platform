@@ -143,7 +143,11 @@
                 <artifactId>mapstruct-processor</artifactId>
                 <version>${org.mapstruct.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>1.8.13</version>
+            </dependency>
 
 
 
@@ -176,6 +180,11 @@
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
                             <version>${org.mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.16.20</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
