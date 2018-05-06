@@ -32,6 +32,11 @@ public class ModelHolder {
     private AggreModelManager aggreModelManager;
     @Autowired
     private ModelManager modelManager;
+    /**
+     * 让modelUtil提前加载配置
+     */
+    @Autowired
+    private ModelUtil modelUtil;
     private static Logger logger = LoggerFactory.getLogger(ModelHolder.class);
 
     private Map<String,List<CpfClassifier>> classifiesMap = Maps.newConcurrentMap();

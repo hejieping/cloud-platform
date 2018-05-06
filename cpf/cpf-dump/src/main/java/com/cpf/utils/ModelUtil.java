@@ -14,6 +14,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.core.*;
@@ -33,11 +35,12 @@ import java.util.stream.Collectors;
  * @author jieping
  * @create 2018-04-08
  **/
+@Component
 public class ModelUtil  {
     private static Logger logger = LoggerFactory.getLogger(ModelUtil.class);
-    public static final String MODEL_PATH =  "cpf-dump/src/main/resources/";
-    public static final String MODEL_SUFFIX = ".model";
-    public static final String ARFF_SUFFIX = ".arff";
+    private static  String MODEL_PATH;
+    private static final String MODEL_SUFFIX = ".model";
+    private static final String ARFF_SUFFIX = ".arff";
     /**
      * 整数的正则表达式
      */
@@ -333,4 +336,8 @@ public class ModelUtil  {
         return PATTTERN.matcher(str).matches();
     }
 
+    @Value("${model.path}")
+    public  void setModelPath(String modelPath) {
+        MODEL_PATH = modelPath;
+    }
 }
