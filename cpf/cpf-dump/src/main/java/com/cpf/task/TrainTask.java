@@ -17,6 +17,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -30,9 +31,9 @@ import java.util.List;
 public class TrainTask extends ServiceTemplate  {
     private Logger logger = LoggerFactory.getLogger(TrainTask.class);
     /**
-     * 定时训练间隔时间
+     * 定时训练间隔时间 一星期训练一次
      */
-    private static Integer TRAIN_INTERVAL = 60*1000;
+    private static final Integer TRAIN_INTERVAL = 7*24*60*60*1000;
     /**
      * 错误样本占总训练样本的比例
      */
@@ -49,8 +50,7 @@ public class TrainTask extends ServiceTemplate  {
      * 定时训练所有配置的算法，并保存算法模型
      * @return
      */
-    //TODO 正式环境记得开启
-    //@Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 7*24*60*60*1000)
    public void train(){
         Object result = execute(logger, "train", new ServiceExecuteTemplate() {
             @Override

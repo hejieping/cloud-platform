@@ -348,8 +348,7 @@ public class MonitorManager extends ServiceTemplate {
      * @param monitorDO
      * @return
      */
-    //TODO 改成private
-    public Point convert2Point(MonitorDO monitorDO){
+    private Point convert2Point(MonitorDO monitorDO){
         Map<String,Object> fieldMap = Maps.newHashMap();
         Map<String,String> tagMap = Maps.newHashMap();
         List<String> tagList = RuleTypeEnum.getTagList(true);

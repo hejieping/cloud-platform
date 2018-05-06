@@ -11,7 +11,6 @@ import com.cpf.mysql.manager.DO.ModelOptionDO;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -307,25 +306,7 @@ public class ModelUtil  {
         return MODEL_PATH + id + ARFF_SUFFIX;
 
     }
-    /**
-     * 判断value是否符合option的指定数据类型
-     * @param value
-     * @param option
-     * @return
-     */
-    private  static boolean judgeOptionType(String value, ModelOptionDO option){
-        if(option.getValueType() == OptionTypeEnum.INTEGER){
-            return isInteger(value);
-        }
-        if(option.getValueType() == OptionTypeEnum.DOUBLE){
-            return NumberUtils.isDigits(value);
-        }
-        if(option.getValueType() == OptionTypeEnum.ENUM){
-            //TODO 需要修改为指定的枚举
-            return true;
-        }
-        return false;
-    }
+
 
     /**
      * 判断是否为整数
