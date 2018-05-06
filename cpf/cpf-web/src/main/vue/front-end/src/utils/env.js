@@ -12,9 +12,9 @@ let baseImgPath;
 
 if (process.env.NODE_ENV == 'development') {
 	  baseUrl = 'http://119.23.77.132:8080';
-    baseImgPath = 'http://119.23.77.132:8002/img/';
+    baseImgPath = 'http://localhost:8080';
 }else{
-	  baseUrl = 'http://cangdu.org:8001';
+	  baseUrl = 'http://119.23.77.132:8080';
     baseImgPath = 'http://cangdu.org:8001/img/';
 }
 
