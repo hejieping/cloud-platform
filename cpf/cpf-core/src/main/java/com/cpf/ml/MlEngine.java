@@ -48,7 +48,7 @@ public class MlEngine extends ServiceTemplate {
     private static final String UNIT = TimeIntervalEnum.generateInterval(TimeIntervalEnum.HOUR,1L);
     private static final Logger logger = LoggerFactory.getLogger(MlEngine.class);
 
-
+    //TODO 算法模型训练好后记得开启
     public void predict(){
         execute(logger, "predict", new ServiceExecuteTemplate() {
             @Override

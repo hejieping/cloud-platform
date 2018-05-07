@@ -8,6 +8,7 @@ import com.cpf.logger.BusinessLogger;
 import com.cpf.mysql.manager.AggreModelManager;
 import com.cpf.mysql.manager.DO.AggreModelDO;
 import com.cpf.mysql.manager.DO.ModelDO;
+import com.cpf.mysql.manager.ModelManager;
 import com.cpf.service.CallbackResult;
 import com.cpf.service.ServiceExecuteTemplate;
 import com.cpf.service.ServiceTemplate;
@@ -45,6 +46,8 @@ public class TrainTask extends ServiceTemplate  {
     private MonitorManager monitorManager;
     @Autowired
     private ModelHolder modelHolder;
+    @Autowired
+    private ModelManager modelManager;
 
     /**
      * 定时训练所有配置的算法，并保存算法模型
@@ -64,8 +67,11 @@ public class TrainTask extends ServiceTemplate  {
                 for(AggreModelDO aggreModelDO : aggreModelDOList){
                     List<MonitorDO> trainMOnitorDOList = getTrainSamples(aggreModelDO.getScene());
                     for(ModelDO modelDO : aggreModelDO.getModels()){
+                        //训练结果在modelDO中
                         ModelUtil.train(modelDO,trainMOnitorDOList);
                     }
+                    //保存训练结果
+                    aggreModelManager.save(aggreModelDO);
                 }
                 //算法模型更新
                 modelHolder.refresh();
@@ -93,6 +99,7 @@ public class TrainTask extends ServiceTemplate  {
                AggreModelDO aggreModelDO = aggreModelManager.get(modelDO).getResult();
                List<MonitorDO> trainList = getTrainSamples(aggreModelDO.getScene());
                ModelUtil.train(modelDO,trainList);
+               modelManager.modifyModel(modelDO,false);
                modelHolder.refresh(modelDO);
                return CallbackResult.success();
            }

@@ -73,7 +73,7 @@ public class ModelController {
      */
     @RequestMapping(value = "/model",method = RequestMethod.POST)
     ResponseEntity<Object> model(@RequestBody ModelDO modelDO){
-        CallbackResult<ModelDO> result = modelManager.modifyModel(modelDO);
+        CallbackResult<ModelDO> result = modelManager.modifyModel(modelDO,true);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

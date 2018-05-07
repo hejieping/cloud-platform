@@ -197,8 +197,8 @@ public class ModelUtil  {
             attributeArrayList.add(attribute);
         }
         Map<String,Attribute> attributeMap = attributeArrayList.stream().collect(Collectors.toMap(Attribute::name,Function.identity()));
-        Instances instances = new Instances(monitorDOList.get(0).getType(),attributeArrayList,0);
-        instances.setClassIndex(instances.numAttributes()-1);
+        Instances instances = new Instances(monitorDOList.get(0).getType(),attributeArrayList,monitorDOList.size());
+        instances.setClass(attributeArrayList.stream().filter(attribute -> "danger".equals(attribute.name())).findFirst().get());
         for(MonitorDO monitorDO : monitorDOList){
             Instance instance = new DenseInstance(attributeArrayList.size());
             for(Map.Entry<String,String> entry : monitorDO.getData().entrySet()){

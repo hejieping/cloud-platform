@@ -58,10 +58,11 @@ public class ModelManager extends ServiceTemplate {
 
     /**
      * 修改模型
-     * @param modelDO
+     * @param modelDO 算法模型参数
+     * @param train 是否需要训练模型
      * @return
      */
-    public CallbackResult<ModelDO> modifyModel(ModelDO modelDO){
+    public CallbackResult<ModelDO> modifyModel(ModelDO modelDO,Boolean train){
         Object  result = execute(logger, "modifyModel", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
@@ -79,7 +80,9 @@ public class ModelManager extends ServiceTemplate {
                 ModelPO modelPO = modelDAO.save(DOPOConverter.modelDO2PO(modelDO));
                 ModelUtil.setOptions(modelDO);
                 //异步进行模型训练
-                executorService.submit(()->trainTask.train(modelDO));
+                if(train){
+                    executorService.submit(()->trainTask.train(modelDO));
+                }
                 return new CallbackResult<>(DOPOConverter.modelPO2DO(modelPO), true);
             }
         });

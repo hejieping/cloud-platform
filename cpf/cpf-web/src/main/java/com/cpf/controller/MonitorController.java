@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,8 +40,8 @@ public class MonitorController {
      * @param monitorDO
      * @return
      */
-    @RequestMapping(method = RequestMethod.GET)
-    ResponseEntity<Object> monitor(MonitorDO monitorDO){
+    @RequestMapping(method = RequestMethod.POST)
+    ResponseEntity<Object> monitor(@RequestBody MonitorDO monitorDO){
         //异步执行
         executorService.submit(()->monitorEngine.monitor(monitorDO));
         return new ResponseEntity<>(true,HttpStatus.OK);
