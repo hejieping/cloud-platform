@@ -65,7 +65,7 @@ public class InfluxSqlGenerator {
         StringBuilder sql = new StringBuilder();
         sql.append(SELECT + ALL + FROM).append(tableName).append(condition(tagMap, startTime, endTime));
         if(limit != null){
-            sql.append(LIMIT + limit);
+            sql.append(LIMIT).append(limit);
         }
         sql.append(FINISH);
         return sql.toString();

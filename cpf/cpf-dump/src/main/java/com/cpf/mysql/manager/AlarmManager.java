@@ -50,6 +50,11 @@ public class AlarmManager extends ServiceTemplate {
         return (CallbackResult<AlarmDO>)result;
     }
 
+    /**
+     * 根据id获取报警信息
+     * @param id
+     * @return
+     */
     public CallbackResult<AlarmDO> get(Long id){
         Object result = execute(logger, "get", new ServiceExecuteTemplate() {
             @Override
@@ -68,6 +73,12 @@ public class AlarmManager extends ServiceTemplate {
         });
         return (CallbackResult<AlarmDO>)result;
     }
+
+    /**
+     * 根据是否过期获取报警信息
+     * @param expire
+     * @return
+     */
     public CallbackResult<List<AlarmDO>> get(boolean expire){
         Object result = execute(logger, "get", new ServiceExecuteTemplate() {
             @Override

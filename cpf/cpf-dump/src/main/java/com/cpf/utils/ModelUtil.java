@@ -186,7 +186,7 @@ public class ModelUtil  {
         List<String> tagList = Lists.newArrayList(RuleTypeEnum.getTagList(true));
         ArrayList<Attribute> attributeArrayList = Lists.newArrayList();
         for(String key : monitorMap.keySet()){
-            Attribute attribute = null;
+            Attribute attribute;
             //如果该属性为标签属性，则设置为nominal属性
             if(tagList.contains(key)){
                 List<String> nominalList = monitorMap.get(key).stream().distinct().collect(Collectors.toList());

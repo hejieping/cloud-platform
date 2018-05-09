@@ -2,7 +2,7 @@ package com.cpf.mysql.manager;
 
 import com.cpf.constants.CpfDumpConstants;
 import com.cpf.exception.BusinessException;
-import com.cpf.influx.holder.ModelHolder;
+import com.cpf.holder.ModelHolder;
 import com.cpf.mysql.dao.ModelDAO;
 import com.cpf.mysql.dao.PO.ModelPO;
 import com.cpf.mysql.manager.DO.ModelDO;

@@ -1,6 +1,6 @@
 package com.cpf.mysql.manager;
 
-import com.cpf.influx.holder.ModelHolder;
+import com.cpf.holder.ModelHolder;
 import com.cpf.mysql.dao.AggreModelDAO;
 import com.cpf.mysql.dao.PO.AggreModelPO;
 import com.cpf.mysql.manager.DO.AggreModelDO;

@@ -3,6 +3,7 @@ package com.cpf.monitor;
 import com.alibaba.fastjson.JSON;
 import com.cpf.alarm.AlarmTimer;
 import com.cpf.constants.AlarmTypeEnum;
+import com.cpf.holder.RuleHolder;
 import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.influx.manager.MonitorManager;
 import com.cpf.logger.BusinessLogger;

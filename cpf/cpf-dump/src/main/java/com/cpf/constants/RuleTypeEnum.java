@@ -32,7 +32,7 @@ public enum  RuleTypeEnum {
      * 数据库表的tags
      */
     private static final List<String> MONITOR_DATA_TAG_LIST = Collections.unmodifiableList(Lists.newArrayList("host","instance","objectname"));
-    private static final List<String> TRAIN_DATA_TAG_LIST = Collections.unmodifiableList(Lists.newArrayList(new String[]{"host","instance","objectname","danger"}));
+    private static final List<String> TRAIN_DATA_TAG_LIST = Collections.unmodifiableList(Lists.newArrayList("host","instance","objectname","danger"));
     RuleTypeEnum(String type){
         this.type = type;
     }

@@ -1,11 +1,11 @@
 package com.cpf.controller;
 
-import com.cpf.influx.holder.ModelHolder;
+import com.cpf.holder.ModelHolder;
 import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.influx.manager.MonitorManager;
 import com.cpf.ml.MlEngine;
 import com.cpf.monitor.MonitorEngine;
-import com.cpf.monitor.RuleHolder;
+import com.cpf.holder.RuleHolder;
 import com.cpf.mysql.dao.AggreModelDAO;
 import com.cpf.task.TrainTask;
 import org.springframework.beans.factory.annotation.Autowired;

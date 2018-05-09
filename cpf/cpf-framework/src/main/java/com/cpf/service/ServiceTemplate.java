@@ -19,7 +19,7 @@ public class ServiceTemplate {
         methodName = this.getClass().toString()+ "."+methodName;
         Long time = System.currentTimeMillis();
         CallbackResult<Object> checkResult;
-        CallbackResult<Object> executeResult = null;
+        CallbackResult<Object> executeResult;
         //参数校验
         try {
             checkResult = executeTemplate.checkParams();

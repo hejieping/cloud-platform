@@ -1,7 +1,7 @@
 package com.cpf.task;
 
 import com.alibaba.fastjson.JSON;
-import com.cpf.influx.holder.ModelHolder;
+import com.cpf.holder.ModelHolder;
 import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.influx.manager.MonitorManager;
 import com.cpf.logger.BusinessLogger;

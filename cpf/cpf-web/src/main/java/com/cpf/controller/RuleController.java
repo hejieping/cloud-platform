@@ -2,7 +2,7 @@ package com.cpf.controller;
 
 import com.cpf.mysql.manager.DO.RuleDO;
 import com.cpf.mysql.manager.RuleManager;
-import com.cpf.monitor.RuleHolder;
+import com.cpf.holder.RuleHolder;
 import com.cpf.service.CallbackResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

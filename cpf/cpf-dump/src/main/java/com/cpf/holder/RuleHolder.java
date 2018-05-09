@@ -1,4 +1,4 @@
-package com.cpf.monitor;
+package com.cpf.holder;
 
 import com.alibaba.fastjson.JSON;
 import com.cpf.mysql.manager.DO.RuleDO;
