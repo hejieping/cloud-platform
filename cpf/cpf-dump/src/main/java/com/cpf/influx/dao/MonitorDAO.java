@@ -33,7 +33,7 @@ public class MonitorDAO {
      * @return
      */
     public QueryResult queryAVGByTime(Map<String,String> tags,String tableName,Long startTime,Long endTime){
-        String SQL =  InfluxSqlGenerator.meanDataSQL(tags,tableName,startTime,endTime);
+        String SQL =  InfluxSqlGenerator.meanDataSql(tags,tableName,startTime,endTime);
         Query query = new Query(SQL, template.getDatabase());
         return template.query(query, TimeUnit.MILLISECONDS);
     }
@@ -48,7 +48,7 @@ public class MonitorDAO {
     public QueryResult queryAllAVGByTime(Map<String,String> tags,Long startTime,Long endTime){
         StringBuilder sqls = new StringBuilder();
         for(RuleTypeEnum ruleTypeEnum : RuleTypeEnum.values()){
-            sqls.append(InfluxSqlGenerator.meanDataSQL(tags,ruleTypeEnum.getType(),startTime,endTime));
+            sqls.append(InfluxSqlGenerator.meanDataSql(tags,ruleTypeEnum.getType(),startTime,endTime));
         }
         Query query = new Query(sqls.toString(), template.getDatabase());
         return template.query(query, TimeUnit.MILLISECONDS);

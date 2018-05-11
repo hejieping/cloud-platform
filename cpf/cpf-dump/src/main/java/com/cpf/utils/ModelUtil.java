@@ -9,7 +9,6 @@ import com.cpf.logger.BusinessLogger;
 import com.cpf.mysql.manager.DO.ModelDO;
 import com.cpf.mysql.manager.DO.ModelOptionDO;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,17 +17,12 @@ import org.springframework.stereotype.Component;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.core.*;
-import weka.core.converters.ArffSaver;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+
 /**
  * @author jieping
  * @create 2018-04-08
@@ -57,7 +51,7 @@ public class ModelUtil  {
         //设置模型参数
         optionHandler.setOptions(getOptions(modelDO));
         //将模型数据转换成instances格式
-        Instances instances = ModelUtil.monitorDOS2Instances(monitorDOList);
+        Instances instances = MonitorUtil.monitorDOS2Instances(monitorDOList);
         //数据预处理
         instances = InstancesBuilder.construct(instances).standardize().replaceMissingValues().build();
         try {
@@ -133,7 +127,7 @@ public class ModelUtil  {
      * 设置模型参数，并持久化
      * @param modelDO
      */
-        public static void setOptions(ModelDO modelDO){
+    public static void setOptions(ModelDO modelDO){
         OptionHandler optionHandler = (OptionHandler) deSerialization(modelDO.getId());
         try {
             optionHandler.setOptions(getOptions(modelDO));
@@ -163,86 +157,6 @@ public class ModelUtil  {
             }
         }
         return optionList.toArray(new String[optionList.size()]);
-    }
-
-    /**
-     * 监控数据转成weka接受的数据
-     * @param monitorDOList
-     * @return
-     */
-    public static Instances monitorDOS2Instances(List<MonitorDO> monitorDOList){
-        if(CollectionUtils.isEmpty(monitorDOList)){
-            return null;
-        }
-        Map<String,List<String>> monitorMap = Maps.newHashMap();
-        Random random = new Random();
-        //获取monitordo的所有值，map的key为属性名，
-        for(MonitorDO monitorDO : monitorDOList){
-            for(Map.Entry<String,String> entry : monitorDO.getData().entrySet()) {
-                List<String> list = monitorMap.computeIfAbsent(entry.getKey(), k -> Lists.newArrayList());
-                list.add(entry.getValue());
-            }
-        }
-        List<String> tagList = Lists.newArrayList(RuleTypeEnum.getTagList(true));
-        ArrayList<Attribute> attributeArrayList = Lists.newArrayList();
-        for(String key : monitorMap.keySet()){
-            Attribute attribute;
-            //如果该属性为标签属性，则设置为nominal属性
-            if(tagList.contains(key)){
-                List<String> nominalList = monitorMap.get(key).stream().distinct().collect(Collectors.toList());
-                attribute = new Attribute(key,nominalList);
-            }else {
-                attribute = new Attribute(key);
-            }
-            attributeArrayList.add(attribute);
-        }
-        Map<String,Attribute> attributeMap = attributeArrayList.stream().collect(Collectors.toMap(Attribute::name,Function.identity()));
-        Instances instances = new Instances(monitorDOList.get(0).getType(),attributeArrayList,monitorDOList.size());
-        instances.setClass(attributeArrayList.stream().filter(attribute -> "danger".equals(attribute.name())).findFirst().get());
-        for(MonitorDO monitorDO : monitorDOList){
-            Instance instance = new DenseInstance(attributeArrayList.size());
-            for(Map.Entry<String,String> entry : monitorDO.getData().entrySet()){
-                if(tagList.contains(entry.getKey())){
-                    instance.setValue(attributeMap.get(entry.getKey()),entry.getValue());
-                }else {
-                    instance.setValue(attributeMap.get(entry.getKey()),new Double(entry.getValue()));
-
-                }
-            }
-            instances.add(instance);
-        }
-        return instances;
-    }
-
-    /**
-     * 单条监控数据转成weka的数据
-     * @param monitorDO
-     * @return
-     */
-    public static Instance monitorDO2Instance(MonitorDO monitorDO){
-        if(monitorDO == null){
-            return null;
-        }
-        Instances instances = monitorDOS2Instances(Lists.newArrayList(monitorDO));
-        return instances.get(0);
-    }
-    /**
-     * 将监控数据转换为arff文件
-     * @param monitorDOList
-     * @return 文件路径+文件名称
-     */
-    public static String monitorDOS2Arff(List<MonitorDO> monitorDOList){
-        Instances instances = monitorDOS2Instances(monitorDOList);
-        ArffSaver saver = new ArffSaver();
-        saver.setInstances(instances);
-        String fileName = generateArffFileName(System.currentTimeMillis());
-        try {
-            saver.setFile(new File(fileName));
-            saver.writeBatch();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return fileName;
     }
 
     /**
@@ -287,15 +201,6 @@ public class ModelUtil  {
      */
     private static String generateModelFileName(Long id){
         return MODEL_PATH + id + MODEL_SUFFIX;
-    }
-    /**
-     * 根据模型id产生训练样本的全路径名
-     * @param id
-     * @return
-     */
-    private static String generateArffFileName(Long id){
-        return MODEL_PATH + id + ARFF_SUFFIX;
-
     }
 
 

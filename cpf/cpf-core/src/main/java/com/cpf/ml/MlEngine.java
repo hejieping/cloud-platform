@@ -16,7 +16,7 @@ import com.cpf.mysql.manager.DO.AssetDO;
 import com.cpf.service.CallbackResult;
 import com.cpf.service.ServiceExecuteTemplate;
 import com.cpf.service.ServiceTemplate;
-import com.cpf.utils.ModelUtil;
+import com.cpf.utils.MonitorUtil;
 import com.cpf.utils.ValidationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +95,7 @@ public class MlEngine extends ServiceTemplate {
             return;
         }
         List<CpfClassifier> cpfClassifierList = modelHolder.getClassifiers(monitorDO.getType());
-        Instance instance = ModelUtil.monitorDO2Instance(monitorDO);
+        Instance instance = MonitorUtil.monitorDO2Instance(monitorDO);
         //计算权重
         Double sum = 0D;
         Double predicts = 0D;
@@ -112,7 +112,8 @@ public class MlEngine extends ServiceTemplate {
             alarmDO.setType(AlarmTypeEnum.PREDICT);
             alarmDO.setMonitorDO(monitorDO);
             alarmDO.setTime(new Date());
-            alarmManager.save(alarmDO);
+            alarmDO = alarmManager.save(alarmDO).getResult();
+            alarmTimer.put(alarmDO);
         }
     }
     private boolean alarmed(MonitorDO monitor){

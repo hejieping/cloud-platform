@@ -29,7 +29,7 @@ public class AlarmController {
      * @return
      */
     @RequestMapping(value = "/alarms", method = RequestMethod.GET)
-    ResponseEntity<Object> modelType(){
+    ResponseEntity<Object> alarms(){
         //获取所有未过期的报警数据
         boolean expire = false;
         CallbackResult<List<AlarmDO>> result = alarmManager.get(expire);

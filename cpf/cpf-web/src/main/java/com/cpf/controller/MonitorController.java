@@ -71,9 +71,9 @@ public class MonitorController {
      * @return
      */
     @RequestMapping(value = "/chartdata", method = RequestMethod.GET)
-    ResponseEntity<Object> chartdata(String host,String table,String col,
-                                  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
-                                  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")Date endTime){
+    ResponseEntity<Object> chartData(String host, String table, String col,
+                                     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
+                                     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")Date endTime){
         return new ResponseEntity<>(monitorManager.queryChartDataByTime(host,table,col,startTime,endTime),HttpStatus.OK);
     }
 

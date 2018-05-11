@@ -366,7 +366,7 @@ public class MonitorManager extends ServiceTemplate {
      * @param result
      * @return
      */
-    public Map<String,List<MonitorDO>> parseQueryResult(QueryResult result){
+    private Map<String,List<MonitorDO>> parseQueryResult(QueryResult result){
         Map<String,List<MonitorDO>> resultMap = Maps.newHashMap();
         //一个Result代表一个表的查询结果
         for(QueryResult.Result r : result.getResults()){

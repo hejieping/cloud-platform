@@ -35,7 +35,7 @@ public class InfluxSqlGenerator {
      * @param endTime 结束时间
      * @return
      */
-    public static String meanDataSQL(Map<String,String> tags, String tableName, Long startTime, Long endTime){
+    public static String meanDataSql(Map<String,String> tags, String tableName, Long startTime, Long endTime){
         return meanSql(tags,null,tableName,startTime,endTime) + FILL;
     }
 

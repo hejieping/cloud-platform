@@ -118,7 +118,7 @@ public class ModelController {
      * @return
      */
     @RequestMapping(value = "/aggremodel",method = RequestMethod.DELETE)
-    ResponseEntity<Object> deleteAggreModel(@RequestParam Long id){
+    ResponseEntity<Object> aggremodel(@RequestParam Long id){
         return new ResponseEntity<>(aggreModelManager.delete(id), HttpStatus.OK);
     }
 }

@@ -53,7 +53,7 @@ public class RuleController {
      * @return
      */
     @RequestMapping(value = "/rule", method = RequestMethod.DELETE)
-    ResponseEntity<Object> deleteRule(@RequestParam Long id){
+    ResponseEntity<Object> rule(@RequestParam Long id){
         return new ResponseEntity<>(ruleManager.delete(id), HttpStatus.OK);
     }
 
