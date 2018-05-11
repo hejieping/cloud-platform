@@ -1,5 +1,6 @@
 package com.cpf.mysql.dao;
 
+import com.cpf.mysql.dao.PO.AlarmPO;
 import com.cpf.mysql.dao.PO.AssetPO;
 import org.springframework.data.repository.CrudRepository;
 
@@ -15,4 +16,12 @@ public interface AssetDAO extends CrudRepository<AssetPO, String> {
      */
     @Override
     List<AssetPO> findAll();
+
+    /**
+     * 保存对象
+     * @param alarmPO
+     * @return
+     */
+    @Override
+    AssetPO save(AssetPO assetPO);
 }
