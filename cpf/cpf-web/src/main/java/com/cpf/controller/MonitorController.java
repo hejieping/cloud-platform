@@ -6,6 +6,8 @@ import com.cpf.ml.MlEngine;
 import com.cpf.monitor.MonitorEngine;
 import com.cpf.mysql.manager.AssetManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,12 +80,12 @@ public class MonitorController {
     }
 
     /**
-     * 获取所有资产信息
+     * 分页获取资产信息
      * @return
      */
     @RequestMapping(value = "/assets", method = RequestMethod.GET)
-    ResponseEntity<Object> assets(){
-        return new ResponseEntity<>(assetManager.all(),HttpStatus.OK);
+    ResponseEntity<Object> assets(@PageableDefault() Pageable pageable){
+        return new ResponseEntity<>(assetManager.all(pageable),HttpStatus.OK);
     }
 
 }

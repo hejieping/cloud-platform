@@ -16,7 +16,7 @@
    </el-row>
    <el-row>
             <el-table
-       :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+       :data="tableData"
       style="width: 100%">
       <el-table-column
         align='left'
@@ -62,7 +62,7 @@
     :current-page="currentPage"
     @current-change="handleCurrentChange"
     @size-change="handleSizeChange"
-    :total="tableData.length">
+    :total="total">
   </el-pagination>
    </el-row>
  </div>
@@ -76,7 +76,8 @@ export default {
   data() {
     return {
       tableData: [],
-      currentPage:1,
+      total:0,
+      currentPage:0,
       pagesize:10,
       assetId:'',
       allData:[]
@@ -84,10 +85,11 @@ export default {
   },
   methods: {
     async initTableData() {
-      const response = await getAssets();
+      let params = {"page":this.currentPage-1,"size":this.pagesize};
+      const response = await getAssets(params);
       if (response.success) {
-        this.allData = response.result;
-        this.tableData =  this.allData;
+        this.total = response.result.totalElements;
+        this.tableData =  response.result.content;
       } else {
         this.$message("获取监控数据失败");
       }
@@ -97,9 +99,11 @@ export default {
     },
     handleSizeChange(size){
        this.pagesize = size;
+       this.initTableData();
     },
     handleCurrentChange(currentPage){
        this.currentPage = currentPage;
+       this.initTableData();
     },
     search(){
       if(this.assetId==''){

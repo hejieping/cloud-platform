@@ -5,13 +5,13 @@ import com.cpf.mysql.manager.DO.AssetDO;
 import com.cpf.service.CallbackResult;
 import com.cpf.service.ServiceExecuteTemplate;
 import com.cpf.service.ServiceTemplate;
-import com.cpf.utils.DOPOConverter;
+import com.cpf.utils.mapper.AssetMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 /**
  * @author jieping
  * @create 2018-04-22
@@ -26,7 +26,7 @@ public class AssetManager extends ServiceTemplate {
      * 获取所有资产信息
      * @return
      */
-    public CallbackResult<List<AssetDO>> all(){
+    public CallbackResult<Page<AssetDO>> all(Pageable pageable){
         Object result =execute(logger, "all", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
@@ -35,9 +35,9 @@ public class AssetManager extends ServiceTemplate {
 
             @Override
             public CallbackResult<Object> executeAction() {
-                return new CallbackResult<>(DOPOConverter.assetPOS2DOS(assetDAO.findAll()),true);
+                return new CallbackResult<>(assetDAO.findAll(pageable).map(AssetMapper.INSTANCE::assetPO2DO),true);
             }
         });
-        return (CallbackResult<List<AssetDO>>)result;
+        return (CallbackResult<Page<AssetDO>>)result;
     }
 }

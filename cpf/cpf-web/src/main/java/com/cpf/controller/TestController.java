@@ -1,7 +1,5 @@
 package com.cpf.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.cpf.holder.ModelHolder;
 import com.cpf.holder.RuleHolder;
 import com.cpf.influx.manager.MonitorManager;
@@ -9,7 +7,6 @@ import com.cpf.ml.MlEngine;
 import com.cpf.monitor.MonitorEngine;
 import com.cpf.mysql.dao.AggreModelDAO;
 import com.cpf.mysql.dao.AssetDAO;
-import com.cpf.mysql.dao.PO.AssetPO;
 import com.cpf.task.TrainTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.influxdb.DefaultInfluxDBTemplate;
@@ -18,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * Created by jieping on 2018-04-19
@@ -79,14 +74,14 @@ public class TestController {
 //        trainTask.train();
 //        List<MonitorDO> samples = monitorManager.queryDataByTime("win_cpu",null,null,null,1L).getResult();
 //        monitorEngine.monitor(samples.get(0));
-        List<AssetPO> assetPOList = assetDAO.findAll();
-        AssetPO assetPO = assetPOList.get(0);
-        for(int i = 0; i< 100;i++){
-            //深度复制
-            AssetPO temp = JSON.parseObject(JSON.toJSONString(assetPO),new TypeReference<AssetPO>(){});
-            temp.setId(String.valueOf(i));
-            assetDAO.save(temp);
-        }
+//        List<AssetPO> assetPOList = assetDAO.findAll();
+//        AssetPO assetPO = assetPOList.get(0);
+//        for(int i = 0; i< 100;i++){
+//            //深度复制
+//            AssetPO temp = JSON.parseObject(JSON.toJSONString(assetPO),new TypeReference<AssetPO>(){});
+//            temp.setId(String.valueOf(i));
+//            assetDAO.save(temp);
+//        }
         return new ResponseEntity<>(true,HttpStatus.OK);
     }
 }
