@@ -58,7 +58,8 @@ public class MlEngine extends ServiceTemplate {
 
             @Override
             public CallbackResult<Object> executeAction() throws Exception {
-                List<AssetDO> assetDOList = assetManager.all(null).getResult().getContent();
+                //一次性查询所有数据
+                List<AssetDO> assetDOList = assetManager.findByIP(null,"").getResult().getContent();
                 //遍历所有资产
                 for (AssetDO assetDO : assetDOList) {
                     //查询资产的所有最新系统监控数据

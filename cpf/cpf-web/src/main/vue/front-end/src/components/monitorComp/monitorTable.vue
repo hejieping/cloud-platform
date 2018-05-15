@@ -9,8 +9,8 @@
    </el-row>
    <el-row >
      <el-col :span="5">
-       <el-input v-model="assetId" placeholder="请输入IP地址">
-                 <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
+       <el-input v-model="ipaddr" placeholder="请输入IP地址">
+                 <el-button slot="append" icon="el-icon-search" @click="initTableData"></el-button>
        </el-input>
      </el-col>
    </el-row>
@@ -34,7 +34,7 @@
       align='left'
         prop="ipaddr"
         label="ip"
-        width="120">
+        width="300">
       </el-table-column>
       <el-table-column
       align='left'
@@ -79,13 +79,13 @@ export default {
       total:0,
       currentPage:0,
       pagesize:10,
-      assetId:'',
+      ipaddr:'',
       allData:[]
     };
   },
   methods: {
     async initTableData() {
-      let params = {"page":this.currentPage-1,"size":this.pagesize};
+      let params = {"page":this.currentPage-1,"size":this.pagesize,"ipaddr":this.ipaddr};
       const response = await getAssets(params);
       if (response.success) {
         this.total = response.result.totalElements;
@@ -104,18 +104,6 @@ export default {
     handleCurrentChange(currentPage){
        this.currentPage = currentPage;
        this.initTableData();
-    },
-    search(){
-      if(this.assetId==''){
-         this.tableData = this.allData;
-         return;
-      }
-      this.tableData = [];
-      this.allData.forEach((data)=>{
-        if(data.ipaddr == this.assetId){
-          this.tableData.push(data);
-        }
-      })
     }
   },
   created() {

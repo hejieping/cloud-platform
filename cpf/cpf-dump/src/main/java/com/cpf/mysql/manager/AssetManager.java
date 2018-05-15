@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AssetManager extends ServiceTemplate {
     private static final Logger logger = LoggerFactory.getLogger(AssetManager.class);
+    private static final String LIKE = "%";
     @Autowired
     private AssetDAO assetDAO;
 
@@ -26,7 +27,7 @@ public class AssetManager extends ServiceTemplate {
      * 获取所有资产信息
      * @return
      */
-    public CallbackResult<Page<AssetDO>> all(Pageable pageable){
+    public CallbackResult<Page<AssetDO>> findByIP(Pageable pageable, String ipaddr){
         Object result =execute(logger, "all", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
@@ -35,7 +36,8 @@ public class AssetManager extends ServiceTemplate {
 
             @Override
             public CallbackResult<Object> executeAction() {
-                return new CallbackResult<>(assetDAO.findAll(pageable).map(AssetMapper.INSTANCE::assetPO2DO),true);
+                String ipLike = ipaddr + LIKE;
+                return new CallbackResult<>(assetDAO.findByIpaddrLike(ipLike,pageable).map(AssetMapper.INSTANCE::assetPO2DO),true);
             }
         });
         return (CallbackResult<Page<AssetDO>>)result;

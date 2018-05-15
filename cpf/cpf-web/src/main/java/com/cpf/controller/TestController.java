@@ -1,5 +1,6 @@
 package com.cpf.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.cpf.holder.ModelHolder;
 import com.cpf.holder.RuleHolder;
 import com.cpf.influx.manager.MonitorManager;
@@ -9,6 +10,8 @@ import com.cpf.mysql.dao.AggreModelDAO;
 import com.cpf.mysql.dao.AssetDAO;
 import com.cpf.task.TrainTask;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.influxdb.DefaultInfluxDBTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -82,6 +85,10 @@ public class TestController {
 //            temp.setId(String.valueOf(i));
 //            assetDAO.save(temp);
 //        }
+        Pageable pageable = new PageRequest(0,10);
+        String ipaddr = "192.168.207.82" + "%";
+        System.out.println(JSON.toJSONString(assetDAO.findByIpaddrLike(ipaddr,pageable)));
+        System.out.println(assetDAO.findByIpaddrLike("%",null).getNumberOfElements());
         return new ResponseEntity<>(true,HttpStatus.OK);
     }
 }

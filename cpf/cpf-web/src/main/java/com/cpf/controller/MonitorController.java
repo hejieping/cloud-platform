@@ -80,12 +80,12 @@ public class MonitorController {
     }
 
     /**
-     * 分页获取资产信息
+     * 根据ip地址模糊分页查询资产信息
      * @return
      */
     @RequestMapping(value = "/assets", method = RequestMethod.GET)
-    ResponseEntity<Object> assets(@PageableDefault() Pageable pageable){
-        return new ResponseEntity<>(assetManager.all(pageable),HttpStatus.OK);
+    ResponseEntity<Object> assets(@PageableDefault() Pageable pageable,String ipaddr){
+        return new ResponseEntity<>(assetManager.findByIP(pageable,ipaddr),HttpStatus.OK);
     }
 
 }

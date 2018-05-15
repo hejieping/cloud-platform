@@ -17,6 +17,14 @@ public interface AssetDAO extends PagingAndSortingRepository<AssetPO, String> {
     Page<AssetPO> findAll(Pageable pageable);
 
     /**
+     * 根据ipaddr模糊查询
+     * @param ipaddr
+     * @param pageable
+     * @return
+     */
+    Page<AssetPO> findByIpaddrLike(String ipaddr,Pageable pageable);
+
+    /**
      * 保存对象
      * @param alarmPO
      * @return
