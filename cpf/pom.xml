@@ -21,6 +21,8 @@
         <cpf.core.version>1.0-SNAPSHOT</cpf.core.version>
         <cpf.dump.version>1.0-SNAPSHOT</cpf.dump.version>
         <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
+        <org.projectlombok.version>1.16.20</org.projectlombok.version>
+
     </properties>
     <modules>
         <module>cpf-framework</module>
@@ -90,7 +92,7 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.16.20</version>
+                <version>${org.projectlombok.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
@@ -184,7 +186,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>1.16.20</version>
+                            <version>${org.projectlombok.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
