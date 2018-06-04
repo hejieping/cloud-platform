@@ -13,6 +13,7 @@ public class TimeStampUtil {
      * java时间戳和influx时间戳相差倍数
      */
     private static final Long MULTIPLE = 1000000L;
+    private static final Long MINUTE = 60*1000L;
 
     /**
      * java时间戳转influx时间戳
@@ -42,6 +43,6 @@ public class TimeStampUtil {
      * @return
      */
     public static Long minutes2Time(Long minutes){
-        return minutes*60*1000;
+        return minutes*MINUTE;
     }
 }

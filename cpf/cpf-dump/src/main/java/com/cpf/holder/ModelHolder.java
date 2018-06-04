@@ -5,7 +5,6 @@ import com.cpf.logger.BusinessLogger;
 import com.cpf.mysql.manager.AggreModelManager;
 import com.cpf.mysql.manager.DO.AggreModelDO;
 import com.cpf.mysql.manager.DO.ModelDO;
-import com.cpf.mysql.manager.ModelManager;
 import com.cpf.service.CallbackResult;
 import com.cpf.task.TrainTask;
 import com.cpf.utils.ModelUtil;
@@ -31,8 +30,6 @@ import java.util.Map;
 public class ModelHolder {
     @Autowired
     private AggreModelManager aggreModelManager;
-    @Autowired
-    private ModelManager modelManager;
     @Autowired
     private TrainTask trainTask;
     /**

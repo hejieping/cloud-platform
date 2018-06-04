@@ -14,13 +14,31 @@ import lombok.Data;
 
 @Data
 public class CallbackResult<T> {
+    /**
+     * 执行结果是否成功
+     */
     private Boolean success;
+    /**
+     * 执行失败的错误码
+     */
     private String errorCode;
+    /**
+     * 执行成功返回的结果
+     */
     private T result;
+    /**
+     * 执行失败的错误描述
+     */
     private String errorDesc;
+    /**
+     * 执行的详细描述
+     */
     private String detail;
     private CallbackResult(Boolean success){
         this.success = success;
+    }
+    public CallbackResult(){
+
     }
     public CallbackResult(T result,Boolean success){
         this.result = result;

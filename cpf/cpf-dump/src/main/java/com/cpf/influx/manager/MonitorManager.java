@@ -1,7 +1,5 @@
 package com.cpf.influx.manager;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.cpf.constants.CpfDumpConstants;
 import com.cpf.constants.RuleTypeEnum;
 import com.cpf.constants.TimeIntervalEnum;
@@ -11,6 +9,7 @@ import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.service.CallbackResult;
 import com.cpf.service.ServiceExecuteTemplate;
 import com.cpf.service.ServiceTemplate;
+import com.cpf.utils.BeanUtil;
 import com.cpf.utils.MonitorUtil;
 import com.cpf.utils.TimeStampUtil;
 import com.cpf.utils.ValidationUtil;
@@ -44,9 +43,10 @@ public class MonitorManager extends ServiceTemplate {
      */
     private static final String TRAIN_SUFFIX ="_train";
     /**
-     * 监控数据变化率的时间间隔
+     * host字段的key
      */
-    private static final String UNIT = TimeIntervalEnum.generateInterval(TimeIntervalEnum.HOUR,1L);
+    private static final String HOST = "host";
+
 
     /**
      * 查询过去一段时间的数据平均值
@@ -75,7 +75,10 @@ public class MonitorManager extends ServiceTemplate {
                 }
                 //组装表的标签
                 for(String tag : RuleTypeEnum.getTagList(false)){
-                    tagMap.put(tag,monitorDO.getData().get(tag));
+                    String value = monitorDO.getData().get(tag);
+                    if(ValidationUtil.isNotNull(value)){
+                        tagMap.put(tag,value);
+                    }
                 }
                 Long endTime = System.currentTimeMillis();
                 Long startTime = endTime - TimeStampUtil.minutes2Time(minutes);
@@ -112,7 +115,7 @@ public class MonitorManager extends ServiceTemplate {
             @Override
             public CallbackResult<Object> executeAction() {
                 Map<String,String> tagMap = Maps.newHashMap();
-                tagMap.put("host",hostName);
+                tagMap.put(HOST,hostName);
                 Long start = startTime == null? null : startTime.getTime();
                 Long end = endTime == null? null : endTime.getTime();
                 QueryResult result = monitorDAO.queryAllAVGByTime(tagMap,start,end);
@@ -139,7 +142,7 @@ public class MonitorManager extends ServiceTemplate {
             @Override
             public CallbackResult<Object> executeAction() {
                 Map<String,String> tagMap = Maps.newHashMap();
-                tagMap.put("host",hostName);
+                tagMap.put(HOST,hostName);
                 QueryResult result = monitorDAO.queryRecentAllData(tagMap);
                 Map<String,List<MonitorDO>> resultMap =  parseQueryResult(result);
                 List<MonitorDO> resultList = Lists.newLinkedList();
@@ -225,7 +228,7 @@ public class MonitorManager extends ServiceTemplate {
             public CallbackResult<Object> executeAction() {
                 List<String> meanList  = Lists.newArrayList(col);
                 Map<String,String> tagMap = Maps.newHashMap();
-                tagMap.put("host",hostName);
+                tagMap.put(HOST,hostName);
                 QueryResult result = monitorDAO.queryAVGGroupByTime(tagMap,meanList,startTime.getTime(),endTime.getTime(),RuleTypeEnum.typeOf(tableName));
                 Map<String,List<MonitorDO>> resultMap =  parseQueryResult(result);
                 List<String> timeList = Lists.newLinkedList();
@@ -271,13 +274,12 @@ public class MonitorManager extends ServiceTemplate {
                         tagMap.put(key,monitorDO.getData().get(key));
                     }
                 });
-                String unit = TimeIntervalEnum.generateInterval(TimeIntervalEnum.HOUR,1L);
-                QueryResult result = monitorDAO.queryChangeRateByTime(monitorDO.getType(),null,unit,tagMap);
+                QueryResult result = monitorDAO.queryChangeRateByTime(monitorDO.getType(),null,TimeIntervalEnum.changeRateInterval(),tagMap);
                 //查询结果解析成domain对象
                 List<MonitorDO> monitorDOList = parseQueryResult(result).get(monitorDO.getType());
                 if(CollectionUtils.isNotEmpty(monitorDOList) && monitorDOList.size() == 1){
                     //深复制对象
-                    MonitorDO changeRateData = JSON.parseObject(JSON.toJSONString(monitorDO),new TypeReference<MonitorDO>(){});
+                    MonitorDO changeRateData = BeanUtil.copy(monitorDO);
                     changeRateData.getData().putAll(monitorDOList.get(0).getData());
                     return new CallbackResult<>(changeRateData,true);
                 }else {
@@ -304,7 +306,7 @@ public class MonitorManager extends ServiceTemplate {
 
             @Override
             public CallbackResult<Object> executeAction() {
-                CallbackResult<MonitorDO> queryResult = queryChangeRateByTime(monitorDO, UNIT);
+                CallbackResult<MonitorDO> queryResult = queryChangeRateByTime(monitorDO, TimeIntervalEnum.changeRateInterval());
                 if(queryResult.getSuccess()){
                     MonitorDO sample = queryResult.getResult();
                     //将数据类型改成训练数据类型
@@ -334,7 +336,6 @@ public class MonitorManager extends ServiceTemplate {
 
             @Override
             public CallbackResult<Object> executeAction() {
-
                 monitorDAO.insert(convert2Point(monitorDO));
                 return CallbackResult.success();
             }

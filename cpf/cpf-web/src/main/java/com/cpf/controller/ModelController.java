@@ -73,8 +73,7 @@ public class ModelController {
      */
     @RequestMapping(value = "/model",method = RequestMethod.POST)
     ResponseEntity<Object> model(@RequestBody ModelDO modelDO){
-        CallbackResult<ModelDO> result = modelManager.modifyModel(modelDO,true);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(modelManager.modifyModel(modelDO,true), HttpStatus.OK);
     }
 
     /**
@@ -84,8 +83,7 @@ public class ModelController {
      */
     @RequestMapping(value = "/model",method = RequestMethod.DELETE)
     ResponseEntity<Object> model(@RequestParam Long id){
-        CallbackResult<Object> result = modelManager.delete(id);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(modelManager.delete(id), HttpStatus.OK);
     }
 
     /**
@@ -104,9 +102,14 @@ public class ModelController {
      */
     @RequestMapping(value = "/aggremodel",method = RequestMethod.POST)
     ResponseEntity<Object> aggremodel(@RequestBody AggreModelDO aggreModelDO){
-        CallbackResult<AggreModelDO> result = aggreModelManager.save(aggreModelDO);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(aggreModelManager.save(aggreModelDO), HttpStatus.OK);
     }
+
+    /**
+     * 获取指定id的聚合模型
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/aggremodel",method = RequestMethod.GET)
     ResponseEntity<Object> getAggreModel( Long id){
         return new ResponseEntity<>(aggreModelManager.get(id), HttpStatus.OK);

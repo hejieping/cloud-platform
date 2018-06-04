@@ -74,7 +74,7 @@ public class DOPOConverter {
         AggreModelDO aggreModelDO = new AggreModelDO();
         aggreModelDO.setId(aggreModelPO.getId());
         aggreModelDO.setScene(aggreModelPO.getScene());
-        aggreModelDO.setModels(modelPOs2DOs(aggreModelPO.getModels()));
+        aggreModelDO.addModels(modelPOs2DOs(aggreModelPO.getModels()));
         return aggreModelDO;
     }
     public static AggreModelPO aggreModelDO2PO(AggreModelDO aggreModelDO){

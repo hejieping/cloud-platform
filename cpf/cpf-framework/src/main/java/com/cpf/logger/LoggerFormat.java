@@ -9,7 +9,13 @@ import com.google.common.base.Joiner;
  * @desc 日志格式
  **/
 public class LoggerFormat {
+    /**
+     * 日志一级分隔符
+     */
     private static final String FIRST_SPLIT = "|";
+    /**
+     * 日志二级分隔符
+     */
     private static final String SECOND_SPLIT = ",";
     public static String format(String business,String[] params,String result,String desc){
         if(params == null){

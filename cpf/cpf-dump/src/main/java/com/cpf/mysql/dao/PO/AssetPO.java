@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+
 /**
  * @author jieping
  * @create 2018-04-21

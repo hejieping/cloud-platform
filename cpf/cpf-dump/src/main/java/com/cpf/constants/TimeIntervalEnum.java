@@ -1,4 +1,7 @@
 package com.cpf.constants;
+
+import javax.validation.constraints.NotNull;
+
 /**
  * @author jieping
  * @create 2018-04-25 19:56
@@ -49,12 +52,20 @@ public enum TimeIntervalEnum {
     }
 
     /**
+     * 默认变化率时间间隔
+     * @return
+     */
+    public static String changeRateInterval(){
+        return generateInterval(TimeIntervalEnum.HOUR,1L);
+    }
+
+    /**
      * 切分时间段，确保每段份数<100
      * @param startTime
      * @param endTime
      * @return
      */
-    public static String interval(Long startTime,Long endTime){
+    public static String interval(@NotNull Long startTime,@NotNull Long endTime){
         Long diff = (endTime - startTime)/100;
         return generateInterval(MINUTE,diff/M+1);
     }

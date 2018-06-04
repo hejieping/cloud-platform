@@ -36,6 +36,9 @@ import java.util.List;
 public class MlEngine extends ServiceTemplate {
     @Autowired
     private ModelHolder modelHolder;
+    /**
+     * 预警阈值
+     */
     private static final Double THRESHOLD  = 0.5D;
     @Autowired
     private AlarmManager alarmManager;
@@ -45,7 +48,7 @@ public class MlEngine extends ServiceTemplate {
     private MonitorManager monitorManager;
     @Autowired
     private AlarmTimer alarmTimer;
-    private static final String UNIT = TimeIntervalEnum.generateInterval(TimeIntervalEnum.HOUR,1L);
+
     private static final Logger logger = LoggerFactory.getLogger(MlEngine.class);
 
     //TODO 算法模型训练好后记得开启
@@ -53,12 +56,12 @@ public class MlEngine extends ServiceTemplate {
         execute(logger, "predict", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
-                return null;
+                return CallbackResult.success();
             }
 
             @Override
             public CallbackResult<Object> executeAction() throws Exception {
-                //一次性查询所有数据
+                //一次性查询所有数据,ipaddr为空字符串且pageable为null时候
                 List<AssetDO> assetDOList = assetManager.findByIP(null,"").getResult().getContent();
                 //遍历所有资产
                 for (AssetDO assetDO : assetDOList) {
@@ -67,7 +70,7 @@ public class MlEngine extends ServiceTemplate {
                     if (recentAllData.getSuccess()) {
                         for (MonitorDO monitorDO : recentAllData.getResult()) {
                             //查询监控数据变化率
-                            CallbackResult<MonitorDO> changeRateData = monitorManager.queryChangeRateByTime(monitorDO, UNIT);
+                            CallbackResult<MonitorDO> changeRateData = monitorManager.queryChangeRateByTime(monitorDO, TimeIntervalEnum.changeRateInterval());
                             if (changeRateData.getSuccess()) {
                                 //预测系统是否出现问题
                                 predict(changeRateData.getResult());
@@ -99,12 +102,14 @@ public class MlEngine extends ServiceTemplate {
         Instance instance = MonitorUtil.monitorDO2Instance(monitorDO);
         //计算权重
         Double sum = 0D;
+        //各个分类器预测结果累加
         Double predicts = 0D;
         for(CpfClassifier cpfClassifier : cpfClassifierList){
             sum+=cpfClassifier.getWeight();
             Double predict = cpfClassifier.getClassifier().classifyInstance(instance)*cpfClassifier.getWeight();
             predicts+=predict;
         }
+        //权值计算
         predicts /= sum;
         //如果小于阈值，代表存在危险
         if(predicts < THRESHOLD){
@@ -121,6 +126,6 @@ public class MlEngine extends ServiceTemplate {
         AlarmDO alarmDO = new AlarmDO();
         alarmDO.setMonitorDO(monitor);
         alarmDO.setType(AlarmTypeEnum.PREDICT);
-        return alarmTimer.exist(alarmDO);
+        return alarmTimer.existAndIncrement(alarmDO);
     }
 }

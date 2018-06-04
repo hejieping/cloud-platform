@@ -11,6 +11,7 @@ import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -26,8 +27,19 @@ import java.util.Map;
  **/
 @Component
 public class AlarmTimer {
+    /**
+     * 报警计数器 key的分隔符
+     */
     private static final String SPLIT = "#";
-    private static final Long EXPIRE_TIME = 60*60*1000L;
+    /**
+     * 报警数据的host字段的key
+     */
+    private static final String HOST = "host";
+    /**
+     * 报警的失效时间
+     */
+    @Value("${alarmTimer.expire}")
+    private Long EXPIRE_TIME = 60*60*1000L;
     private static final Logger logger = LoggerFactory.getLogger(AlarmTimer.class);
     @Autowired
     private AlarmManager alarmManager;
@@ -45,6 +57,10 @@ public class AlarmTimer {
      * value ：数据库表alarm对应的id
      */
     private Map<String,Long> alarmMap = Maps.newHashMap();
+
+    /**
+     * 计时器初始化
+     */
     @PostConstruct
     private void init(){
         List<AlarmDO> alarmDOList = alarmManager.get(false).getResult();
@@ -63,7 +79,7 @@ public class AlarmTimer {
     /**
      * 定期清除报警计时器已经过期的报警
      */
-    @Scheduled(fixedDelay = 60*1000L)
+    @Scheduled(cron = "${alarmtimer.cron}")
     private void remove(){
         Long currentTime = System.currentTimeMillis();
         for(Iterator<Map.Entry<String,Long>> it = expireMap.entrySet().iterator();it.hasNext();){
@@ -89,11 +105,12 @@ public class AlarmTimer {
     }
 
     /**
-     * 是否已经存在该报警了
+     * 是否已经存在该报警了,存在则重新更新该报警的计时
      * @param alarmDO
      * @return
      */
-    public boolean exist(AlarmDO alarmDO){
+    public boolean existAndIncrement(AlarmDO alarmDO){
+        expireMap.computeIfPresent(key(alarmDO),(k,v)->System.currentTimeMillis()+EXPIRE_TIME);
         return expireMap.containsKey(key(alarmDO));
     }
     /**
@@ -106,7 +123,7 @@ public class AlarmTimer {
     private static String key(AlarmDO alarmDO){
         List<String> keys = Lists.newArrayList();
         keys.add(alarmDO.getType().toString());
-        keys.add(alarmDO.getMonitorDO().getData().get("host"));
+        keys.add(alarmDO.getMonitorDO().getData().get(HOST));
         keys.add(alarmDO.getMonitorDO().getType());
         if(AlarmTypeEnum.MONITOR==alarmDO.getType()){
             keys.add(alarmDO.getRuleDO().getId().toString());

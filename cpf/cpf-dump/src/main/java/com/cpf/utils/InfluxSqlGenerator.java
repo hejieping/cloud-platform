@@ -3,7 +3,6 @@ package com.cpf.utils;
 import com.cpf.constants.TimeIntervalEnum;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 
@@ -139,10 +138,7 @@ public class InfluxSqlGenerator {
         List<String> conditionList = Lists.newArrayList();
         if(MapUtils.isNotEmpty(conditionMap)){
             for(Map.Entry<String,String> tag : conditionMap.entrySet()){
-                String condition = tag.getKey() +
-                        "='" +
-                        tag.getValue() +
-                        "'";
+                String condition = tag.getKey() + "='" + tag.getValue() + "'";
                 conditionList.add(condition);
             }
         }
@@ -163,13 +159,4 @@ public class InfluxSqlGenerator {
         keys.forEach(key-> derivatives.add("derivative(" + key + "," + unit + ")"));
         return Joiner.on(COMMA).join(derivatives);
     }
-    public static void main(String[] args){
-        List<String> keys = Lists.newArrayList("idal_time","pec_time");
-        Map<String,String> tagMap = Maps.newHashMap();
-        tagMap.put("instance","0");
-        tagMap.put("host","windows");
-        System.out.println(changeRateSql("win_cpu",keys,"1h",tagMap));
-        System.out.println(recentDataSql("win_cpu",tagMap));
-    }
-
 }

@@ -1,5 +1,6 @@
 package com.cpf.mysql.manager;
 
+import com.cpf.holder.RuleHolder;
 import com.cpf.mysql.dao.PO.RulePO;
 import com.cpf.mysql.dao.RuleDAO;
 import com.cpf.mysql.manager.DO.RuleDO;
@@ -21,6 +22,8 @@ import java.util.List;
 public class RuleManager extends ServiceTemplate {
     @Autowired
     private RuleDAO ruleDAO;
+    @Autowired
+    private RuleHolder ruleHolder;
     private static final Logger logger = LoggerFactory.getLogger(RuleManager.class);
 
     /**
@@ -40,6 +43,8 @@ public class RuleManager extends ServiceTemplate {
             @Override
             public CallbackResult<Object> executeAction() {
                 RulePO rulePO = ruleDAO.save(DOPOConverter.ruleDO2PO(ruleDO));
+                //内存中监控规则刷新
+                ruleHolder.refresh();
                 return new CallbackResult<>(DOPOConverter.rulePO2DO(rulePO),true);
             }
         });
@@ -82,6 +87,7 @@ public class RuleManager extends ServiceTemplate {
             @Override
             public CallbackResult<Object> executeAction() {
                 ruleDAO.deleteById(id);
+                ruleHolder.refresh();
                 return CallbackResult.success();
             }
         });

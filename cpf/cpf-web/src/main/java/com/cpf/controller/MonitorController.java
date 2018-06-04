@@ -2,7 +2,6 @@ package com.cpf.controller;
 
 import com.cpf.influx.manager.DO.MonitorDO;
 import com.cpf.influx.manager.MonitorManager;
-import com.cpf.ml.MlEngine;
 import com.cpf.monitor.MonitorEngine;
 import com.cpf.mysql.manager.AssetManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author jieping
@@ -31,9 +32,7 @@ public class MonitorController {
     private MonitorManager monitorManager;
     @Autowired
     private AssetManager assetManager;
-    private ExecutorService executorService = Executors.newFixedThreadPool(30);
-    @Autowired
-    private MlEngine mlEngine;
+    private ExecutorService executorService = new ThreadPoolExecutor(20, 30, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
     @Autowired
     private MonitorEngine monitorEngine;
 

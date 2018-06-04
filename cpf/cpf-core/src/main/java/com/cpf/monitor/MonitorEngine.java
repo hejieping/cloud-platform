@@ -17,6 +17,7 @@ import com.cpf.utils.ValidationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -43,11 +44,22 @@ public class MonitorEngine extends ServiceTemplate{
     @Autowired
     private AlarmTimer alarmTimer;
     private ExecutorService executorService = Executors.newFixedThreadPool(10);
+    /**
+     * 分类结果字段
+     */
     private static final String CLASS_TAG = "danger";
     private static final Boolean DANGER = true;
     private static final Boolean SAFE = false;
-    private static final Integer DANGER_SAMPLE_WEIGHT = 10;
-    private static final Integer SAFE_SAMPLE_WEIGHT = 1;
+    /**
+     * 故障样本权重
+     */
+    @Value("${monitorEngine.dangerSampleWeight}")
+    private  Integer dangerSampleWeight = 1;
+    /**
+     * 安全样本权重
+     */
+    @Value("${monitorEngine.safeSampleWeight}")
+    private  Integer safeSampleWeight = 1;
     /**
      * 样本计数器，用该计数器决定正负训练样本写入数据库比例
      */
@@ -69,7 +81,6 @@ public class MonitorEngine extends ServiceTemplate{
                     return CallbackResult.success();
                 }
             }
-
             @Override
             public CallbackResult<Object> executeAction() {
                 CallbackResult<Object> result = new CallbackResult<>(SAFE, true);
@@ -98,6 +109,7 @@ public class MonitorEngine extends ServiceTemplate{
                             warn(monitorDO,ruleDO);
                         }
                     }
+                    //保存样本
                     saveSample(monitorDO);
                 }
                 return result;
@@ -160,9 +172,9 @@ public class MonitorEngine extends ServiceTemplate{
     private void saveSample(MonitorDO monitorDO){
         boolean danger = Boolean.valueOf(monitorDO.getData().get(CLASS_TAG));
         //计数器求余
-        long index = sampleCount.longValue()%(DANGER_SAMPLE_WEIGHT+SAFE_SAMPLE_WEIGHT);
-        //当 index 处于[0，DANGER_SAMPLE_WEIGHT）范围时，表示此时只能保存有故障的设备数据，否则只能保存没有故障的设备数据
-        if((index < DANGER_SAMPLE_WEIGHT && danger)||(index >= DANGER_SAMPLE_WEIGHT && !danger)){
+        long index = sampleCount.longValue()%(dangerSampleWeight + safeSampleWeight);
+        //当 index 处于[0，dangerSampleWeight）范围时，表示此时只能保存有故障的设备数据，否则只能保存没有故障的设备数据
+        if((index < dangerSampleWeight && danger)||(index >= dangerSampleWeight && !danger)){
             sampleCount.incrementAndGet();
             executorService.submit(()->monitorManager.addTrainSample(monitorDO));
         }
@@ -172,6 +184,6 @@ public class MonitorEngine extends ServiceTemplate{
         alarmDO.setRuleDO(rule);
         alarmDO.setMonitorDO(monitor);
         alarmDO.setType(AlarmTypeEnum.MONITOR);
-        return alarmTimer.exist(alarmDO);
+        return alarmTimer.existAndIncrement(alarmDO);
     }
 }

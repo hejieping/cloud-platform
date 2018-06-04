@@ -16,7 +16,6 @@ import weka.core.Instances;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -25,10 +24,22 @@ import java.util.stream.Collectors;
  * @create 2018-04-30 20:15
  * @desc 监控数据工具
  **/
+
 public class MonitorUtil {
+
     private static final Logger logger = LoggerFactory.getLogger(MonitorUtil.class);
+    /**
+     * 单位为byte且需要转换为MB的列
+     */
     private static List<String> byteColName = Lists.newArrayList();
+    /**
+     * mega 单位
+     */
     private static final Double M = 1024*1024D;
+    /**
+     * 监控数据 设备是否故障字段
+     */
+    private static final String DANGER  = "danger";
     static {
         byteColName.add("Available_Bytes");
     }
@@ -59,12 +70,11 @@ public class MonitorUtil {
      * @param monitorDOList
      * @return
      */
-    public static Instances monitorDOS2Instances(List<MonitorDO> monitorDOList){
+    public static Instances monitorDOS2Instances( List<MonitorDO> monitorDOList){
         if(CollectionUtils.isEmpty(monitorDOList)){
             return null;
         }
         Map<String,List<String>> monitorMap = Maps.newHashMap();
-        Random random = new Random();
         //获取monitordo的所有值，map的key为属性名，
         for(MonitorDO monitorDO : monitorDOList){
             for(Map.Entry<String,String> entry : monitorDO.getData().entrySet()) {
@@ -87,7 +97,7 @@ public class MonitorUtil {
         }
         Map<String,Attribute> attributeMap = attributeArrayList.stream().collect(Collectors.toMap(Attribute::name,Function.identity()));
         Instances instances = new Instances(monitorDOList.get(0).getType(),attributeArrayList,monitorDOList.size());
-        instances.setClass(attributeArrayList.stream().filter(attribute -> "danger".equals(attribute.name())).findFirst().get());
+        instances.setClass(attributeArrayList.stream().filter(attribute -> DANGER.equals(attribute.name())).findFirst().get());
         for(MonitorDO monitorDO : monitorDOList){
             Instance instance = new DenseInstance(attributeArrayList.size());
             for(Map.Entry<String,String> entry : monitorDO.getData().entrySet()){

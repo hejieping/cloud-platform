@@ -84,7 +84,6 @@ export default {
       this.$store.commit("openRuleAddDialog");
     },
     saveRule(target) {
-      console.log(target);
       let index = this.tableData.findIndex(rule => rule.id == target.id);
       if (index != -1) {
          this.tableData[index].name = target.name;

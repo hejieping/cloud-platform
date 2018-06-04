@@ -1,6 +1,5 @@
 package com.cpf.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.cpf.holder.ModelHolder;
 import com.cpf.holder.RuleHolder;
 import com.cpf.influx.manager.MonitorManager;
@@ -8,10 +7,10 @@ import com.cpf.ml.MlEngine;
 import com.cpf.monitor.MonitorEngine;
 import com.cpf.mysql.dao.AggreModelDAO;
 import com.cpf.mysql.dao.AssetDAO;
+import com.cpf.mysql.manager.AggreModelManager;
 import com.cpf.task.TrainTask;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.influxdb.DefaultInfluxDBTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,9 +38,13 @@ public class TestController {
     @Autowired
     private AggreModelDAO aggreModelDAO;
     @Autowired
+    private AggreModelManager aggreModelManager;
+    @Autowired
     private DefaultInfluxDBTemplate template;
     @Autowired
     private AssetDAO assetDAO;
+    @Value("${alarmTimer.expire}")
+    private Long time = 60*100L;
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ResponseEntity<Object> test() {
 ////        List<MonitorDO> monitorDOList = monitorManager.queryDataByTime("win_cpu",null,null,null,2L).getResult();
@@ -85,10 +88,11 @@ public class TestController {
 //            temp.setId(String.valueOf(i));
 //            assetDAO.save(temp);
 //        }
-        Pageable pageable = new PageRequest(0,10);
-        String ipaddr = "192.168.207.82" + "%";
-        System.out.println(JSON.toJSONString(assetDAO.findByIpaddrLike(ipaddr,pageable)));
-        System.out.println(assetDAO.findByIpaddrLike("%",null).getNumberOfElements());
+//        Pageable pageable = new PageRequest(0,10);
+//        String ipaddr = "192.168.207.82" + "%";
+//        System.out.println(JSON.toJSONString(assetDAO.findByIpaddrLike(ipaddr,pageable)));
+//        System.out.println(assetDAO.findByIpaddrLike("%",null).getNumberOfElements());
+
         return new ResponseEntity<>(true,HttpStatus.OK);
     }
 }

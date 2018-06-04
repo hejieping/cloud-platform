@@ -74,7 +74,7 @@ public class ModelUtil  {
      * @param id 模型对应的数据库信息ID
      * @param classifier 模型
      */
-    private static void serialization(Long id, Object classifier){
+    private static void serialization(@NotNull Long id, @NotNull Object classifier){
         try {
             SerializationHelper.write(generateModelFileName(id),classifier);
         } catch (Exception e) {
@@ -150,6 +150,7 @@ public class ModelUtil  {
                     optionList.add(option.getKey());
                     optionList.add((String)option.getValue());
                 }else {
+                    //如果参数类型是bool，只需要填入参数名
                     if("true".equals(option.getValue().toString()) ){
                         optionList.add(option.getKey());
                     }

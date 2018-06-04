@@ -57,6 +57,13 @@ public class InstancesBuilder {
         instances = Filter.useFilter(instances,rmv);
         return this;
     }
+
+    /**
+     * 抽取样本
+     * @param percent
+     * @return
+     * @throws Exception
+     */
     public InstancesBuilder resample(Double percent) throws Exception {
         Resample resample = new Resample();
         resample.setOptions(new String[]{"-Z",percent.toString()});

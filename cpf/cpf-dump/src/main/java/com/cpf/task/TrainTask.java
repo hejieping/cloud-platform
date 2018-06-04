@@ -31,15 +31,6 @@ import java.util.List;
 @Component
 public class TrainTask extends ServiceTemplate  {
     private final Logger logger = LoggerFactory.getLogger(TrainTask.class);
-    /**
-     * 定时训练间隔时间 一星期训练一次
-     */
-    private static final Integer TRAIN_INTERVAL = 7*24*60*60*1000;
-    /**
-     * 错误样本占总训练样本的比例
-     */
-    private static final Double  DANGER_PROPORITION = 0.5D;
-
     @Autowired
     private AggreModelManager aggreModelManager;
     @Autowired
@@ -49,18 +40,18 @@ public class TrainTask extends ServiceTemplate  {
     @Autowired
     private ModelManager modelManager;
 
+
     /**
      * 定时训练所有配置的算法，并保存算法模型
      * @return
      */
-    @Scheduled(fixedRate = 7*24*60*60*1000)
+    @Scheduled(cron = "${traintask.cron}")
    public void train(){
         Object result = execute(logger, "train", new ServiceExecuteTemplate() {
             @Override
             public CallbackResult<Object> checkParams() {
                 return CallbackResult.success();
             }
-
             @Override
             public CallbackResult<Object> executeAction() throws Exception {
                 List<AggreModelDO> aggreModelDOList = aggreModelManager.all().getResult();

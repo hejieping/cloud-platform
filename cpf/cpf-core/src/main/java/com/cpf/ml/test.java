@@ -4,6 +4,7 @@ package com.cpf.ml;
  * Created by jieping on 2018-04-07
  */
 public class test {
+
     public static void main(String[] args) throws Exception {
         double a = 6.4827975e+06;
         System.out.println(a);
@@ -30,6 +31,11 @@ public class test {
 //        IBk classifier = (IBk)SerializationHelper.read("cpf-core/src/main/resources/ibk.model");
 //        System.out.println(JSON.toJSONString(classifier.getOptions()));
         int v = 14;
+        String ac = "ab";
+        String ab = "ba";
+        System.out.println(ac.hashCode());
+        System.out.println(ab.hashCode());
+
         System.out.println(Integer.toBinaryString(v));
 
     }

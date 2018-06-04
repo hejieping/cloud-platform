@@ -33,8 +33,8 @@ public class MonitorDAO {
      * @return
      */
     public QueryResult queryAVGByTime(Map<String,String> tags,String tableName,Long startTime,Long endTime){
-        String SQL =  InfluxSqlGenerator.meanDataSql(tags,tableName,startTime,endTime);
-        Query query = new Query(SQL, template.getDatabase());
+        String sql =  InfluxSqlGenerator.meanDataSql(tags,tableName,startTime,endTime);
+        Query query = new Query(sql, template.getDatabase());
         return template.query(query, TimeUnit.MILLISECONDS);
     }
 

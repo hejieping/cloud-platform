@@ -76,7 +76,7 @@ public class AggreModelManager extends ServiceTemplate {
             }
             @Override
             public CallbackResult<Object> executeAction() {
-                aggreModelDO.getModels().add(modelDO);
+                aggreModelDO.addModel(modelDO);
                 AggreModelDO saveResult = DOPOConverter.aggreModelPO2DO(aggreModelDAO.save(DOPOConverter.aggreModelDO2PO(aggreModelDO)));
                 ModelDO returnResult =  saveResult.getModels().stream().filter(model -> model.getName().equals(modelDO.getName())).findFirst().orElse(null);
                 //持久化
