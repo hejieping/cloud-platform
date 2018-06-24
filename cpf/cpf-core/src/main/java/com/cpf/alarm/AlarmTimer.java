@@ -105,7 +105,7 @@ public class AlarmTimer {
     }
 
     /**
-     * 是否已经存在该报警了,存在则重新更新该报警的计时
+     * 是否已经存在该报警了,存在则更新该报警的计时
      * @param alarmDO
      * @return
      */

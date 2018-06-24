@@ -55,7 +55,7 @@ public class MlEngine extends ServiceTemplate {
     public void predict(){
         execute(logger, "predict", new ServiceExecuteTemplate() {
             @Override
-            public CallbackResult<Object> checkParams() {
+            public            CallbackResult<Object> checkParams() {
                 return CallbackResult.success();
             }
 

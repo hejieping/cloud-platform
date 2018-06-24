@@ -43,7 +43,7 @@
          <ChartCard :id="chartId1" table='win_mem'
           :host="this.$route.params.hostname"
            col='Available_Bytes'
-           text='内存利用率(MB)'
+           text='内存大小(MB)'
           :startTime='start'
           ref='memChart'
           :endTime='end'></ChartCard>

@@ -634,4 +634,14 @@ public class ModelFactory {
         list.add(modelOptionDO2);
         return list;
     }
+    public static void main(String[] args){
+        Map<String,List<ModelOptionDO>> map = ModelFactory.optionsMap;
+        map.forEach((key,value)->{
+            System.out.println(key);
+            value.forEach(item->{
+                System.out.println(item.getKey()+"  "+item.getDesc());
+            });
+            System.out.println("=================");
+        });
+    }
 }

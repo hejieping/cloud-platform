@@ -1,5 +1,6 @@
 package com.cpf.controller;
 
+import com.cpf.alarm.AlarmTimer;
 import com.cpf.holder.ModelHolder;
 import com.cpf.holder.RuleHolder;
 import com.cpf.influx.manager.MonitorManager;
@@ -43,6 +44,8 @@ public class TestController {
     private DefaultInfluxDBTemplate template;
     @Autowired
     private AssetDAO assetDAO;
+    @Autowired
+    private AlarmTimer alarmTimer;
     @Value("${alarmTimer.expire}")
     private Long time = 60*100L;
     @RequestMapping(value = "/test", method = RequestMethod.GET)
@@ -92,7 +95,7 @@ public class TestController {
 //        String ipaddr = "192.168.207.82" + "%";
 //        System.out.println(JSON.toJSONString(assetDAO.findByIpaddrLike(ipaddr,pageable)));
 //        System.out.println(assetDAO.findByIpaddrLike("%",null).getNumberOfElements());
-
+        int a = 5;
         return new ResponseEntity<>(true,HttpStatus.OK);
     }
 }
